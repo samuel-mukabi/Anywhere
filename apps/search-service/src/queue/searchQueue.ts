@@ -1,0 +1,56 @@
+import { Queue, Worker } from 'bullmq';
+import { cacheRedis, setCachedSearch } from '../lib/cache';
+import { SearchQuery } from '../schema/search';
+import { DestinationRanker } from '../logic/DestinationRanker';
+import { emitSearchCompleted } from '../lib/kafka';
+
+// Define the shape of our background job
+export interface SearchJobPayload {
+  hash: string;
+  query: SearchQuery;
+}
+
+// 1. Setup the Producer (To allow routes to add jobs)
+export const searchQueue = new Queue<SearchJobPayload>('FlightSearchQueue', {
+  connection: cacheRedis,
+  defaultJobOptions: {
+    attempts: 2,
+    removeOnComplete: 100,
+    removeOnFail: 100, // Do not bloat redis violently
+  }
+});
+
+// 2. Setup the Background Consumer (Evaluates the heaviest tasks detached from the route handler)
+// Important wrapper check prevents Worker starting during purely test scopes if implemented.
+if (process.env.NODE_ENV !== 'test') {
+  
+  const ranker = new DestinationRanker();
+
+  const worker = new Worker<SearchJobPayload>('FlightSearchQueue', async (job) => {
+    
+    // Perform complex parallel outbound fetching algorithms safely
+    console.log(`[Worker] Started Engine Algorithm for Job ${job.id}`);
+    
+    const results = await ranker.computeTopDestinations(job.data.query);
+
+    // Save final raw output natively into Fast-Retrieval Redis Memory layer for the polling client
+    await setCachedSearch(job.data.hash, results);
+    
+    // Broadcast Analytics asynchronously into Kafka
+    await emitSearchCompleted({
+      totalResults: results.length,
+      topDestination: results.length > 0 ? results[0].city : 'None',
+      queryBudget: job.data.query.budget
+    });
+
+    console.log(`[Worker] Processed Job ${job.id} - Yielded ${results.length} ranks`);
+
+    // The output return value natively feeds into BullMQ job.returnvalue 
+    return results;
+
+  }, { connection: cacheRedis, concurrency: 5 }); // Process 5 parallel global searches
+
+  worker.on('failed', (job, err) => {
+    console.error(`Job ${job?.id} failed with error ${err.message}`);
+  });
+}
