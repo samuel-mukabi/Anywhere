@@ -1,0 +1,13 @@
+# Doppler project configuration
+# Docs: https://docs.doppler.com/docs/doppler-yaml
+#
+# After cloning this repo, run:
+#   doppler setup
+# to authenticate and link your local environment.
+#
+# Each developer's machine will use the 'dev' config.
+# CI overrides the config via DOPPLER_TOKEN environment variable.
+
+setup:
+  project: anywhere
+  config: dev
