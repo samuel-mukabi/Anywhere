@@ -1,0 +1,295 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Anywhere design tokens — raw --aw-* custom properties */
+@import "@repo/ui/tokens.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   SHADCN SEMANTIC TOKENS  (oklch — do not rename; shadcn components depend
+   on these exact variable names)
+   ========================================================================== */
+:root {
+  --background:              oklch(1 0 0);
+  --foreground:              oklch(0.145 0 0);
+  --card:                    oklch(1 0 0);
+  --card-foreground:         oklch(0.145 0 0);
+  --popover:                 oklch(1 0 0);
+  --popover-foreground:      oklch(0.145 0 0);
+  --primary:                 oklch(0.205 0 0);
+  --primary-foreground:      oklch(0.985 0 0);
+  --secondary:               oklch(0.97 0 0);
+  --secondary-foreground:    oklch(0.205 0 0);
+  --muted:                   oklch(0.97 0 0);
+  --muted-foreground:        oklch(0.556 0 0);
+  --accent:                  oklch(0.97 0 0);
+  --accent-foreground:       oklch(0.205 0 0);
+  --destructive:             oklch(0.577 0.245 27.325);
+  --border:                  oklch(0.922 0 0);
+  --input:                   oklch(0.922 0 0);
+  --ring:                    oklch(0.708 0 0);
+  --chart-1:                 oklch(0.87 0 0);
+  --chart-2:                 oklch(0.556 0 0);
+  --chart-3:                 oklch(0.439 0 0);
+  --chart-4:                 oklch(0.371 0 0);
+  --chart-5:                 oklch(0.269 0 0);
+  --radius:                  0.625rem;
+  --sidebar:                 oklch(0.985 0 0);
+  --sidebar-foreground:      oklch(0.145 0 0);
+  --sidebar-primary:         oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent:          oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border:          oklch(0.922 0 0);
+  --sidebar-ring:            oklch(0.708 0 0);
+}
+
+/* ==========================================================================
+   TAILWIND V4  @theme inline
+   Maps CSS custom properties → Tailwind utility classes.
+   "inline" = use the var() directly; don't generate a second CSS variable.
+
+   SHADCN PALETTE  (existing — do not remove)
+   ========================================================================== */
+@theme inline {
+  /* Shadcn color mappings */
+  --color-background:              var(--background);
+  --color-foreground:              var(--foreground);
+  --color-card:                    var(--card);
+  --color-card-foreground:         var(--card-foreground);
+  --color-popover:                 var(--popover);
+  --color-popover-foreground:      var(--popover-foreground);
+  --color-primary:                 var(--primary);
+  --color-primary-foreground:      var(--primary-foreground);
+  --color-secondary:               var(--secondary);
+  --color-secondary-foreground:    var(--secondary-foreground);
+  --color-muted:                   var(--muted);
+  --color-muted-foreground:        var(--muted-foreground);
+  --color-accent:                  var(--accent);
+  --color-accent-foreground:       var(--accent-foreground);
+  --color-destructive:             var(--destructive);
+  --color-border:                  var(--border);
+  --color-input:                   var(--input);
+  --color-ring:                    var(--ring);
+  --color-chart-1:                 var(--chart-1);
+  --color-chart-2:                 var(--chart-2);
+  --color-chart-3:                 var(--chart-3);
+  --color-chart-4:                 var(--chart-4);
+  --color-chart-5:                 var(--chart-5);
+  --color-sidebar:                 var(--sidebar);
+  --color-sidebar-foreground:      var(--sidebar-foreground);
+  --color-sidebar-primary:         var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:          var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:          var(--sidebar-border);
+  --color-sidebar-ring:            var(--sidebar-ring);
+
+  /* Shadcn radius mappings */
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Font family mappings (loaded by next/font/local in fonts.ts) */
+  --font-astoria: var(--font-astoria);
+  --font-cera:    var(--font-cera);
+  --font-sans:    var(--font-cera), system-ui, sans-serif;
+  --font-heading: var(--font-astoria), Georgia, serif;
+
+  /* ========================================================================
+     ANYWHERE PALETTE
+     Generates:  bg-{name}  text-{name}  border-{name}  ring-{name}
+                 accent-{name}  fill-{name}  stroke-{name}  shadow-{name}
+     ======================================================================== */
+
+  /* --- Parchment (warm off-white backgrounds) --- */
+  --color-parchment:         var(--aw-parchment-300);   /* bg-parchment  #EEEBD9 */
+  --color-parchment-50:      var(--aw-parchment-50);
+  --color-parchment-100:     var(--aw-parchment-100);
+  --color-parchment-200:     var(--aw-parchment-200);   /* bg-parchment-200 */
+  --color-parchment-300:     var(--aw-parchment-300);
+  --color-parchment-400:     var(--aw-parchment-400);
+  --color-parchment-500:     var(--aw-parchment-500);
+
+  /* --- Nearblack (warm dark text) --- */
+  --color-nearblack:         var(--aw-nearblack-800);   /* text-nearblack #282427 */
+  --color-nearblack-600:     var(--aw-nearblack-600);
+  --color-nearblack-700:     var(--aw-nearblack-700);
+  --color-nearblack-800:     var(--aw-nearblack-800);
+  --color-nearblack-900:     var(--aw-nearblack-900);
+
+  /* --- Terracotta (primary brand / CTA) --- */
+  --color-terracotta:        var(--aw-terracotta-700);  /* bg-terracotta / accent-terracotta #904814 */
+  --color-terracotta-100:    var(--aw-terracotta-100);
+  --color-terracotta-400:    var(--aw-terracotta-400);
+  --color-terracotta-500:    var(--aw-terracotta-500);
+  --color-terracotta-600:    var(--aw-terracotta-600);
+  --color-terracotta-700:    var(--aw-terracotta-700);
+  --color-terracotta-800:    var(--aw-terracotta-800);
+  --color-terracotta-900:    var(--aw-terracotta-900);
+
+  /* --- Sage (secondary / nature / pro features) --- */
+  --color-sage:              var(--aw-sage-700);        /* bg-sage #3D6B5E */
+  --color-sage-100:          var(--aw-sage-100);
+  --color-sage-400:          var(--aw-sage-400);
+  --color-sage-500:          var(--aw-sage-500);
+  --color-sage-600:          var(--aw-sage-600);
+  --color-sage-700:          var(--aw-sage-700);
+  --color-sage-800:          var(--aw-sage-800);
+  --color-sage-900:          var(--aw-sage-900);
+
+  /* --- Midnight (map / dark surfaces) --- */
+  --color-midnight:          var(--aw-midnight-800);    /* bg-midnight #1C2B36 */
+  --color-midnight-500:      var(--aw-midnight-500);
+  --color-midnight-600:      var(--aw-midnight-600);
+  --color-midnight-700:      var(--aw-midnight-700);
+  --color-midnight-800:      var(--aw-midnight-800);
+  --color-midnight-900:      var(--aw-midnight-900);
+
+  /* --- Gold (Pro tier) --- */
+  --color-gold:              var(--aw-gold-500);        /* bg-gold */
+  --color-gold-100:          var(--aw-gold-100);
+  --color-gold-400:          var(--aw-gold-400);
+  --color-gold-500:          var(--aw-gold-500);
+  --color-gold-600:          var(--aw-gold-600);
+
+  /* --- Semantic / Map --- */
+  --color-affordable:        var(--aw-affordable);      /* text-affordable (map) */
+  --color-overbudget:        var(--aw-overbudget);      /* text-overbudget (map) */
+  --color-map-cluster:       var(--aw-map-cluster);
+
+  /* ========================================================================
+     ANYWHERE SHADOWS
+     Generates:  shadow-{name}
+     ======================================================================== */
+  --shadow-xs:               var(--aw-shadow-xs);
+  --shadow-sm:               var(--aw-shadow-sm);
+  --shadow-card:             var(--aw-shadow-card);
+  --shadow-card-hover:       var(--aw-shadow-card-hover);
+  --shadow-dropdown:         var(--aw-shadow-dropdown);
+  --shadow-modal:            var(--aw-shadow-modal);
+  --shadow-map:              var(--aw-shadow-map);
+  --shadow-map-popup:        var(--aw-shadow-map-popup);
+  --shadow-glow-terracotta:  var(--aw-shadow-glow-terracotta);
+  --shadow-glow-sage:        var(--aw-shadow-glow-sage);
+  --shadow-focus:            var(--aw-shadow-focus);
+
+  /* ========================================================================
+     ANYWHERE RADII  (append to shadcn's radius scale)
+     Generates:  rounded-{name}
+     ======================================================================== */
+  --radius-xs:    var(--aw-radius-xs);      /* rounded-xs  = 4px  */
+  --radius-pill:  var(--aw-radius-pill);    /* rounded-pill = 9999px */
+  --radius-card:  var(--aw-radius-card);    /* rounded-card = 20px */
+  --radius-modal: var(--aw-radius-modal);   /* rounded-modal = 24px */
+}
+
+/* ==========================================================================
+   LAYOUT UTILITIES  (Tailwind v4 @utility blocks)
+   ========================================================================== */
+@utility flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@utility flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 90rem;          /* 1440px */
+  margin-inline: auto;
+  padding-inline: var(--aw-space-section-x);
+}
+
+@utility section-padding {
+  padding-block: var(--aw-space-section-y);
+}
+
+@utility card-base {
+  background-color: var(--aw-surface-card);
+  border-radius: var(--aw-radius-card);
+  padding: var(--aw-space-card);
+  box-shadow: var(--aw-shadow-card);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY BASE
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--aw-font-heading);
+  letter-spacing: var(--aw-tracking-tight);
+  line-height: var(--aw-leading-tight);
+  color: var(--aw-text-primary);
+}
+
+body {
+  font-family: var(--aw-font-body);
+  font-size: var(--aw-text-base);
+  font-weight: 400;
+  line-height: var(--aw-leading-relaxed);
+  background-color: var(--aw-surface-page);
+  color: var(--aw-text-primary);
+}
+
+/* ==========================================================================
+   DARK MODE  (shadcn tokens — Anywhere dark mode handled separately later)
+   ========================================================================== */
+.dark {
+  --background:              oklch(0.145 0 0);
+  --foreground:              oklch(0.985 0 0);
+  --card:                    oklch(0.205 0 0);
+  --card-foreground:         oklch(0.985 0 0);
+  --popover:                 oklch(0.205 0 0);
+  --popover-foreground:      oklch(0.985 0 0);
+  --primary:                 oklch(0.922 0 0);
+  --primary-foreground:      oklch(0.205 0 0);
+  --secondary:               oklch(0.269 0 0);
+  --secondary-foreground:    oklch(0.985 0 0);
+  --muted:                   oklch(0.269 0 0);
+  --muted-foreground:        oklch(0.708 0 0);
+  --accent:                  oklch(0.269 0 0);
+  --accent-foreground:       oklch(0.985 0 0);
+  --destructive:             oklch(0.704 0.191 22.216);
+  --border:                  oklch(1 0 0 / 10%);
+  --input:                   oklch(1 0 0 / 15%);
+  --ring:                    oklch(0.556 0 0);
+  --chart-1:                 oklch(0.87 0 0);
+  --chart-2:                 oklch(0.556 0 0);
+  --chart-3:                 oklch(0.439 0 0);
+  --chart-4:                 oklch(0.371 0 0);
+  --chart-5:                 oklch(0.269 0 0);
+  --sidebar:                 oklch(0.205 0 0);
+  --sidebar-foreground:      oklch(0.985 0 0);
+  --sidebar-primary:         oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent:          oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border:          oklch(1 0 0 / 10%);
+  --sidebar-ring:            oklch(0.556 0 0);
+}
+
+/* ==========================================================================
+   BASE LAYER RESET (shadcn standard)
+   ========================================================================== */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
