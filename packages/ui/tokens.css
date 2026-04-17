@@ -1,0 +1,311 @@
+/**
+ * Anywhere Design Tokens
+ * ======================
+ * Single source of truth for all raw design values.
+ * Framework-agnostic — importable by any app (Next.js, React Native via
+ * react-native-css-interop, plain HTML, etc.)
+ *
+ * Convention: All Anywhere tokens are prefixed --aw- to prevent collision
+ * with shadcn/ui's unprefixed token set.
+ *
+ * Consumers map these to framework utilities:
+ *   - Tailwind v4 → apps/web/app/globals.css @theme block
+ *   - React Native → packages/ui/src/tokens.native.ts (future)
+ *
+ * See docs/TOKENS.md for usage rules and which token goes where.
+ */
+
+/* ============================================================
+   LAYER 1 — PRIMITIVE / RAW PALETTE
+   Named by hue + lightness, not by role.
+   Never use these directly in components — use semantic tokens.
+   ============================================================ */
+:root {
+  /* --- Parchment scale (warm off-white) --- */
+  --aw-parchment-50:  #FDFCF7;
+  --aw-parchment-100: #F9F7EE;
+  --aw-parchment-200: #F5F2E6;   /* card surfaces */
+  --aw-parchment-300: #EEEBD9;   /* main background */
+  --aw-parchment-400: #E5E1CA;   /* subtle dividers */
+  --aw-parchment-500: #D8D3B8;   /* strong dividers */
+
+  /* --- Nearblack scale (warm dark) --- */
+  --aw-nearblack-900: #1A181B;
+  --aw-nearblack-800: #282427;   /* primary text */
+  --aw-nearblack-700: #3D3940;
+  --aw-nearblack-600: #5C5860;
+
+  /* --- Terracotta scale (primary / brand action) --- */
+  --aw-terracotta-900: #6B340D;
+  --aw-terracotta-800: #7C3D10;
+  --aw-terracotta-700: #904814;   /* primary */
+  --aw-terracotta-600: #AF602A;   /* hover */
+  --aw-terracotta-500: #C87840;   /* lighter accent */
+  --aw-terracotta-400: #E09A62;   /* very light */
+  --aw-terracotta-100: #F9EDE3;   /* muted background */
+
+  /* --- Sage scale (secondary / nature / success contexts) --- */
+  --aw-sage-900: #294840;
+  --aw-sage-800: #325A50;
+  --aw-sage-700: #3D6B5E;         /* secondary */
+  --aw-sage-600: #4F8275;
+  --aw-sage-500: #5A8A7B;         /* hover */
+  --aw-sage-400: #7DADA2;
+  --aw-sage-100: #E6F0EE;         /* muted background */
+
+  /* --- Midnight scale (map globe / dark surfaces) --- */
+  --aw-midnight-900: #0E1820;
+  --aw-midnight-800: #1C2B36;     /* globe bg */
+  --aw-midnight-700: #243344;
+  --aw-midnight-600: #2E4258;
+  --aw-midnight-500: #3A526B;
+
+  /* --- Gold scale (premium / Pro tier accent) --- */
+  --aw-gold-600: #B8860B;
+  --aw-gold-500: #D4A017;
+  --aw-gold-400: #E8B84B;
+  --aw-gold-100: #FDF7E3;
+
+  /* --- Neutral slate (UI chrome) --- */
+  --aw-slate-50:  #F8F8F8;
+  --aw-slate-100: #F0F0F0;
+  --aw-slate-200: #E4E4E4;
+  --aw-slate-300: #C8C8C8;
+  --aw-slate-400: #A0A0A0;
+  --aw-slate-500: #717171;
+  --aw-slate-600: #4A4A4A;
+
+  /* --- Status colors --- */
+  --aw-affordable:   #22C55E;     /* map: destination within budget */
+  --aw-overbudget:   #EF4444;     /* map: destination over budget */
+  --aw-warning:      #F59E0B;
+  --aw-info:         #3B82F6;
+}
+
+
+/* ============================================================
+   LAYER 2 — SEMANTIC TOKENS (roles, not hues)
+   These are what components should reference.
+   ============================================================ */
+:root {
+  /* --- Surface --- */
+  --aw-surface-page:         var(--aw-parchment-300);   /* #EEEBD9 */
+  --aw-surface-card:         var(--aw-parchment-200);   /* #F5F2E6 */
+  --aw-surface-card-hover:   var(--aw-parchment-100);
+  --aw-surface-elevated:     var(--aw-parchment-50);
+  --aw-surface-inverse:      var(--aw-midnight-800);    /* for dark panels */
+  --aw-surface-map:          var(--aw-midnight-800);    /* globe background */
+
+  /* --- Text --- */
+  --aw-text-primary:           var(--aw-nearblack-800);  /* #282427 — body + headings */
+  --aw-text-secondary:         var(--aw-nearblack-600);  /* secondary label */
+  --aw-text-tertiary:          var(--aw-slate-500);      /* placeholder / caption */
+  --aw-text-on-dark:           var(--aw-parchment-100);  /* text on midnight surfaces */
+  --aw-text-on-primary:        var(--aw-parchment-50);   /* text on terracotta buttons */
+  --aw-text-link:              var(--aw-terracotta-700);
+  --aw-text-link-hover:        var(--aw-terracotta-600);
+
+  /* --- Brand actions (primary) --- */
+  --aw-primary:                var(--aw-terracotta-700); /* #904814 */
+  --aw-primary-hover:          var(--aw-terracotta-600); /* #AF602A */
+  --aw-primary-active:         var(--aw-terracotta-900);
+  --aw-primary-muted:          var(--aw-terracotta-100); /* subtle bg */
+  --aw-primary-foreground:     var(--aw-parchment-50);
+
+  /* --- Brand secondary --- */
+  --aw-secondary:              var(--aw-sage-700);       /* #3D6B5E */
+  --aw-secondary-hover:        var(--aw-sage-600);
+  --aw-secondary-muted:        var(--aw-sage-100);
+  --aw-secondary-foreground:   var(--aw-parchment-50);
+
+  /* --- Pro tier accent --- */
+  --aw-pro:                    var(--aw-gold-500);
+  --aw-pro-foreground:         var(--aw-nearblack-800);
+
+  /* --- Border & Divider --- */
+  --aw-border:                 rgba(40, 36, 39, 0.10);
+  --aw-border-strong:          rgba(40, 36, 39, 0.22);
+  --aw-border-inverse:         rgba(238, 235, 217, 0.14);
+  --aw-border-focus:           var(--aw-terracotta-700);
+
+  /* --- Map overlay colors --- */
+  --aw-map-affordable:         var(--aw-affordable);
+  --aw-map-overbudget:         var(--aw-overbudget);
+  --aw-map-cluster:            #6366F1;
+
+  /* --- Status --- */
+  --aw-success:                var(--aw-affordable);
+  --aw-error:                  var(--aw-overbudget);
+  --aw-warning:                var(--aw-warning);
+  --aw-info:                   var(--aw-info);
+}
+
+
+/* ============================================================
+   LAYER 3 — SPACING TOKENS
+   Supplements Tailwind's default spacing scale with
+   named semantic steps for layout consistency.
+   ============================================================ */
+:root {
+  --aw-space-section-y:      5rem;      /* vertical section padding (80px) */
+  --aw-space-section-x:      clamp(1.5rem, 5vw, 6rem); /* responsive container inset */
+  --aw-space-card:           1.5rem;    /* card internal padding (24px) */
+  --aw-space-card-sm:        1rem;      /* compact card padding (16px) */
+  --aw-space-stack-xs:       0.25rem;
+  --aw-space-stack-sm:       0.5rem;
+  --aw-space-stack-md:       1rem;
+  --aw-space-stack-lg:       1.5rem;
+  --aw-space-stack-xl:       2rem;
+  --aw-space-stack-2xl:      3rem;
+  --aw-space-stack-3xl:      4rem;
+  --aw-space-budget-bar:     5.5rem;    /* budget slider bar height */
+  --aw-space-navbar:         4rem;      /* navbar height (64px) */
+}
+
+
+/* ============================================================
+   LAYER 4 — BORDER RADIUS TOKENS
+   ============================================================ */
+:root {
+  --aw-radius-xs:    4px;
+  --aw-radius-sm:    8px;
+  --aw-radius-md:    12px;
+  --aw-radius-lg:    16px;
+  --aw-radius-xl:    20px;
+  --aw-radius-2xl:   24px;
+  --aw-radius-3xl:   32px;
+  --aw-radius-pill:  9999px;
+
+  /* Semantic radii */
+  --aw-radius-card:      var(--aw-radius-xl);   /* 20px — destination cards */
+  --aw-radius-button:    var(--aw-radius-pill);  /* pill buttons (brand style) */
+  --aw-radius-button-sm: var(--aw-radius-md);    /* small / secondary buttons */
+  --aw-radius-input:     var(--aw-radius-md);    /* form inputs */
+  --aw-radius-badge:     var(--aw-radius-sm);    /* filter tags */
+  --aw-radius-modal:     var(--aw-radius-2xl);   /* modals / sheets */
+  --aw-radius-tooltip:   var(--aw-radius-sm);
+  --aw-radius-map-popup: var(--aw-radius-lg);
+}
+
+
+/* ============================================================
+   LAYER 5 — SHADOW TOKENS
+   ============================================================ */
+:root {
+  /* Elevation shadows (warm-tinted) */
+  --aw-shadow-xs:
+    0 1px 2px rgba(40, 36, 39, 0.04);
+
+  --aw-shadow-sm:
+    0 2px 6px  rgba(40, 36, 39, 0.05),
+    0 1px 2px  rgba(40, 36, 39, 0.04);
+
+  --aw-shadow-card:
+    0 2px 12px rgba(40, 36, 39, 0.06),
+    0 1px 3px  rgba(40, 36, 39, 0.04);
+
+  --aw-shadow-card-hover:
+    0 8px 32px rgba(40, 36, 39, 0.12),
+    0 2px 8px  rgba(40, 36, 39, 0.07);
+
+  --aw-shadow-dropdown:
+    0 4px 24px rgba(40, 36, 39, 0.10),
+    0 1px 4px  rgba(40, 36, 39, 0.06);
+
+  --aw-shadow-modal:
+    0 20px 60px rgba(28, 43, 54, 0.30),
+    0 8px  24px rgba(40, 36, 39, 0.12);
+
+  /* Map-specific shadows */
+  --aw-shadow-map:
+    0 20px 60px rgba(28, 43, 54, 0.40);
+
+  --aw-shadow-map-popup:
+    0  8px 32px rgba(28, 43, 54, 0.30),
+    0  2px  8px rgba(28, 43, 54, 0.20);
+
+  /* Glow shadows (interactive / branded) */
+  --aw-shadow-glow-terracotta:
+    0 0 0 3px rgba(144, 72, 20, 0.20),
+    0 0 24px  rgba(144, 72, 20, 0.18);
+
+  --aw-shadow-glow-sage:
+    0 0 0 3px rgba(61, 107, 94, 0.20),
+    0 0 24px  rgba(61, 107, 94, 0.15);
+
+  /* Focus ring (accessibility) */
+  --aw-shadow-focus:
+    0 0 0 2px var(--aw-surface-page),
+    0 0 0 4px var(--aw-border-focus);
+}
+
+
+/* ============================================================
+   LAYER 6 — TYPOGRAPHY TOKENS
+   Font families are loaded via next/font/local (see fonts.ts)
+   and injected as CSS variables. These reference those vars.
+   ============================================================ */
+:root {
+  --aw-font-heading: var(--font-astoria), Georgia, serif;
+  --aw-font-body:    var(--font-cera), system-ui, sans-serif;
+
+  /* Type scale (fluid) */
+  --aw-text-xs:    0.75rem;    /* 12px — captions, labels */
+  --aw-text-sm:    0.875rem;   /* 14px — small body */
+  --aw-text-base:  1rem;       /* 16px — body */
+  --aw-text-lg:    1.125rem;   /* 18px — lead body */
+  --aw-text-xl:    1.25rem;    /* 20px — subheading */
+  --aw-text-2xl:   1.5rem;     /* 24px */
+  --aw-text-3xl:   2rem;       /* 32px */
+  --aw-text-4xl:   2.5rem;     /* 40px */
+  --aw-text-5xl:   clamp(2.5rem, 5vw, 4rem);   /* responsive hero */
+  --aw-text-hero:  clamp(3rem,   7vw, 6rem);   /* landing hero */
+
+  /* Line heights */
+  --aw-leading-tight:   1.15;
+  --aw-leading-snug:    1.3;
+  --aw-leading-normal:  1.5;
+  --aw-leading-relaxed: 1.65;
+
+  /* Letter spacing */
+  --aw-tracking-tight:   -0.02em;
+  --aw-tracking-normal:   0em;
+  --aw-tracking-wide:     0.04em;
+  --aw-tracking-widest:   0.12em;  /* used for eyebrow labels */
+}
+
+
+/* ============================================================
+   LAYER 7 — MOTION TOKENS
+   ============================================================ */
+:root {
+  /* Durations */
+  --aw-duration-fast:     120ms;
+  --aw-duration-base:     200ms;
+  --aw-duration-slow:     350ms;
+  --aw-duration-slower:   500ms;
+  --aw-duration-map:      800ms;  /* map marker transitions */
+
+  /* Easings */
+  --aw-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);   /* snappy deceleration */
+  --aw-ease-in:       cubic-bezier(0.7, 0, 0.84, 0);
+  --aw-ease-in-out:   cubic-bezier(0.45, 0, 0.55, 1);
+  --aw-ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1); /* slight overshoot */
+  --aw-ease-map:      cubic-bezier(0.25, 0.46, 0.45, 0.94); /* map pan/zoom */
+}
+
+
+/* ============================================================
+   LAYER 8 — Z-INDEX TOKENS
+   ============================================================ */
+:root {
+  --aw-z-base:       0;
+  --aw-z-raised:     10;
+  --aw-z-dropdown:   100;
+  --aw-z-sticky:     200;
+  --aw-z-navbar:     300;
+  --aw-z-overlay:    400;
+  --aw-z-modal:      500;
+  --aw-z-toast:      600;
+  --aw-z-tooltip:    700;
+}
