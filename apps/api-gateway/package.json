@@ -1,0 +1,32 @@
+{
+  "name": "@repo/api-gateway",
+  "version": "1.0.0",
+  "description": "Anywhere API Gateway",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/server.ts",
+    "start": "node dist/server.js",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^9.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "@fastify/redis": "^7.0.0",
+    "fastify": "^5.0.0",
+    "fastify-plugin": "^5.0.0",
+    "ioredis": "^5.4.1",
+    "opossum": "^8.1.4",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.2.2",
+    "undici": "^6.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/opossum": "^8.1.6",
+    "@types/pino": "^7.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  }
+}
