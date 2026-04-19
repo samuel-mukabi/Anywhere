@@ -48,8 +48,9 @@ export async function proxyRoutes(fastify: FastifyInstance) {
       // 4. Conclude
       reply.code(upstreamResponse.statusCode).send(Buffer.from(responseData));
 
-    } catch (error: any) {
-      if (error.message === 'Service Unavailable - Circuit Breaker Open') {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '';
+      if (message === 'Service Unavailable - Circuit Breaker Open') {
         request.log.error({ target: downstreamHost }, 'Circuit Breaker prevented connection');
         return reply.code(503).send({ error: 'Service Unavailable', message: 'Downstream dependency unavailable momentarily.' });
       }

@@ -5,7 +5,7 @@ interface ProxyRequestOptions {
   method: Dispatcher.HttpMethod;
   url: string;
   headers: IncomingHttpHeaders;
-  body?: any;
+  body?: Dispatcher.DispatchOptions['body'];
 }
 import { IncomingHttpHeaders } from 'http';
 

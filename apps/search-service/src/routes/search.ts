@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import crypto from 'crypto';
-import { SearchQuerySchema, SearchQuery } from '../schema/search';
+import { SearchQuerySchema } from '../schema/search';
 import { getCachedSearch } from '../lib/cache';
 import { searchQueue } from '../queue/searchQueue';
 

@@ -20,7 +20,7 @@ export class CacheService {
   /**
    * Pushes a serialized JSON blob clamping natively to a specified Expiry (in seconds).
    */
-  static async set(key: string, value: any, ttlSeconds: number): Promise<void> {
+  static async set(key: string, value: unknown, ttlSeconds: number): Promise<void> {
      await redisClient.setex(key, ttlSeconds, JSON.stringify(value));
   }
 

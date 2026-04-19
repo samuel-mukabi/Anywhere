@@ -61,9 +61,6 @@ export async function syncOAuthUser(email: string, providerId: string): Promise<
   return createdUser as UserProfile;
 }
 
-/**
- * Update Tier (used heavily by Stripe Webhooks)
- */
 export async function updateUserTierByStripeId(stripeCustomerId: string, tier: 'free' | 'pro') {
     const { error } = await supabaseAdmin
       .from('users')
@@ -71,4 +68,60 @@ export async function updateUserTierByStripeId(stripeCustomerId: string, tier: '
       .eq('stripe_customer_id', stripeCustomerId);
 
     if (error) throw error;
+}
+
+/**
+ * Link a Stripe Customer ID to our internal user (fired after successful checkout)
+ */
+export async function updateUserStripeCustomer(userId: string, stripeCustomerId: string) {
+    const { error } = await supabaseAdmin
+      .from('users')
+      .update({ stripe_customer_id: stripeCustomerId })
+      .eq('id', userId);
+
+    if (error) throw error;
+}
+
+/**
+ * Upsert Subscription state from Stripe Webhooks
+ */
+export async function upsertSubscription(
+  userId: string, 
+  stripeSubscriptionId: string, 
+  status: string, 
+  currentPeriodEnd: Date
+) {
+    // Note: If updating, we match by stripe_subscription_id.
+    // If inserting, we insert new. 
+    // In a production Supabase DB, you'd use a unique constraint on stripe_subscription_id 
+    // and `upsert` matching it. For now, we do a basic `upsert` relying on user_id + sub id combo
+    // or just an explicit lookup.
+    
+    // Check if it exists
+    const { data: existing } = await supabaseAdmin
+      .from('subscriptions')
+      .select('id')
+      .eq('stripe_subscription_id', stripeSubscriptionId)
+      .limit(1)
+      .single();
+
+    if (existing) {
+       const { error } = await supabaseAdmin
+         .from('subscriptions')
+         .update({ status, current_period_end: currentPeriodEnd.toISOString(), user_id: userId })
+         .eq('stripe_subscription_id', stripeSubscriptionId);
+         
+       if (error) throw error;
+    } else {
+       const { error } = await supabaseAdmin
+         .from('subscriptions')
+         .insert([{
+            user_id: userId,
+            stripe_subscription_id: stripeSubscriptionId,
+            status,
+            current_period_end: currentPeriodEnd.toISOString()
+         }]);
+
+       if (error) throw error;
+    }
 }

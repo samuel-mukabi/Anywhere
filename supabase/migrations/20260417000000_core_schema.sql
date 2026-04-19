@@ -53,13 +53,18 @@ CREATE TABLE affiliate_clicks (
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     destination_id VARCHAR(50) NOT NULL,
     provider TEXT NOT NULL,
+    offer_price DECIMAL(10, 2),
     clicked_at TIMESTAMPTZ DEFAULT NOW(),
+    converted_at TIMESTAMPTZ,
     commission_est DECIMAL(10, 2)
 );
 
 CREATE TABLE bookings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    duffel_order_id TEXT,
+    offer_id TEXT,
+    currency VARCHAR(10) DEFAULT 'USD',
     destination_id VARCHAR(50) NOT NULL,
     total_cost DECIMAL(10, 2) NOT NULL,
     booked_at TIMESTAMPTZ DEFAULT NOW(),

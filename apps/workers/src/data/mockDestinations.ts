@@ -15,8 +15,21 @@ export const BASE_LOCATIONS = [
  * Creates 250+ highly dynamic permutations safely mutating longitudes minimally
  * to prevent massive identical datasets natively mapping uniquely via Map constraints.
  */
-export function generateMockDestinations(count: number = 250) {
-  const generated: any[] = [];
+interface MockSeedDestination {
+  name: string;
+  country: string;
+  iso: string;
+  coords: { type: 'Point'; coordinates: number[] };
+  vibes: string[];
+  climate: { bestMonths: number[]; annualClimateScore: number };
+  avgCosts: { total: number; flightEst: number; dailyLiving: number };
+  imageUrl: string;
+  hiddenGemScore: number;
+  updatedAt: Date;
+}
+
+export function generateMockDestinations(count: number = 250): MockSeedDestination[] {
+  const generated: MockSeedDestination[] = [];
   
   for (let i = 0; i < count; i++) {
     const base = BASE_LOCATIONS[i % BASE_LOCATIONS.length];

@@ -2,7 +2,7 @@
  * app/page.tsx — Marketing home page
  * =====================================
  * This file lives at the root of `app/` (not inside a route group) because
- * Next.js does not allow two page files to serve the same route `/`.
+ * Next.js does not allow two-page files to serve the same route `/`.
  * The home page therefore imports NavBar and Footer directly rather than
  * relying on a wrapping layout.
  *

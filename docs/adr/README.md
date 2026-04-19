@@ -16,6 +16,7 @@ ADRs document significant technical decisions, the context that drove them, the 
 | [ADR-004](./ADR-004-redis-upstash-bullmq.md) | Redis (Upstash) for caching + BullMQ for background job queues | ✅ Accepted | 2026-04-17 |
 | [ADR-005](./ADR-005-mapbox-gl-js.md) | Mapbox GL JS for custom budget map — replacing any Google Maps dependency | ✅ Accepted | 2026-04-17 |
 | [ADR-006](./ADR-006-secrets-management.md) | Doppler as the single source of truth for all secrets | ✅ Accepted | 2026-04-17 |
+| [ADR-007](./ADR-007-cloudflare-r2-object-storage.md) | Cloudflare R2 for global low-egress object storage | ✅ Accepted | 2026-04-19 |
 
 ---
 

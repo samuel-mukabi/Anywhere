@@ -72,7 +72,7 @@ export function Footer() {
           >
             Anywhere
           </Link>
-          <p className="text-sm font-cera text-parchment-400 leading-relaxed max-w-[220px]">
+          <p className="text-sm font-cera text-parchment-400 leading-relaxed max-w-55">
             Budget-first travel discovery.{' '}
             <span className="text-parchment-200">
               See where the world can take you for what you can actually spend.

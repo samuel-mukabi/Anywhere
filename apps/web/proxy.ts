@@ -13,7 +13,7 @@ const authRoutes = ['/login', '/signup', '/forgot-password'];
  * Secures app routes before they hit the Next.js server.
  * Uses lightweight `jose` for Edge-compatible JWT verification.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // 1. Check if route is protected or auth-related
@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
       await jwtVerify(token, secret);
       isValidAuth = true;
-    } catch (err) {
+    } catch {
       // Token is invalid, expired, or tampered with
       isValidAuth = false;
     }

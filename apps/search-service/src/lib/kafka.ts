@@ -34,3 +34,22 @@ export async function emitSearchCompleted(analyticsPayload: {
     console.error('Failed to emit kafka stream', err);
   }
 }
+
+export async function emitSearchRanked(analyticsPayload: {
+  searchId: string;
+  topDestination: string;
+  avgRankScore: number;
+  resultCount: number;
+  droppedCount: number;
+}) {
+  if (!isConnected) return;
+
+  try {
+    await producer.send({
+      topic: 'search.ranked',
+      messages: [{ value: JSON.stringify(analyticsPayload) }],
+    });
+  } catch (err) {
+    console.error('Failed to emit ranked analytics stream', err);
+  }
+}

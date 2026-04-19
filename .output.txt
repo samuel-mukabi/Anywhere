@@ -1,0 +1,895 @@
+
+> anywhere-monorepo@0.1.0 test
+> turbo run test
+• turbo 2.9.6
+   • Packages in scope: @repo/api, @repo/api-clients, @repo/api-gateway, @repo/auth-service, @repo/config, @repo/mobile, @repo/redis, @repo/search-service, @repo/types, @repo/ui, @repo/web, @repo/workers
+   • Running test in 12 packages
+   • Remote caching disabled
+@repo/workers:build: cache hit, replaying logs 2a1a17c9ed02f1df
+@repo/api-gateway:build: cache hit, replaying logs 876d71916210d95e
+@repo/api:build: cache hit, replaying logs e337b29711424828
+@repo/mobile:build: cache hit, replaying logs 277d23cd1a072a0e
+@repo/redis:build: cache hit, replaying logs 36d886b8bb317050
+@repo/search-service:build: cache hit, replaying logs a20861adc553565b
+@repo/workers:build:
+@repo/workers:build:
+@repo/workers:build: > @repo/workers@1.0.0 build
+@repo/workers:build: > tsc
+@repo/workers:build:
+@repo/auth-service:build: cache hit, replaying logs 2ba578070167e2ba
+@repo/api:build:
+@repo/api:build:
+@repo/api:build: > @repo/api@0.1.0 build
+@repo/api:build: > echo "Not implemented"
+@repo/api:build:
+@repo/api:build: Not implemented
+@repo/mobile:build:
+@repo/mobile:build:
+@repo/mobile:build: > @repo/mobile@0.1.0 build
+@repo/mobile:build: > echo "Not implemented"
+@repo/mobile:build:
+@repo/mobile:build: Not implemented
+@repo/redis:build:
+@repo/redis:build:
+@repo/redis:build: > @repo/redis@1.0.0 build
+@repo/redis:build: > tsc
+@repo/redis:build:
+@repo/auth-service:build:
+@repo/auth-service:build:
+@repo/auth-service:build: > @repo/auth-service@1.0.0 build
+@repo/auth-service:build: > tsc
+@repo/auth-service:build:
+@repo/search-service:build:
+@repo/search-service:build:
+@repo/search-service:build: > @repo/search-service@1.0.0 build
+@repo/api-gateway:build:
+@repo/api-gateway:build:
+@repo/api-gateway:build: > @repo/api-gateway@1.0.0 build
+@repo/api-gateway:build: > tsc
+@repo/api-gateway:build:
+@repo/search-service:build: > tsc
+@repo/search-service:build:
+@repo/api-clients:test: cache miss, executing fbc4c0b3f3cde06e
+@repo/web:build: cache hit, replaying logs 98d5cef28a0c5ea8
+@repo/search-service:test: cache hit, replaying logs b5d9a12bb880c5c7
+@repo/web:build:
+@repo/web:build:
+@repo/web:build: > @repo/web@0.1.0 build
+@repo/web:build: > next build
+@repo/web:build:
+@repo/web:build: ▲ Next.js 16.2.3 (Turbopack)
+@repo/web:build:
+@repo/web:build:   Creating an optimized production build ...
+@repo/web:build: ✓ Compiled successfully in 9.1s
+@repo/web:build: ✓ Finished TypeScript in 2.1s
+@repo/web:build: ✓ Collecting page data using 6 workers in 262ms
+✓ Generating static pages using 6 workers (5/5) in 212ms
+@repo/search-service:test:
+@repo/web:build: ✓ Finalizing page optimization in 6ms
+@repo/web:build:
+@repo/web:build: Route (app)
+@repo/web:build: ┌ ○ /
+@repo/web:build: ├ ○ /_not-found
+@repo/web:build: ├ ○ /explore
+@repo/web:build: └ ○ /login
+@repo/web:build:
+@repo/web:build:
+@repo/web:build: ƒ Proxy (Middleware)
+@repo/web:build:
+@repo/web:build: ○  (Static)  prerendered as static content
+@repo/web:build:
+@repo/search-service:test:
+@repo/search-service:test: > @repo/search-service@1.0.0 test
+@repo/search-service:test: > jest --passWithNoTests
+@repo/search-service:test:
+                            PASS  src/DestinationRanker.spec.ts
+@repo/search-service:test:
+@repo/api-clients:test: t: {"level":30,"time":1776629201969,"pid":65833,"hostname":"Samuels-MacBook-Air.local","analytics":"search.ranked","event":{"searchId":"search_1776629201900","topDestination":"Bali","avgRankScore":0.475,"resultCount":1,"droppedCount":2},"msg":"Destination ranking completed"}
+@repo/search-service:test: (node:65833) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/search-service:test: (Use `node --trace-warnings ...` to show where the warning was created)ce:test:
+@repo/search-service:test: {"level":30,"time":1776629201975,"pid":65833,"hostname":"Samuels-MacBook-Air.local","analytics":"search.ranked","event":{"searchId":"search_1776629201974","topDestination":"Bali","avgRankScore":0.615,"resultCount":3,"droppedCount":0},"msg":"Destination ranking completed"}
+@repo/search-service:test: {"level":30,"time":1776629201978,"pid":65833,"hostname":"Samuels-MacBook-Air.local","analytics":"search.ranked","event":{"searchId":"search_1776629201978","topDestination":"Bali","avgRankScore":0.59,"resultCount":1,"droppedCount":0},"msg":"Destination ranking completed"}
+@repo/search-service:test: {"level":30,"time":1776629201979,"pid":65833,"hostname":"Samuels-MacBook-Air.local","analytics":"search.ranked","event":{"searchId":"search_123","topDestination":"Bali","avgRankScore":0.59,"resultCount":1,"droppedCount":0},"msg":"Destination ranking completed"}
+@repo/search-service:test: (node:65832) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/search-service:test: (Use `node --trace-warnings ...` to show where the warning was created)ce:test:
+@repo/search-service:test:  PASS  src/__tests__/search.integration.spec.ts
+@repo/search-service:test:   ● Console
+@repo/search-service:test:
+@repo/search-service:test:     console.warn
+@repo/search-service:test:       SUPABASE config missing. Booking writes are disabled.search-service:test:
+@repo/search-service:test:
+@repo/search-service:test:        5 |
+@repo/search-service:test:        6 | if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+@repo/search-service:test:     >  7 |   console.warn('SUPABASE config missing. Booking writes are disabled.');
+@repo/search-service:test:          |           ^
+@repo/search-service:test:        8 | }
+@repo/search-service:test:        9 |
+@repo/search-service:test:       10 | const noopSupabase = {
+@repo/search-service:test:
+@repo/search-service:test:       at Object.<anonymous> (src/lib/supabase.ts:7:11)
+@repo/search-service:test:       at Object.<anonymous> (src/routes/booking.ts:5:1)
+@repo/search-service:test:       at Object.<anonymous> (src/app.ts:4:1)
+@repo/search-service:test:       at Object.<anonymous> (src/__tests__/search.integration.spec.ts:3:1)
+@repo/search-service:test:
+@repo/search-service:test: [23:06:43.547] INFO (65832): Search API request receivedpo/search-service:test:
+@repo/search-service:test:     reqId: "req-1"
+@repo/search-service:test:     req: {
+@repo/search-service:test:       "method": "POST",
+@repo/search-service:test:       "url": "/search/"
+@repo/search-service:test:     }
+@repo/search-service:test: [23:06:43.552] INFO (65832): Dispatched algorithm analysis strictly to background worker
+@repo/search-service:test:     jobId: "job_hash_123"
+@repo/search-service:test: [23:06:43.553] INFO (65832): Search API request completed
+@repo/search-service:test:     reqId: "req-1"
+@repo/search-service:test:     res: {
+@repo/search-service:test:       "statusCode": 202
+@repo/search-service:test:     }
+@repo/search-service:test:     responseTime: 6.22366601228714
+@repo/search-service:test: [23:06:43.625] INFO (65832): Search API request received
+@repo/search-service:test:     reqId: "req-2"
+@repo/search-service:test:     req: {
+@repo/search-service:test:       "method": "GET",
+@repo/search-service:test:       "url": "/search/poll/job_hash_123"
+@repo/search-service:test:     }
+@repo/search-service:test: [23:06:43.626] INFO (65832): Search API request completed
+@repo/search-service:test:     reqId: "req-2"
+@repo/search-service:test:     res: {
+@repo/search-service:test:       "statusCode": 200
+@repo/search-service:test:     }
+@repo/search-service:test:     responseTime: 0.41612499952316284
+@repo/search-service:test: [23:06:43.628] INFO (65832): Search API request received
+@repo/search-service:test:     reqId: "req-3"
+@repo/search-service:test:     req: {
+@repo/search-service:test:       "method": "POST",
+@repo/search-service:test:       "url": "/search/"
+@repo/search-service:test:     }
+@repo/search-service:test: [23:06:43.629] INFO (65832): Dispatched algorithm analysis strictly to background worker
+@repo/search-service:test:     jobId: "job_hash_123"
+@repo/search-service:test: [23:06:43.630] INFO (65832): Search API request completed
+@repo/search-service:test:     reqId: "req-3"
+@repo/search-service:test:     res: {
+@repo/search-service:test:       "statusCode": 202
+@repo/search-service:test:     }
+@repo/search-service:test:     responseTime: 2.012499988079071
+@repo/search-service:test: [23:06:43.633] INFO (65832): Search API request received
+@repo/search-service:test:     reqId: "req-4"
+@repo/search-service:test:     req: {
+@repo/search-service:test:       "method": "POST",
+@repo/search-service:test:       "url": "/search/"
+@repo/search-service:test:     }
+@repo/search-service:test: [23:06:43.633] INFO (65832): Returning instantaneous cached algorithm results
+@repo/search-service:test:     hash: "038e53d75f42b3601c00bf651e99511aae6214b0ba3b49871ceb3f741fb5805f"
+@repo/search-service:test: [23:06:43.634] INFO (65832): Search API request completed
+@repo/search-service:test:     reqId: "req-4"
+@repo/search-service:test:     res: {
+@repo/search-service:test:       "statusCode": 200
+@repo/search-service:test:     }
+@repo/search-service:test:     responseTime: 1.0192919969558716
+@repo/search-service:test: A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+@repo/search-service:test: Test Suites: 2 passed, 2 total
+@repo/search-service:test: Tests:       6 passed, 6 total
+@repo/search-service:test: Snapshots:   0 total
+@repo/search-service:test: Time:        5.008 s
+@repo/search-service:test: Ran all test suites.
+@repo/api-clients:test:
+@repo/api-clients:test: > @repo/api-clients@0.1.0 test
+@repo/api-clients:test: > jest --passWithNoTests
+@repo/api-clients:test:
+                        ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test: ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+@repo/api-clients:test: transform: {
+@repo/api-clients:test:     <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+@repo/api-clients:test: },
+@repo/api-clients:test: See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+@repo/api-clients:test:  PASS  src/ClimateScorer.spec.ts (5.573 s)
+@repo/api-clients:test: (node:70896) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test: (node:70897) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test:  PASS  src/openmeteo/OpenMeteoClient.spec.ts (5.819 s)
+@repo/api-clients:test: (node:70898) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test:  PASS  src/restcountries/RestCountriesClient.spec.ts (5.927 s)api-clients:test:
+@repo/api-clients:test: {"level":40,"time":1776629912321,"pid":70897,"hostname":"Samuels-MacBook-Air.local","originalLat":0,"originalLng":0,"fallback":"Cape Town","reason":"No data available for these coordinates","msg":"OpenMeteo: no data for destination [0,0] — substituting nearest capital: Cape Town"}
+@repo/api-clients:test: {"level":40,"time":1776629912325,"pid":70897,"hostname":"Samuels-MacBook-Air.local","originalLat":-8.4,"originalLng":115.2,"fallback":"Singapore","msg":"OpenMeteo: no data for destination [-8.4,115.2] — substituting nearest capital: Singapore"}
+@repo/api-clients:test: {"level":50,"time":1776629912326,"pid":70897,"hostname":"Samuels-MacBook-Air.local","msg":"Total OpenMeteo bounds fetch collapse inherently"}/api-clients:test:
+@repo/api-clients:test: {"level":50,"time":1776629912344,"pid":70897,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"timeout","stack":"Error: timeout\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/openmeteo/OpenMeteoClient.spec.ts:115:35)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)"},"msg":"Exception executing OpenMeteo sequence seamlessly"}
+@repo/api-clients:test: {"level":40,"time":1776629912409,"pid":70898,"hostname":"Samuels-MacBook-Air.local","code":"XX","msg":"RestCountries invalid country code"}
+@repo/api-clients:test: {"level":40,"time":1776629912411,"pid":70898,"hostname":"Samuels-MacBook-Air.local","code":"BAD","msg":"RestCountries invalid country code"}
+@repo/api-clients:test: {"level":50,"time":1776629912412,"pid":70898,"hostname":"Samuels-MacBook-Air.local","code":"ID","statusCode":503,"msg":"RestCountries returned non-200 status"}
+@repo/api-clients:test: {"level":50,"time":1776629912415,"pid":70898,"hostname":"Samuels-MacBook-Air.local","err":[{"code":"invalid_type","expected":"string","received":"undefined","path":["name","official"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["cca2"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["cca3"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["flag"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["region"],"message":"Required"},{"code":"invalid_type","expected":"array","received":"undefined","path":["latlng"],"message":"Required"},{"code":"invalid_type","expected":"number","received":"undefined","path":["population"],"message":"Required"}],"code":"BR","msg":"RestCountries response failed schema validation"}
+@repo/api-clients:test: {"level":40,"time":1776629912418,"pid":70898,"hostname":"Samuels-MacBook-Air.local","msg":"Destination missing alpha-2 country code for enrichment"}
+@repo/api-clients:test: {"level":40,"time":1776629912419,"pid":70898,"hostname":"Samuels-MacBook-Air.local","code":"XX","msg":"RestCountries invalid country code"}
+@repo/api-clients:test: (node:70893) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test:  PASS  src/geodb/GeoDBClient.spec.ts
+@repo/api-clients:test: {"level":40,"time":1776629912529,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912531,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}nts:test:
+@repo/api-clients:test: {"level":30,"time":1776629912531,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}api-clients:test:
+@repo/api-clients:test: {"level":60,"time":1776629912554,"pid":70896,"hostname":"Samuels-MacBook-Air.local","msg":"RapidAPI Limit Structurally Breached. Terminate seed locally actively blocking IP."}
+@repo/api-clients:test: {"level":40,"time":1776629912569,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912569,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912569,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":50,"time":1776629912557,"pid":70896,"hostname":"Samuels-MacBook-Air.local","statusCode":503,"msg":"Unexpected Response entirely explicitly blocking resolution sequence."}
+@repo/api-clients:test: {"level":40,"time":1776629912558,"pid":70896,"hostname":"Samuels-MacBook-Air.local","name":"nowhere","countryCode":"XX","msg":"GeoDB explicitly returned empty matches logically avoiding coordinates"}
+@repo/api-clients:test: {"level":50,"time":1776629912560,"pid":70896,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"network error","stack":"Error: network error\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/geodb/GeoDBClient.spec.ts:93:35)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)"},"name":"bali","countryCode":"ID","msg":"GeoDBClient mapping sequence collapsed tracking dependencies."}
+@repo/api-clients:test: {"level":40,"time":1776629912602,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912602,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912602,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: (node:70894) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test:  PASS  src/TripCostCalculator.spec.ts (6.161 s)
+@repo/api-clients:test: {"level":40,"time":1776629912634,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912634,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}nts:test:
+@repo/api-clients:test: {"level":30,"time":1776629912635,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}api-clients:test:
+@repo/api-clients:test: {"level":40,"time":1776629912666,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912666,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912666,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629912698,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912698,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912698,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":50,"time":1776629912730,"pid":70893,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"FX network down","stack":"Error: FX network down\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/wherenext/WhereNextClient.spec.ts:112:39)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)\n    at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)"},"msg":"Failed tracking FX sequences successfully"}
+@repo/api-clients:test: {"level":40,"time":1776629912732,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912732,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912732,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: (node:70895) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test: (node:70892) Warning: `--localstorage-file` was provided without a valid patht:
+@repo/api-clients:test: (Use `node --trace-warnings ...` to show where the warning was created)ts:test:
+@repo/api-clients:test:  PASS  src/tequila/TequilaClient.spec.ts (6.314 s)
+@repo/api-clients:test:  PASS  src/duffel/DuffelClient.spec.ts (6.28 s)
+@repo/api-clients:test:   ● Console
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in developmentpo/api-clients:test:
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Duffel Create Offer Request Failed: 422
+@repo/api-clients:test:
+@repo/api-clients:test:       139 |
+@repo/api-clients:test:       140 |       if (statusCode !== 200 && statusCode !== 201) {
+@repo/api-clients:test:     > 141 |          console.error(`Duffel Create Offer Request Failed: ${statusCode}`);
+@repo/api-clients:test:           |                  ^
+@repo/api-clients:test:       142 |          return null;
+@repo/api-clients:test:       143 |       }
+@repo/api-clients:test:       144 |
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.createOfferRequest (src/duffel/DuffelClient.ts:141:18)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:101:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Error creating Duffel Offer Request: Error: connection refused
+@repo/api-clients:test:           at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:105:37)
+@repo/api-clients:test:           at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)
+@repo/api-clients:test:           at new Promise (<anonymous>)
+@repo/api-clients:test:           at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)
+@repo/api-clients:test:           at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)
+@repo/api-clients:test:           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+@repo/api-clients:test:           at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)
+@repo/api-clients:test:           at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+@repo/api-clients:test:           at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+@repo/api-clients:test:           at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)
+@repo/api-clients:test:           at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)
+@repo/api-clients:test:           at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)
+@repo/api-clients:test:
+@repo/api-clients:test:       146 |       return res.data.id;
+@repo/api-clients:test:       147 |     } catch (err) {
+@repo/api-clients:test:     > 148 |       console.error('Error creating Duffel Offer Request:', err);
+@repo/api-clients:test:           |               ^
+@repo/api-clients:test:       149 |       return null;
+@repo/api-clients:test:       150 |     }
+@repo/api-clients:test:       151 |   }
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.createOfferRequest (src/duffel/DuffelClient.ts:148:15)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:106:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Duffel List Offers Failed: 500
+@repo/api-clients:test:
+@repo/api-clients:test:       166 |
+@repo/api-clients:test:       167 |       if (statusCode !== 200) {
+@repo/api-clients:test:     > 168 |         console.error(`Duffel List Offers Failed: ${statusCode}`);
+@repo/api-clients:test:           |                 ^
+@repo/api-clients:test:       169 |         return [];
+@repo/api-clients:test:       170 |       }
+@repo/api-clients:test:       171 |
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.listOffers (src/duffel/DuffelClient.ts:168:17)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:156:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Error listing Duffel Offers: Error: timeout
+@repo/api-clients:test:           at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:160:37)
+@repo/api-clients:test:           at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)
+@repo/api-clients:test:           at new Promise (<anonymous>)
+@repo/api-clients:test:           at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)
+@repo/api-clients:test:           at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)
+@repo/api-clients:test:           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+@repo/api-clients:test:           at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)
+@repo/api-clients:test:           at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+@repo/api-clients:test:           at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+@repo/api-clients:test:           at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)
+@repo/api-clients:test:           at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)
+@repo/api-clients:test:           at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)
+@repo/api-clients:test:
+@repo/api-clients:test:       185 |
+@repo/api-clients:test:       186 |     } catch (err) {
+@repo/api-clients:test:     > 187 |       console.error('Error listing Duffel Offers:', err);
+@repo/api-clients:test:           |               ^
+@repo/api-clients:test:       188 |       return [];
+@repo/api-clients:test:       189 |     }
+@repo/api-clients:test:       190 |   }
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.listOffers (src/duffel/DuffelClient.ts:187:15)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:161:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Duffel Get Offer Failed: 503
+@repo/api-clients:test:
+@repo/api-clients:test:       201 |
+@repo/api-clients:test:       202 |       if (statusCode !== 200) {
+@repo/api-clients:test:     > 203 |         console.error(`Duffel Get Offer Failed: ${statusCode}`);
+@repo/api-clients:test:           |                 ^
+@repo/api-clients:test:       204 |         return null;
+@repo/api-clients:test:       205 |       }
+@repo/api-clients:test:       206 |
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.getOffer (src/duffel/DuffelClient.ts:203:17)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:205:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Error getting Duffel Offer: Error: timeout
+@repo/api-clients:test:           at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:209:37)
+@repo/api-clients:test:           at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)
+@repo/api-clients:test:           at new Promise (<anonymous>)
+@repo/api-clients:test:           at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)
+@repo/api-clients:test:           at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)
+@repo/api-clients:test:           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+@repo/api-clients:test:           at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)
+@repo/api-clients:test:           at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+@repo/api-clients:test:           at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+@repo/api-clients:test:           at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)
+@repo/api-clients:test:           at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)
+@repo/api-clients:test:           at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)
+@repo/api-clients:test:
+@repo/api-clients:test:       212 |       return null;
+@repo/api-clients:test:       213 |     } catch (err) {
+@repo/api-clients:test:     > 214 |       console.error('Error getting Duffel Offer:', err);
+@repo/api-clients:test:           |               ^
+@repo/api-clients:test:       215 |       return null;
+@repo/api-clients:test:       216 |     }
+@repo/api-clients:test:       217 |   }
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.getOffer (src/duffel/DuffelClient.ts:214:15)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:210:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Duffel Create Order Failed: 503
+@repo/api-clients:test:
+@repo/api-clients:test:       244 |
+@repo/api-clients:test:       245 |       if (statusCode !== 200 && statusCode !== 201) {
+@repo/api-clients:test:     > 246 |         console.error(`Duffel Create Order Failed: ${statusCode}`);
+@repo/api-clients:test:           |                 ^
+@repo/api-clients:test:       247 |         return null;
+@repo/api-clients:test:       248 |       }
+@repo/api-clients:test:       249 |
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.createOrder (src/duffel/DuffelClient.ts:246:17)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:243:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.error
+@repo/api-clients:test:       Error creating Duffel Order: Error: connection reset
+@repo/api-clients:test:           at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:247:37)
+@repo/api-clients:test:           at Promise.then.completed (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:298:28)
+@repo/api-clients:test:           at new Promise (<anonymous>)
+@repo/api-clients:test:           at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/jest-circus/build/utils.js:231:10)
+@repo/api-clients:test:           at _callCircusTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:316:40)
+@repo/api-clients:test:           at processTicksAndRejections (node:internal/process/task_queues:104:5)
+@repo/api-clients:test:           at _runTest (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:252:3)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:126:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:121:9)
+@repo/api-clients:test:           at run (/Users/samuel/anywhere/node_modules/jest-circus/build/run.js:71:3)
+@repo/api-clients:test:           at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+@repo/api-clients:test:           at jestAdapter (/Users/samuel/anywhere/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+@repo/api-clients:test:           at runTestInternal (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:367:16)
+@repo/api-clients:test:           at runTest (/Users/samuel/anywhere/node_modules/jest-runner/build/runTest.js:444:34)
+@repo/api-clients:test:           at Object.worker (/Users/samuel/anywhere/node_modules/jest-runner/build/testWorker.js:106:12)
+@repo/api-clients:test:
+@repo/api-clients:test:       253 |       if (err instanceof Error && err.message === 'offer_no_longer_available') throw err;
+@repo/api-clients:test:       254 |
+@repo/api-clients:test:     > 255 |       console.error('Error creating Duffel Order:', err);
+@repo/api-clients:test:           |               ^
+@repo/api-clients:test:       256 |       return null;
+@repo/api-clients:test:       257 |     }
+@repo/api-clients:test:       258 |   }
+@repo/api-clients:test:
+@repo/api-clients:test:       at DuffelClient.createOrder (src/duffel/DuffelClient.ts:255:15)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:248:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test:     console.warn
+@repo/api-clients:test:       DUFFEL_ACCESS_TOKEN not set or invalid in development
+@repo/api-clients:test:
+@repo/api-clients:test:       57 |         this.token = envToken.startsWith('duffel_test_') ? envToken : '';
+@repo/api-clients:test:       58 |         if (!this.token && process.env.NODE_ENV === 'development') {
+@repo/api-clients:test:     > 59 |           console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
+@repo/api-clients:test:          |                   ^
+@repo/api-clients:test:       60 |         }
+@repo/api-clients:test:       61 |       }
+@repo/api-clients:test:       62 |     } else {
+@repo/api-clients:test:
+@repo/api-clients:test:       at new DuffelClient (src/duffel/DuffelClient.ts:59:19)
+@repo/api-clients:test:       at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:47:14)
+@repo/api-clients:test:
+@repo/api-clients:test: {"level":40,"time":1776629912765,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912765,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}nts:test:
+@repo/api-clients:test: {"level":30,"time":1776629912765,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}api-clients:test:
+@repo/api-clients:test: {"level":30,"time":1776629912798,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Missing from WhereNext - Re-routed to Mongo for kyoto"}
+@repo/api-clients:test: {"level":40,"time":1776629912801,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912801,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912802,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":50,"time":1776629912803,"pid":70895,"hostname":"Samuels-MacBook-Air.local","status":500,"msg":"Tequila Explicitly blocked internal request globally"}
+@repo/api-clients:test: {"level":40,"time":1776629912833,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on nowhere_city"}
+@repo/api-clients:test: {"level":40,"time":1776629912833,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912833,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912833,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629912864,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on atlantis"}
+@repo/api-clients:test: {"level":40,"time":1776629912865,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912865,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912865,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":50,"time":1776629912897,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Mongo Fallback collapsed inherently."}
+@repo/api-clients:test: {"level":40,"time":1776629912897,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on some_city"}
+@repo/api-clients:test: {"level":40,"time":1776629912899,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912899,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629912899,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629912930,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629912930,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":40,"time":1776629912930,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Prefetch failed with status: 403"}
+@repo/api-clients:test: {"level":40,"time":1776629913961,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on anywhere"}
+@repo/api-clients:test: {"level":40,"time":1776629913962,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629913962,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629913962,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629913993,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629913993,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":50,"time":1776629913993,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+@repo/api-clients:test: {"level":40,"time":1776629915026,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on reykjavik"}
+@repo/api-clients:test: {"level":40,"time":1776629915027,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629915027,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629915027,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629915058,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629915058,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629915058,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629915089,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629915089,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629915089,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test: {"level":40,"time":1776629915119,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"WHERENEXT_API_KEY is natively missing from environment parameters."}
+@repo/api-clients:test: {"level":30,"time":1776629915119,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+@repo/api-clients:test: {"level":30,"time":1776629915119,"pid":70893,"hostname":"Samuels-MacBook-Air.local","msg":"Successfully cached 1 WhereNext Cities inside RAM"}
+@repo/api-clients:test:  PASS  src/wherenext/WhereNextClient.spec.ts (8.611 s)
+@repo/api-clients:test: Test Suites: 8 passed, 8 total
+@repo/api-clients:test: Tests:       98 passed, 98 total
+@repo/api-clients:test: Snapshots:   0 total
+@repo/api-clients:test: Time:        9.421 s, estimated 12 s
+@repo/api-clients:test: Ran all test suites.
+@repo/api-clients:test:
+ Tasks:    10 successful, 10 total
+Cached:    9 cached, 10 total
+  Time:    10.421s
+[main c305329] chore: remove hardcoded secrets and scrub .env.example
+ 3 files changed, 17 insertions(+), 14 deletions(-)

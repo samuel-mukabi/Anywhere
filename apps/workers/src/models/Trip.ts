@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ITrip extends Document {
   userId: string; // UUID from PostgreSQL
   destinationId: mongoose.Types.ObjectId; // Pointer to NoSQL Destination Entry
-  searchParams: Record<string, any>; // Flexible caching map allowing fast replication
+  searchParams: Record<string, unknown>; // Flexible caching map allowing fast replication
   totalCost: number;
   breakdown: Record<string, number>;
   savedAt: Date;

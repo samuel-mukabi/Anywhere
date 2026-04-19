@@ -43,9 +43,6 @@ export function NavBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Close drawer on route change
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
-
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
@@ -224,7 +221,7 @@ export function NavBar() {
               href="/signup"
               className="text-center px-4 py-3 bg-terracotta hover:bg-terracotta-600 text-parchment-50 text-sm font-cera font-semibold rounded-pill transition-colors duration-200"
             >
-              Get started — it's free
+              Get started — it&apos;s free
             </Link>
           </div>
 

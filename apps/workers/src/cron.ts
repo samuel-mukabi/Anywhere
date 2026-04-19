@@ -2,6 +2,8 @@ import cron from 'node-cron';
 import mongoose from 'mongoose';
 import pino from 'pino';
 import { Destination } from './models/Destination';
+import { bootstrapSeedCron } from './seedDestinationCosts';
+import { bootstrapClimateCron } from './seedClimateProfiles';
 
 const logger = pino({ level: 'info' });
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/anywhere_catalog_dev';
@@ -17,13 +19,13 @@ async function syncExternalData() {
       await mongoose.connect(MONGO_URI);
   }
 
-  // Simulated massive streaming operation hitting Numbeo APIs
+  // Simulated massive streaming operation hitting WhereNext and Teleport APIs
   try {
       const records = await Destination.find({});
       logger.info(`Validating ${records.length} stored locations...`);
 
       for (const dest of records) {
-          // Mock data mutation simulating Numbeo pulling
+          // Mock data mutation simulating WhereNext pulling
           dest.avgCosts.dailyLiving += Math.floor(Math.random() * 5) - 2; // Fluctuates +-2 dollars
           
           // Hidden gem score fluctuates slowly
@@ -49,6 +51,12 @@ cron.schedule('0 0 * * *', () => {
 });
 
 logger.info('Cron Engine initialized and idling. Waiting for schedule limits.');
+
+// Tie Native BullMQ Schedule internally alongside Node's cron locally
+bootstrapSeedCron().catch(err => logger.error('Failed to bind Nightly BullMQ Seed bounds'));
+
+// Tie the Quarterly Climate CRON into BullMQ
+bootstrapClimateCron().catch(err => logger.error('Failed to bind Quarterly Climate Bounds'));
 
 // Connect proactively so mongoose is warmed up
 mongoose.connect(MONGO_URI)

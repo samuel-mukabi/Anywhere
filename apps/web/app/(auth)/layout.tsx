@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 /**
  * (auth) layout — login / signup / forgot-password
@@ -19,13 +20,13 @@ export default function AuthLayout({
     <div className="min-h-screen bg-parchment flex flex-col">
       {/* Subtle brand mark */}
       <div className="pt-8 pb-6 flex-center">
-        <a
+        <Link
           href="/"
           className="font-astoria text-2xl font-light tracking-tight text-nearblack hover:text-terracotta transition-colors"
           aria-label="Anywhere — home"
         >
           Anywhere
-        </a>
+        </Link>
       </div>
 
       {/* Auth card */}
@@ -40,9 +41,9 @@ export default function AuthLayout({
         <p className="text-xs font-cera text-nearblack-600">
           &copy; {new Date().getFullYear()} Anywhere Travel, Inc.
           {' · '}
-          <a href="/privacy" className="hover:text-nearblack underline underline-offset-2">Privacy</a>
+          <Link href="/privacy" className="hover:text-nearblack underline underline-offset-2">Privacy</Link>
           {' · '}
-          <a href="/terms" className="hover:text-nearblack underline underline-offset-2">Terms</a>
+          <Link href="/terms" className="hover:text-nearblack underline underline-offset-2">Terms</Link>
         </p>
       </footer>
     </div>

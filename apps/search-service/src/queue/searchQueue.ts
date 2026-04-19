@@ -1,7 +1,7 @@
 import { Queue, Worker } from 'bullmq';
 import { cacheRedis, setCachedSearch } from '../lib/cache';
 import { SearchQuery } from '../schema/search';
-import { DestinationRanker } from '../logic/DestinationRanker';
+import { DestinationRanker, type FlightOffer } from '../DestinationRanker';
 import { emitSearchCompleted } from '../lib/kafka';
 
 // Define the shape of our background job
@@ -11,7 +11,7 @@ export interface SearchJobPayload {
 }
 
 // 1. Setup the Producer (To allow routes to add jobs)
-export const searchQueue = new Queue<SearchJobPayload>('FlightSearchQueue', {
+export const searchQueue = new Queue<SearchJobPayload, unknown, 'evaluate-destination'>('FlightSearchQueue', {
   connection: cacheRedis,
   defaultJobOptions: {
     attempts: 2,
@@ -31,7 +31,20 @@ if (process.env.NODE_ENV !== 'test') {
     // Perform complex parallel outbound fetching algorithms safely
     console.log(`[Worker] Started Engine Algorithm for Job ${job.id}`);
     
-    const results = await ranker.computeTopDestinations(job.data.query);
+    // Mock flight fetching layer resolving explicitly upstream later naturally 
+    const mockFlightOffers: FlightOffer[] = [];
+    const travelMonth = new Date(job.data.query.dateFrom).getMonth() + 1;
+
+    const rankParams = {
+        flightOffers: mockFlightOffers,
+        budget: job.data.query.budget,
+        vibes: job.data.query.vibes,
+        travelMonth,
+        nights: job.data.query.duration,
+        userTier: 'free' as const
+    };
+
+    const results = await ranker.rank(rankParams);
 
     // Save final raw output natively into Fast-Retrieval Redis Memory layer for the polling client
     await setCachedSearch(job.data.hash, results);
@@ -39,7 +52,7 @@ if (process.env.NODE_ENV !== 'test') {
     // Broadcast Analytics asynchronously into Kafka
     await emitSearchCompleted({
       totalResults: results.length,
-      topDestination: results.length > 0 ? results[0].city : 'None',
+      topDestination: results.length > 0 ? results[0].destination?.name || 'None' : 'None',
       queryBudget: job.data.query.budget
     });
 

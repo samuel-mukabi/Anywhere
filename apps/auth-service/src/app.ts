@@ -4,6 +4,8 @@ import fastifyCookie from '@fastify/cookie';
 import { oauthRoutes } from './routes/oauth';
 import { sessionRoutes } from './routes/session';
 import { webhookRoutes } from './routes/webhooks';
+import { billingRoutes } from './routes/billing';
+import { adminRoutes } from './routes/admin';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const logger = pino({
@@ -34,6 +36,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(oauthRoutes);
   await app.register(sessionRoutes);
   await app.register(webhookRoutes);
+  await app.register(billingRoutes);
+  await app.register(adminRoutes, { prefix: '/admin' });
 
   // Health endpoint internally 
   app.get('/health', async () => ({ status: 'up' }));

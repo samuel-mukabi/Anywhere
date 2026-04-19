@@ -1,0 +1,12 @@
+{
+  "DPS": { "name": "Bali", "lat": -8.4095, "lon": 115.1889 },
+  "BKK": { "name": "Bangkok", "lat": 13.7563, "lon": 100.5018 },
+  "LIS": { "name": "Lisbon", "lat": 38.7223, "lon": -9.1393 },
+  "MDE": { "name": "Medellin", "lat": 6.2442, "lon": -75.5658 },
+  "TBS": { "name": "Tbilisi", "lat": 41.7151, "lon": 44.8271 },
+  "PAR": { "name": "Paris", "lat": 48.8566, "lon": 2.3522 },
+  "JPN": { "name": "Kyoto", "lat": 35.0116, "lon": 135.7681 },
+  "ZAF": { "name": "Cape Town", "lat": -33.9249, "lon": 18.4232 },
+  "ARG": { "name": "Buenos Aires", "lat": -34.6037, "lon": -58.3816 },
+  "CZE": { "name": "Prague", "lat": 50.0755, "lon": 14.4378 }
+}
