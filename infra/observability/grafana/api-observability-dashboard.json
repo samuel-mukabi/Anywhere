@@ -1,0 +1,101 @@
+{
+  "title": "Anywhere API Observability",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "tags": ["anywhere", "api", "search-service"],
+  "templating": {
+    "list": [
+      {
+        "name": "api",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(api_calls_total, api)",
+        "refresh": 1,
+        "multi": false,
+        "includeAll": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Call Volume",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(api_calls_total{api=\"$api\"}[5m]))",
+          "legendFormat": "calls/s"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
+    },
+    {
+      "title": "Error Rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(api_calls_total{api=\"$api\",status=~\"5..|error\"}[5m])) / clamp_min(sum(rate(api_calls_total{api=\"$api\"}[5m])), 0.0001)",
+          "legendFormat": "error rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+    },
+    {
+      "title": "Latency p50/p95 (ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(api_latency_ms_bucket{api=\"$api\"}[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(api_latency_ms_bucket{api=\"$api\"}[5m])) by (le))",
+          "legendFormat": "p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
+    },
+    {
+      "title": "Cache Hit Rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(api_cache_events_total{api=\"$api\",event=\"hit\"}[5m])) / clamp_min(sum(rate(api_cache_events_total{api=\"$api\"}[5m])), 0.0001)",
+          "legendFormat": "hit rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
+    },
+    {
+      "title": "Fallback Trigger Rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(api_fallback_events_total{api=\"$api\"}[5m]))",
+          "legendFormat": "fallbacks/s"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 }
+    }
+  ]
+}

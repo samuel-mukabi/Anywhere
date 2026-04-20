@@ -1,12 +1,13 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { Destination } from '@repo/workers/src/models/Destination';
+import { Destination } from '@anywhere/workers/src/models/Destination';
 import {
-  TequilaClient,
+  TravelPayoutsClient,
   climateScorer,
   TripCostCalculator,
+  travelRiskClient,
   type DailyBudgetEstimate,
-} from '@repo/api-clients';
+} from '@anywhere/api-clients';
 import { cacheRedis } from '../lib/cache';
 
 const DetailQuerySchema = z.object({
@@ -16,7 +17,7 @@ const DetailQuerySchema = z.object({
   travelMonth: z.coerce.number().min(1).max(12).optional()
 });
 
-const tequila = new TequilaClient();
+const travelPayouts = new TravelPayoutsClient(process.env.TRAVELPAYOUTS_TOKEN as string);
 
 export async function destinationRoutes(app: FastifyInstance) {
 
@@ -33,6 +34,10 @@ export async function destinationRoutes(app: FastifyInstance) {
 
       const { budget, nights, currency, travelMonth } = parsed.data;
       const normalizedCurrency = currency.toUpperCase();
+      const context = {
+        userId: req.headers['x-user-id']?.toString(),
+        searchId: req.headers['x-search-id']?.toString(),
+      };
 
       // Extract native Tier seamlessly organically tracking PRO inputs locally if bound gracefully via Auth layer
       const userTier: 'free' | 'pro' = req.user?.tier === 'pro' ? 'pro' : 'free';
@@ -65,12 +70,17 @@ export async function destinationRoutes(app: FastifyInstance) {
           flightDeepLink = parsedCache.deepLink;
           flightDataFreshness = 'cached';
       } else {
-           const tequilaRes = await tequila.searchToDestination(isocode, 'NYC', travelMonth?.toString() || '');
-           if (tequilaRes) {
-               flightPrice = tequilaRes.price;
-               flightDeepLink = tequilaRes.deepLink;
+           const travelPayoutsRes = await travelPayouts.searchToDestination(
+            isocode,
+            'NYC',
+            travelMonth?.toString() || '',
+            context,
+           );
+           if (travelPayoutsRes) {
+               flightPrice = travelPayoutsRes.price;
+               flightDeepLink = travelPayoutsRes.deepLink;
                // 20 Minute TTL natively protecting API targets smoothly securely reliably
-               await cacheRedis.setex(flightCacheKey, 1200, JSON.stringify(tequilaRes));
+               await cacheRedis.setex(flightCacheKey, 1200, JSON.stringify(travelPayoutsRes));
            } else {
                // Fallback tightly mapping explicit logical constants smoothly gracefully inherently
                flightPrice = dest.avgCosts?.flightEst || 600;
@@ -114,7 +124,28 @@ export async function destinationRoutes(app: FastifyInstance) {
           climateTag = climateScorer.climateTag(climateScore);
       }
 
-      const safetyScore = dest.safetyScore || 50;
+      // Live Travel Risk Integration
+      let safetyScore = dest.safetyScore || 50;
+      let travelRiskData = null;
+      let safetyFreshness = 'gpi2025';
+
+      try {
+        const riskResult = await travelRiskClient.getRiskScore(dest.iso, {
+          userId: req.user?.tier === 'pro' ? 'pro' : 'free',
+        });
+        
+        if (riskResult) {
+          safetyScore = Math.max(0, Math.min(100, Math.round(((5.0 - riskResult.risk_score) / 4.0) * 100)));
+          safetyFreshness = 'live';
+          travelRiskData = {
+            riskScore: riskResult.risk_score,
+            advisoryLevel: riskResult.advisory_level,
+            activeAlerts: riskResult.active_alerts,
+          };
+        }
+      } catch (err) {
+        app.log.error({ err }, "Fallback gracefully, TravelRisk failed");
+      }
       
       const whyItFits: string[] = [];
       if (calc.totalCost !== null && budget >= calc.totalCost) {
@@ -139,6 +170,7 @@ export async function destinationRoutes(app: FastifyInstance) {
           climateTag,
           climateScore: Math.round(climateScore),
           safetyScore,
+          travelRisk: travelRiskData,
           whyItFits,
           bookingOptions: {
              flight: flightDeepLink,
@@ -148,7 +180,7 @@ export async function destinationRoutes(app: FastifyInstance) {
              flightPrice: flightDataFreshness,
              colData: dest.avgCosts?.dailyLiving ? 'live' : 'seeded',
              climate: 'seeded',
-             safety: 'gpi2025'
+             safety: safetyFreshness
           }
       };
 

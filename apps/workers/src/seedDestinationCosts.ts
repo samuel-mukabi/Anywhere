@@ -3,7 +3,7 @@ import { redisClient } from '@repo/redis/src/client';
 import { nightlySeedQueue } from '@repo/redis/src/queues';
 import mongoose from 'mongoose';
 import pino from 'pino';
-import { WhereNextClient } from '@repo/api-clients';
+import { WhereNextClient } from '@anywhere/api-clients';
 import { Destination } from './models/Destination';
 
 const logger = pino({ level: 'info' });

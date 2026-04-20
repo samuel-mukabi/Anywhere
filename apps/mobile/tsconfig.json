@@ -1,0 +1,45 @@
+{
+  "extends": "../../packages/config/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "lib": [
+      "esnext"
+    ],
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@anywhere/types": [
+        "../../packages/types/src"
+      ],
+      "@anywhere/types/*": [
+        "../../packages/types/src/*"
+      ],
+      "@anywhere/api-clients": [
+        "../../packages/api-clients/src"
+      ],
+      "@anywhere/api-clients/*": [
+        "../../packages/api-clients/src/*"
+      ],
+      "@repo/types": [
+        "../../packages/types/src"
+      ],
+      "@repo/types/*": [
+        "../../packages/types/src/*"
+      ]
+    },
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

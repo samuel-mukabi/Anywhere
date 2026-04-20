@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import pino from 'pino';
 import { Destination } from './models/Destination';
-import { GeoDBClient } from '@repo/api-clients/src/geodb/GeoDBClient';
-import { restCountriesClient } from '@repo/api-clients/src/restcountries/RestCountriesClient';
+import { GeoDBClient, restCountriesClient } from '@anywhere/api-clients';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,7 +12,7 @@ const fallbackPath = path.join(__dirname, 'data', 'destination-coords-fallback.j
 const COORDS_FALLBACK = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/anywhere_catalog_dev';
-const geoDB = new GeoDBClient(process.env.RAPIDAPI_KEY || '');
+const geoDB = new GeoDBClient();
 
 const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 

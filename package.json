@@ -9,15 +9,21 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:mobile": "turbo run dev --filter=@repo/mobile",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "node scripts/patch-expo-router.js"
   },
   "devDependencies": {
     "turbo": "^2.0.0",
     "husky": "^9.0.0",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   }
 }

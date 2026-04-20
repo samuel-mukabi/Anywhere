@@ -1,11 +1,11 @@
 import pino from 'pino';
 import type { FlattenMaps } from 'mongoose';
-import { Destination, IDestination } from '@repo/workers/src/models/Destination';
+import { Destination, IDestination } from '@anywhere/workers/src/models/Destination';
 import {
   TripCostCalculator,
   type DailyBudgetEstimate,
   type TripFlightPricing,
-} from '@repo/api-clients';
+} from '@anywhere/api-clients';
 import { emitSearchRanked } from './lib/kafka';
 
 const logger = pino({ level: 'info' });

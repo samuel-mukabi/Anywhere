@@ -1,5 +1,9 @@
 import { request } from 'undici';
 import { z } from 'zod';
+import {
+  recordApiCall,
+  type ApiLogContext,
+} from '../observability';
 
 export const DuffelSliceSchema = z.object({
   duration: z.string(), // ISO8601 duration
@@ -44,26 +48,18 @@ interface DuffelJsonEnvelope<T> {
 
 export class DuffelClient {
   private token: string;
+  private isLiveMode: boolean;
   private isSandbox: boolean;
   private baseUrl = 'https://api.duffel.com';
 
-  constructor(token: string) {
-    // Development constraint: Prevent live charges
-    if (process.env.NODE_ENV === 'development') {
-      if (token.startsWith('duffel_test_')) {
-        this.token = token;
-      } else {
-        const envToken = process.env.DUFFEL_ACCESS_TOKEN || '';
-        this.token = envToken.startsWith('duffel_test_') ? envToken : '';
-        if (!this.token && process.env.NODE_ENV === 'development') {
-          console.warn('DUFFEL_ACCESS_TOKEN not set or invalid in development');
-        }
-      }
-    } else {
-      this.token = token;
-    }
+  constructor(testToken: string, liveToken: string, isLiveMode?: boolean) {
+    this.isLiveMode = isLiveMode ?? process.env.NODE_ENV === 'production';
+    this.token = this.isLiveMode ? liveToken : testToken;
+    this.isSandbox = !this.isLiveMode;
 
-    this.isSandbox = this.token.startsWith('duffel_test_');
+    if (!this.token && process.env.NODE_ENV === 'development') {
+        console.warn(`DUFFEL_${this.isLiveMode ? 'LIVE' : 'TEST'}_TOKEN not set or invalid.`);
+    }
   }
 
   private get headers() {
@@ -114,7 +110,8 @@ export class DuffelClient {
     origin: string,
     destination: string,
     departureDate: string,
-    passengers: number = 1
+    passengers: number = 1,
+    context: ApiLogContext = {},
   ): Promise<string | null> {
     const payload = {
       data: {
@@ -131,10 +128,20 @@ export class DuffelClient {
     };
 
     try {
+      const startedAt = Date.now();
       const { statusCode, body } = await request(`${this.baseUrl}/air/offer_requests`, {
         method: 'POST',
         headers: this.headers,
         body: JSON.stringify(payload),
+      });
+      recordApiCall({
+        api: 'duffel',
+        method: 'POST',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
       });
 
       if (statusCode !== 200 && statusCode !== 201) {
@@ -145,6 +152,15 @@ export class DuffelClient {
       const res = (await body.json()) as DuffelJsonEnvelope<{ id: string }>;
       return res.data.id;
     } catch (err) {
+      recordApiCall({
+        api: 'duffel',
+        method: 'POST',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
       console.error('Error creating Duffel Offer Request:', err);
       return null;
     }
@@ -153,15 +169,25 @@ export class DuffelClient {
   /**
    * GET /air/offers?offer_request_id={id}&sort=total_amount
    */
-  public async listOffers(offerRequestId: string): Promise<BookingOffer[]> {
+  public async listOffers(offerRequestId: string, context: ApiLogContext = {}): Promise<BookingOffer[]> {
     try {
       const url = new URL(`${this.baseUrl}/air/offers`);
       url.searchParams.set('offer_request_id', offerRequestId);
       url.searchParams.set('sort', 'total_amount');
 
+      const startedAt = Date.now();
       const { statusCode, body } = await request(url.toString(), {
         method: 'GET',
         headers: this.headers,
+      });
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
       });
 
       if (statusCode !== 200) {
@@ -184,6 +210,15 @@ export class DuffelClient {
       return parsedOffers;
 
     } catch (err) {
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
       console.error('Error listing Duffel Offers:', err);
       return [];
     }
@@ -192,11 +227,21 @@ export class DuffelClient {
   /**
    * GET /air/offers/{id}
    */
-  public async getOffer(offerId: string): Promise<BookingOffer | null> {
+  public async getOffer(offerId: string, context: ApiLogContext = {}): Promise<BookingOffer | null> {
     try {
+      const startedAt = Date.now();
       const { statusCode, body } = await request(`${this.baseUrl}/air/offers/${offerId}`, {
         method: 'GET',
         headers: this.headers,
+      });
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
       });
 
       if (statusCode !== 200) {
@@ -211,6 +256,15 @@ export class DuffelClient {
       }
       return null;
     } catch (err) {
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
       console.error('Error getting Duffel Offer:', err);
       return null;
     }
@@ -221,7 +275,11 @@ export class DuffelClient {
    * @param offerId - The exact ID of the verified offer.
    * @param passengers - Array of passengers mirroring Duffel's identity bounds.
    */
-  public async createOrder(offerId: string, passengers: DuffelPassenger[]): Promise<string | null> {
+  public async createOrder(
+    offerId: string,
+    passengers: DuffelPassenger[],
+    context: ApiLogContext = {},
+  ): Promise<string | null> {
     const payload = {
       data: {
         type: 'instant',
@@ -231,10 +289,20 @@ export class DuffelClient {
     };
 
     try {
+      const startedAt = Date.now();
       const { statusCode, body } = await request(`${this.baseUrl}/air/orders`, {
         method: 'POST',
         headers: this.headers,
         body: JSON.stringify(payload),
+      });
+      recordApiCall({
+        api: 'duffel',
+        method: 'POST',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: statusCode === 422,
+        ...context,
       });
 
       if (statusCode === 422) {
@@ -254,6 +322,42 @@ export class DuffelClient {
       
       console.error('Error creating Duffel Order:', err);
       return null;
+    }
+  }
+
+  public async ping(context: ApiLogContext = {}): Promise<{ status: 'healthy' | 'degraded' | 'down'; latencyMs: number }> {
+    const startedAt = Date.now();
+    try {
+      const { statusCode, body } = await request(`${this.baseUrl}/air/airlines?limit=1`, {
+        method: 'GET',
+        headers: this.headers,
+      });
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
+      });
+      await body.dump(); // consume to avoid socket leak
+      if (statusCode >= 500) return { status: 'down', latencyMs };
+      if (statusCode >= 400) return { status: 'degraded', latencyMs };
+      return { status: 'healthy', latencyMs };
+    } catch (_error: unknown) {
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'duffel',
+        method: 'GET',
+        latencyMs,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
+      return { status: 'down', latencyMs };
     }
   }
 }

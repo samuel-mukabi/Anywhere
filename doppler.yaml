@@ -5,9 +5,9 @@
 #   doppler setup
 # to authenticate and link your local environment.
 #
-# Each developer's machine will use the 'dev' config.
+# Each developer's machine will use the 'development' config.
 # CI overrides the config via DOPPLER_TOKEN environment variable.
 
 setup:
   project: anywhere
-  config: dev
+  config: development

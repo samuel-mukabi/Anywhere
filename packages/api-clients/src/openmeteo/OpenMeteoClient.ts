@@ -1,6 +1,11 @@
 import { request } from 'undici';
 import { redisClient } from '@repo/redis/src/client';
 import pino from 'pino';
+import {
+  apiCacheEventsTotal,
+  recordApiCall,
+  type ApiLogContext,
+} from '../observability';
 
 const logger = pino({ level: 'info' });
 
@@ -84,19 +89,28 @@ export class OpenMeteoClient {
   /**
    * Queries bounding sequences hitting archive matrices cleanly translating daily bounds into Month aggregated arrays natively.
    */
-  public async getMonthlyClimate(lat: number, lng: number, year: number): Promise<MonthlyClimate[]> {
+  public async getMonthlyClimate(
+    lat: number,
+    lng: number,
+    year: number,
+    context: ApiLogContext = {},
+  ): Promise<MonthlyClimate[]> {
     const redisKey = `climate:${lat.toFixed(2)}:${lng.toFixed(2)}:${year}`;
 
     try {
         // 1. Transparent Caching Layer locking bounds down perfectly out to 90 Days safely preventing spikes
         const cache = await redisClient.get(redisKey);
-        if (cache) return JSON.parse(cache);
+        if (cache) {
+          apiCacheEventsTotal.inc({ api: 'openmeteo', event: 'hit' });
+          return JSON.parse(cache) as MonthlyClimate[];
+        }
+        apiCacheEventsTotal.inc({ api: 'openmeteo', event: 'miss' });
 
         let fetchLat = lat;
         let fetchLng = lng;
 
         // 2. Primary fetch
-        let result = await this.executeFetch(fetchLat, fetchLng, year);
+        let result = await this.executeFetch(fetchLat, fetchLng, year, false, context);
 
         // 3. Fallback: Open-Meteo returns { error: true, reason: '...' } with HTTP 400
         //    when no historical data exists for the coordinates supplied.
@@ -116,7 +130,7 @@ export class OpenMeteoClient {
             fetchLat = nearest.lat;
             fetchLng = nearest.lng;
 
-            result = await this.executeFetch(fetchLat, fetchLng, year);
+            result = await this.executeFetch(fetchLat, fetchLng, year, true, context);
         }
 
         if (!result || !result.daily) {
@@ -136,7 +150,13 @@ export class OpenMeteoClient {
     }
   }
 
-  private async executeFetch(lat: number, lng: number, year: number): Promise<OpenMeteoArchiveResponse | null> {
+  private async executeFetch(
+    lat: number,
+    lng: number,
+    year: number,
+    fallbackUsed: boolean,
+    context: ApiLogContext,
+  ): Promise<OpenMeteoArchiveResponse | null> {
       const url = new URL(this.baseUrl);
       url.searchParams.set('latitude', lat.toString());
       url.searchParams.set('longitude', lng.toString());
@@ -145,7 +165,17 @@ export class OpenMeteoClient {
       url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration');
       url.searchParams.set('timezone', 'auto'); // Resolves local epoch buckets
 
+      const startedAt = Date.now();
       const { statusCode, body } = await request(url.toString(), { method: 'GET' });
+      recordApiCall({
+        api: 'openmeteo',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed,
+        ...context,
+      });
 
       if (statusCode === 400) {
           // OpenMeteo flags bad coordinates natively mapping across 400 matrices.
@@ -155,6 +185,45 @@ export class OpenMeteoClient {
       if (statusCode !== 200) return null;
 
       return (await body.json()) as OpenMeteoArchiveResponse;
+  }
+
+  public async ping(context: ApiLogContext = {}): Promise<{ status: 'healthy' | 'degraded' | 'down'; latencyMs: number }> {
+    const startedAt = Date.now();
+    try {
+      const url = new URL(this.baseUrl);
+      url.searchParams.set('latitude', '51.5074');
+      url.searchParams.set('longitude', '-0.1278');
+      url.searchParams.set('start_date', '2024-01-01');
+      url.searchParams.set('end_date', '2024-01-02');
+      url.searchParams.set('daily', 'temperature_2m_max');
+      const { statusCode, body } = await request(url.toString(), { method: 'GET' });
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'openmeteo',
+        method: 'GET',
+        latencyMs,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
+      });
+      await body.dump(); // consume to avoid socket leak
+      if (statusCode >= 500) return { status: 'down', latencyMs };
+      if (statusCode >= 400) return { status: 'degraded', latencyMs };
+      return { status: 'healthy', latencyMs };
+    } catch (_error: unknown) {
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'openmeteo',
+        method: 'GET',
+        latencyMs,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
+      return { status: 'down', latencyMs };
+    }
   }
 
   private aggregateDailyToMonthly(daily: OpenMeteoDailySeries): MonthlyClimate[] {

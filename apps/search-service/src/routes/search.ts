@@ -1,8 +1,12 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { SearchQuerySchema } from '../schema/search';
-import { getCachedSearch } from '../lib/cache';
+import { getCachedSearch, cacheRedis } from '../lib/cache';
 import { searchQueue } from '../queue/searchQueue';
+
+const airports = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/airports.json'), 'utf8'));
 
 export async function searchRoutes(app: FastifyInstance) {
 
@@ -20,16 +24,41 @@ export async function searchRoutes(app: FastifyInstance) {
 
     const payload = parsed.data;
 
+    // Resolve IATA
+    const departureIATA = airports[payload.departureRegion] || payload.departureRegion;
+    // Update payload or pass it separately to hash
+
     // 2. Deterministic Request Hashing (Used as strict Cache Key AND Job Dedup strategy)
     const hashData = JSON.stringify({
       bdgt: payload.budget,
-      dpRegion: payload.departureRegion,
+      dpIATA: departureIATA,
       from: payload.dateFrom,
       to: payload.dateTo,
       vibes: payload.vibes.sort() // Sort prevents Array order bypassing cache keys
     });
     
     const searchHash = crypto.createHash('sha256').update(hashData).digest('hex');
+
+    // 2.5. Search-Specific Rate Limiting
+    const userId = req.headers['x-user-id']?.toString() || 'anonymous';
+    const userTier = req.headers['x-user-tier']?.toString() || 'free';
+    const rateLimitKey = `rl:search:${userId}`;
+    const limit = userTier === 'pro' ? 30 : 5;
+    
+    if (userId !== 'anonymous') {
+      const currentCount = await cacheRedis.incr(rateLimitKey);
+      if (currentCount === 1) {
+        await cacheRedis.expire(rateLimitKey, 3600);
+      }
+      if (currentCount > limit) {
+        const ttl = await cacheRedis.ttl(rateLimitKey);
+        return reply.status(429).header('Retry-After', ttl).send({ 
+          error: 'Search rate limit exceeded',
+          limit,
+          resetInSeconds: ttl
+        });
+      }
+    }
 
     // 3. Cache Short-Circuit Evaluation
     const cachedResponse = await getCachedSearch(searchHash);
@@ -48,7 +77,7 @@ export async function searchRoutes(app: FastifyInstance) {
     // Uses searchHash as Job ID ensuring 10 simultaneous identical clicks don't DDOS downstream API targets
     const job = await searchQueue.add('evaluate-destination', {
         hash: searchHash,
-        query: payload
+        query: { ...payload, departureRegion: departureIATA }
     }, { jobId: searchHash });
 
     app.log.info({ jobId: job.id }, 'Dispatched algorithm analysis strictly to background worker');

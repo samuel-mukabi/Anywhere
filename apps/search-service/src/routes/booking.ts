@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { DuffelClient } from '@repo/api-clients';
+import { DuffelClient } from '@anywhere/api-clients';
 import { bookingEventsQueue } from '@repo/redis/src/queues';
 import { supabaseAdmin } from '../lib/supabase';
-import { KiwiAdapter } from '../adapters/KiwiAdapter';
+import { TravelPayoutsClient } from '@anywhere/api-clients';
 
 const PassengerSchema = z.object({
   id: z.string(),
@@ -19,8 +19,11 @@ const PassengerSchema = z.object({
 type Passenger = z.infer<typeof PassengerSchema>;
 
 export async function bookingRoutes(app: FastifyInstance) {
-  const duffel = new DuffelClient(process.env.DUFFEL_ACCESS_TOKEN || '');
-  const kiwi = new KiwiAdapter();
+  const duffel = new DuffelClient(
+    process.env.DUFFEL_TEST_TOKEN || '',
+    process.env.DUFFEL_LIVE_TOKEN || ''
+  );
+  const travelPayouts = new TravelPayoutsClient(process.env.TRAVELPAYOUTS_TOKEN || '');
 
   /**
    * POST /booking/confirm-price
@@ -29,12 +32,16 @@ export async function bookingRoutes(app: FastifyInstance) {
     '/confirm-price',
     async (req, reply) => {
       const { offerId, baselinePrice } = req.body;
+      const context = {
+        userId: req.headers['x-user-id']?.toString(),
+        searchId: req.headers['x-search-id']?.toString(),
+      };
 
       if (!offerId || !baselinePrice) {
         return reply.code(400).send({ error: 'Missing offerId or baselinePrice' });
       }
 
-      const offer = await duffel.getOffer(offerId);
+      const offer = await duffel.getOffer(offerId, context);
 
       if (!offer) {
         return reply.code(404).send({ error: 'Offer not safely recoverable' });
@@ -69,6 +76,10 @@ export async function bookingRoutes(app: FastifyInstance) {
     '/create-order',
     async (req, reply) => {
       const { offerId, passengers, userId, destination, origin, departureDate } = req.body;
+      const context = {
+        userId,
+        searchId: req.headers['x-search-id']?.toString(),
+      };
 
       // 1. Zod native validation
       const parsedPassengers = z.array(PassengerSchema).safeParse(passengers);
@@ -79,14 +90,14 @@ export async function bookingRoutes(app: FastifyInstance) {
 
       try {
         // 2. Transact Order Execution over Duffel SDK safely
-        const orderId = await duffel.createOrder(offerId, parsedPassengers.data);
+        const orderId = await duffel.createOrder(offerId, parsedPassengers.data, context);
 
         if (!orderId) {
           throw new Error('System unverified Duffel state natively');
         }
 
         // 3. Re-verify the price natively locked during transaction
-        const offer = await duffel.getOffer(offerId); 
+        const offer = await duffel.getOffer(offerId, context); 
 
         // 4. Write explicitly to PostgreSQL tracking the conversion internally
         const { error: dbError } = await supabaseAdmin.from('bookings').insert([{
@@ -116,13 +127,14 @@ export async function bookingRoutes(app: FastifyInstance) {
          // Handle Native Flight Collapse bounds explicitly
          if (err instanceof Error && err.message === 'offer_no_longer_available') {
             app.log.warn({ offerId }, 'Executing Native Fallback for expired Duffel Offer');
-            
-            // Re-trigger Tequila locally pushing a new flight parameter cost back to the User interface seamlessly
-            const newCost = await kiwi.getEstimatedFlightCost(origin, destination, departureDate);
-            
-            return reply.code(422).send({ 
-              error: 'offer_no_longer_available', 
-              fallbackPriceEstimate: newCost 
+
+            // Re-search via TravelPayouts to return a fresh price estimate
+            const fallbackOffer = await travelPayouts.searchToDestination(destination, origin, departureDate, context);
+
+            return reply.code(422).send({
+              error: 'offer_no_longer_available',
+              fallbackPriceEstimate: fallbackOffer?.price ?? null,
+              fallbackDeepLink: fallbackOffer?.deepLink ?? null,
             });
          }
 

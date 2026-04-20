@@ -1,4 +1,5 @@
 import Fastify, { FastifyInstance } from 'fastify';
+import cors from '@fastify/cors';
 import pino from 'pino';
 import { setupJwtPlugin } from './plugins/jwt';
 import { setupRateLimit } from './plugins/rate-limit';
@@ -34,7 +35,14 @@ export async function buildApp(): Promise<FastifyInstance> {
     }, 'Request completed');
   });
 
-  // 1. Setup Redis (Used by Rate Limiter)
+  // 1. Setup CORS
+  await app.register(cors, {
+    origin: process.env.NODE_ENV === 'production' 
+      ? ['https://anywhere.app', /\.anywhere\.app$/] 
+      : true,
+  });
+
+  // 2. Setup Redis (Used by Rate Limiter)
   await app.register(setupRedis);
 
   // 2. Register JWT Authentication (extracts `req.user` & `tier`)

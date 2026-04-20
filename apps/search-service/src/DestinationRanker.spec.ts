@@ -1,8 +1,8 @@
 import { DestinationRanker, SearchParams, FlightOffer } from './DestinationRanker';
-import { Destination } from '@repo/workers/src/models/Destination';
+import { Destination } from '@anywhere/workers/src/models/Destination';
 import { emitSearchRanked } from './lib/kafka';
 
-jest.mock('@repo/workers/src/models/Destination', () => ({
+jest.mock('@anywhere/workers/src/models/Destination', () => ({
     Destination: {
         find: jest.fn()
     }

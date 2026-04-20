@@ -4,7 +4,7 @@ import { parse } from 'csv-parse/sync';
 import mongoose from 'mongoose';
 import pino from 'pino';
 import { Destination } from './models/Destination';
-import { restCountriesClient } from '@repo/api-clients/src/restcountries/RestCountriesClient';
+import { restCountriesClient } from '@anywhere/api-clients';
 
 const logger = pino({ level: 'info' });
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/anywhere_catalog_dev';

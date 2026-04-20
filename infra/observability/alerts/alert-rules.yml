@@ -1,0 +1,43 @@
+groups:
+  - name: anywhere-api-alerts
+    rules:
+      - alert: TequilaErrorRateHigh
+        expr: |
+          sum(rate(api_calls_total{api="tequila",status=~"5..|error"}[5m]))
+          /
+          clamp_min(sum(rate(api_calls_total{api="tequila"}[5m])), 0.0001)
+          > 0.15
+        for: 5m
+        labels:
+          severity: p1
+          team: search
+          pagerduty_service: anywhere-search-p1
+        annotations:
+          summary: Tequila error rate above 15% (5m)
+          description: Tequila integration has sustained high error rate and may impact search completions.
+
+      - alert: DuffelErrorRateHigh
+        expr: |
+          sum(rate(api_calls_total{api="duffel",status=~"5..|error"}[5m]))
+          /
+          clamp_min(sum(rate(api_calls_total{api="duffel"}[5m])), 0.0001)
+          > 0.05
+        for: 5m
+        labels:
+          severity: p1
+          team: bookings
+          pagerduty_service: anywhere-bookings-p1
+        annotations:
+          summary: Duffel error rate above 5% (5m)
+          description: Duffel integration instability detected and booking revenue is at risk.
+
+      - alert: WhereNextSeedWorkerFailure
+        expr: increase(wherenext_seed_worker_failures_total[10m]) > 0
+        for: 0m
+        labels:
+          severity: warning
+          notify: slack
+          slack_channel: "#alerts-search"
+        annotations:
+          summary: WhereNext seed worker failure
+          description: WhereNext seed worker reported a failure in the last 10 minutes.

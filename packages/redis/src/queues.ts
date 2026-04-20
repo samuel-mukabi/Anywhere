@@ -30,7 +30,7 @@ export const pushNotificationQueue = process.env.NODE_ENV === 'test'
 // 4. Booking Completion Events => Drives affiliate payouts, confirmation emails, CRM logging
 export const bookingEventsQueue = process.env.NODE_ENV === 'test'
   ? createTestQueue()
-  : new Queue('booking-events', { connection: redisClient });
+  : new Queue('booking.completed', { connection: redisClient });
 
 // 5. Quarterly Climate Seed => Pre-computes and caches 2-year average climate scores globally
 export const quarterlyClimateQueue = process.env.NODE_ENV === 'test'

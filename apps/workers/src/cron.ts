@@ -42,8 +42,8 @@ async function syncExternalData() {
   }
 }
 
-// Ensure execution strictly at 00:00 every day natively
-cron.schedule('0 0 * * *', () => {
+// Ensure execution strictly at 03:00 every day natively
+cron.schedule('0 3 * * *', () => {
     logger.info('Cron Scheduler triggered -> syncExternalData');
     syncExternalData();
 }, {

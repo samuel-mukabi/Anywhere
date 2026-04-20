@@ -5,6 +5,15 @@ import { bookingRoutes } from './routes/booking';
 import { affiliateRoutes } from './routes/affiliate';
 import { destinationRoutes } from './routes/destinations';
 import mongoose from 'mongoose';
+import {
+  DuffelClient,
+  OpenMeteoClient,
+  RestCountriesClient,
+  TravelPayoutsClient,
+  travelRiskClient,
+  getMetricsContentType,
+  getMetricsText,
+} from '@anywhere/api-clients';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -41,6 +50,42 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // Internal healthcheck
   app.get('/health', async () => ({ status: 'search_engine_online' }));
+
+  app.get('/metrics', async (_req, reply) => {
+    reply.header('Content-Type', getMetricsContentType());
+    return reply.send(await getMetricsText());
+  });
+
+  app.get('/health/apis', async (req, reply) => {
+    const context = {
+      userId: req.headers['x-user-id']?.toString(),
+      searchId: req.headers['x-search-id']?.toString(),
+    };
+
+    const travelPayouts = new TravelPayoutsClient(process.env.TRAVELPAYOUTS_TOKEN || '');
+    const duffel = new DuffelClient(
+      process.env.DUFFEL_TEST_TOKEN || '', 
+      process.env.DUFFEL_LIVE_TOKEN || ''
+    );
+    const restCountries = new RestCountriesClient();
+    const openMeteo = new OpenMeteoClient();
+
+    const checks = await Promise.all([
+      travelPayouts.ping(context).then((result) => ({ api: 'travelpayouts', ...result })),
+      duffel.ping(context).then((result) => ({ api: 'duffel', ...result })),
+      restCountries.ping(context).then((result) => ({ api: 'restcountries', ...result })),
+      openMeteo.ping(context).then((result) => ({ api: 'openmeteo', ...result })),
+      travelRiskClient.ping(context).then((result) => ({ api: 'travelrisk', ...result })),
+    ]);
+
+    const overallDown = checks.some((item) => item.status === 'down');
+    const overallDegraded = checks.some((item) => item.status === 'degraded');
+    reply.code(overallDown ? 503 : (overallDegraded ? 207 : 200));
+    return {
+      status: overallDown ? 'down' : (overallDegraded ? 'degraded' : 'healthy'),
+      apis: checks,
+    };
+  });
 
   return app;
 }

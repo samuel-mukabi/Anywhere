@@ -2,6 +2,11 @@ import { request } from 'undici';
 import mongoose from 'mongoose';
 import { redisClient } from '@repo/redis/src/client';
 import pino from 'pino';
+import {
+  apiCacheEventsTotal,
+  recordApiCall,
+  type ApiLogContext,
+} from '../observability';
 
 const logger = pino({ level: 'info' });
 
@@ -17,19 +22,20 @@ export interface DailyBudgetEstimate {
 }
 
 interface WhereNextColData {
-  city: string;
-  meal_inexpensive: number;
-  meal_for_2_mid_range: number;
-  one_way_ticket_local: number;
-  cappuccino_regular: number;
-  currency: string;
-  cost_of_living_index: number;
+  country_code: string;   // ISO-2 e.g. "FR"
+  country: string;
+  region: string;
+  cost_index: number;           // 0-100 relative index (Tbilisi ≈ 24, NYC ≈ 100)
+  monthly_estimate_usd: number; // Estimated monthly cost in USD
+  grocery_index: number;
+  rent_index: number;
+  utilities_index: number;
+  transport_index: number;
 }
 
 export class WhereNextClient {
   private colDataMap: Map<string, WhereNextColData> = new Map();
   private isLoaded: boolean = false;
-  private apiKey: string;
   
   // Default Continent baseline mappings ($USD limits statically mapped internally if all databases fail to return data)
   private readonly CONTINENTAL_FALLBACKS: Record<string, DailyBudgetEstimate> = {
@@ -42,8 +48,6 @@ export class WhereNextClient {
   };
 
   constructor() {
-    this.apiKey = process.env.WHERENEXT_API_KEY || '';
-    if (!this.apiKey) logger.warn("WHERENEXT_API_KEY is natively missing from environment parameters.");
     
     // Automatically trigger cache initialization bounds concurrently
     this.prefetchColData().catch(err => {
@@ -58,23 +62,39 @@ export class WhereNextClient {
     logger.info('Prefetching WhereNext 380 CoL matrix into memory array...');
     
     try {
-       const { statusCode, body } = await request('https://api.wherenext.com/v1/cost-of-living/global', {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${this.apiKey}` }
+       const startedAt = Date.now();
+       const { statusCode, body } = await request('https://getwherenext.com/api/data/cost-of-living', {
+          method: 'GET'
+       });
+       recordApiCall({
+        api: 'wherenext',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
        });
 
        if (statusCode === 200) {
            const json = await body.json() as { data: WhereNextColData[] };
            for (const item of json.data) {
-             // Create index map natively out of lowered string boundaries
-             this.colDataMap.set(item.city.toLowerCase(), item);
+             // Map by lowercase ISO-2 country code — this is what the API actually provides
+             this.colDataMap.set(item.country_code.toLowerCase(), item);
            }
            this.isLoaded = true;
-           logger.info(`Successfully cached ${this.colDataMap.size} WhereNext Cities inside RAM`);
+           logger.info(`Successfully cached ${this.colDataMap.size} WhereNext countries inside RAM`);
        } else {
            logger.warn(`WhereNext Prefetch failed with status: ${statusCode}`);
        }
     } catch (e) {
+       recordApiCall({
+        api: 'wherenext',
+        method: 'GET',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+       });
        logger.error('WhereNext Request crash locally internally.');
     }
   }
@@ -82,19 +102,31 @@ export class WhereNextClient {
   /**
    * Secure Redis fetching with native external api FX limits strictly set to 24HR caching preventing locking.
    */
-  private async getCachedFxRate(targetCurrency: string): Promise<number> {
+  private async getCachedFxRate(targetCurrency: string, context: ApiLogContext = {}): Promise<number> {
     if (targetCurrency === 'USD') return 1;
 
     try {
       // 1. Hit Native Redis Map
       const cachedString = await redisClient.get('fx:rates');
       if (cachedString) {
+         apiCacheEventsTotal.inc({ api: 'fxrates', event: 'hit' });
          const ratesData = JSON.parse(cachedString);
          if (ratesData[targetCurrency]) return ratesData[targetCurrency];
       }
+      apiCacheEventsTotal.inc({ api: 'fxrates', event: 'miss' });
 
       // 2. Refresh from Free External Limits (No Key Required for basic USD fetch)
+      const startedAt = Date.now();
       const { statusCode, body } = await request('https://open.er-api.com/v6/latest/USD');
+      recordApiCall({
+        api: 'fxrates',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
+      });
       if (statusCode === 200) {
          const json = (await body.json()) as { rates?: Record<string, number> };
          const rates = json.rates ?? {};
@@ -103,6 +135,15 @@ export class WhereNextClient {
          return rates[targetCurrency] ?? 1;
       }
     } catch(err) {
+       recordApiCall({
+        api: 'fxrates',
+        method: 'GET',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+       });
        logger.error({ err }, 'Failed tracking FX sequences successfully');
     }
 
@@ -119,23 +160,38 @@ export class WhereNextClient {
   /**
    * Computes the daily total and converts out exactly sequentially mapped against the hierarchy bounds locally.
    */
-  public async getDailyBudget(citySlug: string, targetCurrency: string = 'USD'): Promise<DailyBudgetEstimate> {
+  public async getDailyBudget(
+    citySlug: string,
+    targetCurrency: string = 'USD',
+    context: ApiLogContext = {},
+  ): Promise<DailyBudgetEstimate> {
      // AWAIT readiness mapping allowing fast startup sequences securely
      if (!this.isLoaded) await new Promise(r => setTimeout(r, 1000));
 
-     const slug = citySlug.toLowerCase();
-     let baseData = this.colDataMap.get(slug);
+     // Accept either ISO-2 country code ("fr") or city slug ("paris") —
+     // WhereNext is country-level so we normalise to 2-char code where possible
+     const slug = citySlug.toLowerCase().slice(0, 2);
+     const baseData = this.colDataMap.get(slug);
 
-     // 1. WhereNext Base Path
+     // 1. WhereNext Base Path — derive per-item costs from monthly estimate & indices
      if (baseData) {
+        // monthly_estimate_usd covers rent + food + transport + utilities.
+        // We extract component estimates proportionally from sub-indices.
+        const daily = baseData.monthly_estimate_usd / 30;
+        const mealCheap  = parseFloat((daily * 0.18).toFixed(2)); // ~18% of daily spend on cheap meal
+        const mealMid    = parseFloat((daily * 0.35).toFixed(2)); // ~35% on mid meal
+        const transport  = parseFloat((daily * (baseData.transport_index / 100) * 0.12).toFixed(2));
+        const coffee     = parseFloat((daily * 0.05).toFixed(2));
+
         return this.compileResponse(
-           baseData.meal_inexpensive,
-           baseData.meal_for_2_mid_range / 2, // We split 2-person meal to single bounds
-           baseData.one_way_ticket_local,
-           baseData.cappuccino_regular,
-           baseData.currency,
-           baseData.cost_of_living_index,
-           targetCurrency
+           mealCheap,
+           mealMid,
+           transport,
+           coffee,
+           'USD', // WhereNext already returns USD estimates
+           baseData.cost_index,
+           targetCurrency,
+           context,
         );
      }
 
@@ -153,7 +209,8 @@ export class WhereNextClient {
                  dbCity.avgCosts.coffee || 3,
                  'USD',
                  dbCity.hiddenGemScore || 50,
-                 targetCurrency
+                 targetCurrency,
+                 context,
               );
            }
        }
@@ -172,23 +229,33 @@ export class WhereNextClient {
          fallback.coffee,
          fallback.currency,
          fallback.colIndex,
-         targetCurrency
+         targetCurrency,
+         context,
      );
   }
 
-  private async compileResponse(mealCheap: number, mealMid: number, transport: number, coffee: number, sourceCurrency: string, colIndex: number, targetCurrency: string): Promise<DailyBudgetEstimate> {
+  private async compileResponse(
+    mealCheap: number,
+    mealMid: number,
+    transport: number,
+    coffee: number,
+    sourceCurrency: string,
+    colIndex: number,
+    targetCurrency: string,
+    context: ApiLogContext = {},
+  ): Promise<DailyBudgetEstimate> {
      
      // Correctly map exactly into USD centrally and then project out into target limits securely
-     const sourceToUsd = sourceCurrency === 'USD' ? 1 : (1 / await this.getCachedFxRate(sourceCurrency));
+     const sourceToUsd = sourceCurrency === 'USD' ? 1 : (1 / await this.getCachedFxRate(sourceCurrency, context));
      const totalUsd = (mealCheap + mealMid + transport + coffee) * sourceToUsd;
 
-     const activeMultiplier = targetCurrency === 'USD' ? 1 : await this.getCachedFxRate(targetCurrency);
+     const activeMultiplier = targetCurrency === 'USD' ? 1 : await this.getCachedFxRate(targetCurrency, context);
      
      const totalLocalFixed = parseFloat((totalUsd * activeMultiplier).toFixed(2));
      
      let tier: 'budget' | 'mid' | 'premium' = 'mid';
-     if (totalUsd < 40) tier = 'budget';
-     else if (totalUsd > 90) tier = 'premium';
+     if (colIndex < 50) tier = 'budget';
+     else if (colIndex >= 80) tier = 'premium';
 
      return {
         mealCheap: parseFloat((mealCheap * sourceToUsd * activeMultiplier).toFixed(2)),

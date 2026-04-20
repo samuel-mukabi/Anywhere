@@ -1,6 +1,12 @@
 import { request } from 'undici';
 import { redisClient } from '@repo/redis/src/client';
 import pino from 'pino';
+import {
+  apiCacheEventsTotal,
+  recordApiCall,
+  type ApiLogContext,
+} from '../observability';
+import { createRateLimiter } from '../utils/withRateLimit';
 
 const logger = pino({ level: 'info' });
 
@@ -17,21 +23,25 @@ interface GeoDbSearchResponse {
   data: GeoCityResult[];
 }
 
+// GeoDB free tier: ~1,000 requests/day. We budget 900 to leave headroom.
+// Rate limiter is module-level so all GeoDBClient instances share the same bucket.
+const geoDbRateLimiter = createRateLimiter({
+  requestsPerInterval: 900,
+  intervalMs: 24 * 60 * 60 * 1000, // 24 hours
+});
+
 export class GeoDBClient {
-  private baseUrl = 'https://wft-geo-db.p.rapidapi.com/v1';
-  private rapidApiKey: string;
-  
-  // 90 days explicitly matching architectural seed-only bounds functionally strictly locally 
+  private baseUrl = 'https://geodb-free-service.wirefreethought.com/v1';
+
+  // 90 days — results are stable (city coordinates don't change)
   private CACHE_TTL_SECONDS = 90 * 24 * 60 * 60;
 
-  constructor(rapidApiKey: string) {
-    this.rapidApiKey = rapidApiKey;
-  }
+  constructor() {}
 
   /**
    * Search City strictly bound via Country limits extracting exactly mapping standard coordinates dynamically safely.
    */
-  public async searchCity(name: string, countryCode: string): Promise<GeoCityResult | null> {
+  public async searchCity(name: string, countryCode: string, context: ApiLogContext = {}): Promise<GeoCityResult | null> {
       // Normalize aggressively bypassing caching misses dynamically 
       const cleanName = name.trim().toLowerCase();
       const cleanCode = countryCode.trim().toLowerCase();
@@ -41,22 +51,41 @@ export class GeoDBClient {
       try {
           // 1. Memory Look aside cleanly mapping local state bypassing expensive RapidAPI checks strictly
           const cached = await redisClient.get(redisKey);
-          if (cached) return JSON.parse(cached) as GeoCityResult;
+          if (cached) {
+            apiCacheEventsTotal.inc({ api: 'geodb', event: 'hit' });
+            return JSON.parse(cached) as GeoCityResult;
+          }
+          apiCacheEventsTotal.inc({ api: 'geodb', event: 'miss' });
 
-          // 2. Transact strictly evaluating thresholds limits strictly bounding memory explicitly
+          // Enforce daily rate limit before making a live API call
+          if (geoDbRateLimiter.isThrottled()) {
+            logger.warn({ name, countryCode }, 'GeoDBClient rate limit reached — skipping live call, returning null');
+            return null;
+          }
+          await geoDbRateLimiter.throttle();
+
+          // 2. Live API request
           const url = new URL(`${this.baseUrl}/geo/cities`);
           url.searchParams.set('namePrefix', cleanName);
           url.searchParams.set('countryIds', countryCode.toUpperCase());
           url.searchParams.set('minPopulation', '50000');
           url.searchParams.set('limit', '1');
 
+          const startedAt = Date.now();
           const { statusCode, body } = await request(url.toString(), {
               method: 'GET',
               headers: {
-                  'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-                  'X-RapidAPI-Key': this.rapidApiKey,
                   'Accept': 'application/json'
               }
+          });
+          recordApiCall({
+            api: 'geodb',
+            method: 'GET',
+            latencyMs: Date.now() - startedAt,
+            status: statusCode,
+            cacheHit: false,
+            fallbackUsed: false,
+            ...context,
           });
 
           if (statusCode === 429) {
@@ -92,8 +121,59 @@ export class GeoDBClient {
           return mapped;
 
       } catch (err) {
+         recordApiCall({
+          api: 'geodb',
+          method: 'GET',
+          latencyMs: 0,
+          status: 'error',
+          cacheHit: false,
+          fallbackUsed: true,
+          ...context,
+         });
          logger.error({ err, name, countryCode }, 'GeoDBClient mapping sequence collapsed tracking dependencies.');
          return null;
       }
+  }
+
+  public async ping(context: ApiLogContext = {}): Promise<{ status: 'healthy' | 'degraded' | 'down'; latencyMs: number }> {
+    const startedAt = Date.now();
+    try {
+      const url = new URL(`${this.baseUrl}/geo/cities`);
+      url.searchParams.set('namePrefix', 'london');
+      url.searchParams.set('countryIds', 'GB');
+      url.searchParams.set('limit', '1');
+      const { statusCode, body } = await request(url.toString(), {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'geodb',
+        method: 'GET',
+        latencyMs,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
+      });
+      await body.dump(); // consume to avoid socket leak
+      if (statusCode >= 500) return { status: 'down', latencyMs };
+      if (statusCode >= 400) return { status: 'degraded', latencyMs };
+      return { status: 'healthy', latencyMs };
+    } catch (_error: unknown) {
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'geodb',
+        method: 'GET',
+        latencyMs,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
+      return { status: 'down', latencyMs };
+    }
   }
 }

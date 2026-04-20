@@ -11,7 +11,7 @@ export interface SearchJobPayload {
 }
 
 // 1. Setup the Producer (To allow routes to add jobs)
-export const searchQueue = new Queue<SearchJobPayload, unknown, 'evaluate-destination'>('FlightSearchQueue', {
+export const searchQueue = new Queue<SearchJobPayload, unknown, 'evaluate-destination'>('tequila-search', {
   connection: cacheRedis,
   defaultJobOptions: {
     attempts: 2,
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== 'test') {
   
   const ranker = new DestinationRanker();
 
-  const worker = new Worker<SearchJobPayload>('FlightSearchQueue', async (job) => {
+  const worker = new Worker<SearchJobPayload>('tequila-search', async (job) => {
     
     // Perform complex parallel outbound fetching algorithms safely
     console.log(`[Worker] Started Engine Algorithm for Job ${job.id}`);
@@ -61,7 +61,14 @@ if (process.env.NODE_ENV !== 'test') {
     // The output return value natively feeds into BullMQ job.returnvalue 
     return results;
 
-  }, { connection: cacheRedis, concurrency: 5 }); // Process 5 parallel global searches
+  }, { 
+    connection: cacheRedis, 
+    concurrency: 1,
+    limiter: {
+      max: 1,
+      duration: 400
+    }
+  }); 
 
   worker.on('failed', (job, err) => {
     console.error(`Job ${job?.id} failed with error ${err.message}`);

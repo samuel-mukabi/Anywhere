@@ -1,5 +1,5 @@
 {
-  "name": "@repo/api-gateway",
+  "name": "@anywhere/api-gateway",
   "version": "1.0.0",
   "description": "Anywhere API Gateway",
   "main": "dist/server.js",
@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fastify/jwt": "^9.0.0",
+    "@fastify/cors": "^10.0.0",
+    "@fastify/jwt": "^10.0.0",
     "@fastify/rate-limit": "^10.0.0",
     "@fastify/redis": "^7.0.0",
     "fastify": "^5.0.0",

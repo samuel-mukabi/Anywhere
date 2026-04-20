@@ -6,9 +6,9 @@
 #   ./scripts/secrets/sync-railway.sh <doppler-config> <railway-environment> <service-name>
 #
 # Examples:
-#   ./scripts/secrets/sync-railway.sh dev  development search-service
-#   ./scripts/secrets/sync-railway.sh stg  staging     pricing-engine
-#   ./scripts/secrets/sync-railway.sh prd  production  auth-service
+#   ./scripts/secrets/sync-railway.sh development development search-service
+#   ./scripts/secrets/sync-railway.sh staging     staging     pricing-engine
+#   ./scripts/secrets/sync-railway.sh production  production  auth-service
 #
 # Prerequisites:
 #   - doppler CLI installed and authenticated

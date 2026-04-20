@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGING }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v3
+
+      - name: Doppler setup
+        run: doppler setup --project anywhere --config staging --no-interactive
+
+      - name: Build with Doppler secrets
+        run: doppler run --project anywhere --config staging -- npm run build
+
+      - name: Test with Doppler secrets
+        run: doppler run --project anywhere --config staging -- npm run test

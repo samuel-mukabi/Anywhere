@@ -2,6 +2,11 @@ import { request } from 'undici';
 import { redisClient } from '@repo/redis/src/client';
 import pino from 'pino';
 import { z } from 'zod';
+import {
+  apiCacheEventsTotal,
+  recordApiCall,
+  type ApiLogContext,
+} from '../observability';
 
 const logger = pino({ level: 'info' });
 
@@ -47,7 +52,7 @@ export class RestCountriesClient {
    * Retrieves specific target fields for a country by its ISO code (Alpha-2 or Alpha-3).
    * Result is comprehensively parsed and evaluated against strict Zod bounds.
    */
-  public async getByAlpha2(code: string): Promise<CountryMeta | null> {
+  public async getByAlpha2(code: string, context: ApiLogContext = {}): Promise<CountryMeta | null> {
     const alpha2 = code.trim().toUpperCase();
     const redisKey = `country:${alpha2}`;
 
@@ -55,17 +60,29 @@ export class RestCountriesClient {
       // 1. Transparent caching layer mapped directly to Redis memory
       const cached = await redisClient.get(redisKey);
       if (cached) {
+        apiCacheEventsTotal.inc({ api: 'restcountries', event: 'hit' });
         return JSON.parse(cached) as CountryMeta;
       }
+      apiCacheEventsTotal.inc({ api: 'restcountries', event: 'miss' });
 
       // 2. Transact with REST Countries API
       const url = new URL(`${this.baseUrl}/alpha/${alpha2}`);
       // Only request the specific properties strictly required
       url.searchParams.set('fields', 'name,cca2,cca3,flag,currencies,languages,region,subregion,capital,latlng,population');
 
+      const startedAt = Date.now();
       const { statusCode, body } = await request(url.toString(), {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
+      });
+      recordApiCall({
+        api: 'restcountries',
+        method: 'GET',
+        latencyMs: Date.now() - startedAt,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
       });
 
       if (statusCode === 404 || statusCode === 400) {
@@ -93,6 +110,15 @@ export class RestCountriesClient {
       return parsedData;
 
     } catch (err) {
+      recordApiCall({
+        api: 'restcountries',
+        method: 'GET',
+        latencyMs: 0,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
       if (err instanceof z.ZodError) {
          logger.error({ err: err.issues, code: alpha2 }, 'RestCountries response failed schema validation');
       } else {
@@ -123,6 +149,44 @@ export class RestCountriesClient {
         ...destination,
         ...(meta ? { countryMeta: meta } : {})
      };
+  }
+
+  public async ping(context: ApiLogContext = {}): Promise<{ status: 'healthy' | 'degraded' | 'down'; latencyMs: number }> {
+    const startedAt = Date.now();
+    try {
+      const url = new URL(`${this.baseUrl}/alpha/us`);
+      url.searchParams.set('fields', 'cca2');
+      const { statusCode, body } = await request(url.toString(), {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'restcountries',
+        method: 'GET',
+        latencyMs,
+        status: statusCode,
+        cacheHit: false,
+        fallbackUsed: false,
+        ...context,
+      });
+      await body.dump(); // consume to avoid socket leak
+      if (statusCode >= 500) return { status: 'down', latencyMs };
+      if (statusCode >= 400) return { status: 'degraded', latencyMs };
+      return { status: 'healthy', latencyMs };
+    } catch (_error: unknown) {
+      const latencyMs = Date.now() - startedAt;
+      recordApiCall({
+        api: 'restcountries',
+        method: 'GET',
+        latencyMs,
+        status: 'error',
+        cacheHit: false,
+        fallbackUsed: true,
+        ...context,
+      });
+      return { status: 'down', latencyMs };
+    }
   }
 }
 

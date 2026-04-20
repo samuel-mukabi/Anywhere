@@ -28,17 +28,17 @@ Doppler (source of truth)
 
 | Doppler Config | Maps To | Used By |
 |---------------|---------|---------|
-| `dev` | Local development | Every engineer's machine |
-| `stg` | Staging | Railway staging services + Vercel preview branch |
-| `prd` | Production | Railway prod services + Vercel production |
+| `development` | Local development | Every engineer's machine |
+| `staging` | Staging | Railway staging services + Vercel preview branch |
+| `production` | Production | Railway prod services + Vercel production |
 
 ### Config Inheritance
 
 ```
 root (shared non-sensitive config)
- ├── dev    (overrides: dev API keys, dev DB URLs, mocked 3rd-party URLs)
- ├── stg    (overrides: staging API keys, staging DB, real but sandboxed 3rd-party)
- └── prd    (overrides: live API keys, production DB, real 3rd-party integrations)
+ ├── development    (overrides: dev API keys, dev DB URLs, mocked 3rd-party URLs)
+ ├── staging        (overrides: staging API keys, staging DB, real but sandboxed 3rd-party)
+ └── production     (overrides: live API keys, production DB, real 3rd-party integrations)
 ```
 
 Values defined at the `root` level are available in all three configs unless explicitly overridden.

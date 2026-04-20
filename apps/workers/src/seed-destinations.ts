@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import pino from 'pino';
 import { Destination } from './models/Destination';
 import { generateMockDestinations } from './data/mockDestinations';
-import { GeoDBClient } from '@repo/api-clients';
+import { GeoDBClient } from '@anywhere/api-clients';
 
 const logger = pino({ level: 'info' });
-const geoDB = new GeoDBClient(process.env.RAPIDAPI_KEY || '');
+const geoDB = new GeoDBClient();
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/anywhere_catalog_dev';
 

@@ -162,3 +162,7 @@ FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Users map transparently to their finalized bookings" ON bookings
 FOR SELECT USING (auth.uid() = user_id);
+
+CREATE INDEX idx_price_alerts_user_active ON price_alerts(user_id, is_active);
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+CREATE INDEX idx_affiliate_clicks_user_date ON affiliate_clicks(user_id, clicked_at);

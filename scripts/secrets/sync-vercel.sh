@@ -6,9 +6,9 @@
 #   ./scripts/secrets/sync-vercel.sh <doppler-config> <vercel-env>
 #
 # Examples:
-#   ./scripts/secrets/sync-vercel.sh dev development
-#   ./scripts/secrets/sync-vercel.sh stg preview
-#   ./scripts/secrets/sync-vercel.sh prd production
+#   ./scripts/secrets/sync-vercel.sh development development
+#   ./scripts/secrets/sync-vercel.sh staging preview
+#   ./scripts/secrets/sync-vercel.sh production production
 #
 # Prerequisites:
 #   - doppler CLI installed and authenticated  (brew install dopplerhq/cli/doppler)
