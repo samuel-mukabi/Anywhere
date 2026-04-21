@@ -244,6 +244,7 @@ export default function OnboardingScreen() {
       {/* Slides */}
       <FlatList
         ref={flatListRef}
+        testID="onboarding-swiper"
         data={SLIDES as unknown as Slide[]}
         keyExtractor={(s) => s}
         horizontal

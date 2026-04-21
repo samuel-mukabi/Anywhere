@@ -11,13 +11,14 @@ import { spacing } from '@/theme/spacing';
 import { radii } from '@/theme/radii';
 
 interface PillTagProps {
-  label:      string;
-  active:     boolean;
-  onPress:    () => void;
-  style?:     ViewStyle;
+  label:       string;
+  active:      boolean;
+  onPress:     () => void;
+  style?:      ViewStyle;
+  activeColor?: string;
 }
 
-export function PillTag({ label, active, onPress, style }: PillTagProps) {
+export function PillTag({ label, active, onPress, style, activeColor = Colors.nearBlack }: PillTagProps) {
   const bgAnim   = useRef(new Animated.Value(active ? 1 : 0)).current;
   const prevActive = useRef(active);
 
@@ -25,6 +26,8 @@ export function PillTag({ label, active, onPress, style }: PillTagProps) {
     prevActive.current = active;
     Animated.spring(bgAnim, {
       toValue:         active ? 1 : 0,
+      // Must be false: animating backgroundColor/borderColor (style props),
+      // which the native animation driver does not support.
       useNativeDriver: false,
       damping:         18,
       stiffness:       200,
@@ -33,16 +36,17 @@ export function PillTag({ label, active, onPress, style }: PillTagProps) {
 
   const backgroundColor = bgAnim.interpolate({
     inputRange:  [0, 1],
-    outputRange: [Colors.surface, Colors.nearBlack],
+    outputRange: [Colors.surface, activeColor],
   });
 
   const borderColor = bgAnim.interpolate({
     inputRange:  [0, 1],
-    outputRange: [Colors.border, Colors.nearBlack],
+    outputRange: [Colors.border, activeColor],
   });
 
   const textColor = bgAnim.interpolate({
     inputRange:  [0, 1],
+    // If active color is bright/light maybe we need specific logic, but for sage/terracotta parchment text is good.
     outputRange: [Colors.textSecondary, Colors.parchment],
   });
 
@@ -65,6 +69,7 @@ interface PillGroupProps<T extends string> {
   multiSelect?: boolean;
   onChange:   (value: T | T[]) => void;
   containerStyle?: ViewStyle;
+  activeColor?: string;
 }
 
 export function PillGroup<T extends string>({
@@ -73,11 +78,12 @@ export function PillGroup<T extends string>({
   multiSelect = false,
   onChange,
   containerStyle,
+  activeColor,
 }: PillGroupProps<T>) {
   const isActive = useCallback(
     (opt: T) =>
       multiSelect
-        ? (selected as T[]).includes(opt)
+        ? Array.isArray(selected) && selected.includes(opt)
         : selected === opt,
     [selected, multiSelect],
   );
@@ -85,7 +91,7 @@ export function PillGroup<T extends string>({
   const handlePress = useCallback(
     (opt: T) => {
       if (multiSelect) {
-        const s = selected as T[];
+        const s = Array.isArray(selected) ? selected : [];
         onChange(s.includes(opt) ? s.filter((x) => x !== opt) : [...s, opt]);
       } else {
         onChange(opt);
@@ -105,6 +111,7 @@ export function PillGroup<T extends string>({
           key={opt}
           label={opt}
           active={isActive(opt)}
+          activeColor={activeColor}
           onPress={() => handlePress(opt)}
           style={styles.pillSpacing}
         />

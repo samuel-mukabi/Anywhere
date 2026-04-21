@@ -136,7 +136,9 @@ const DestinationSchema = new Schema<IDestination>({
 DestinationSchema.index({ coords: '2dsphere' });
 
 // Compound index — high-speed aggregation across business logic criteria
-DestinationSchema.index({ vibes: 1, 'climate.bestMonths': 1, 'avgCosts.total': 1 });
+// Note: vibes and bestMonths are both arrays; MongoDB does not allow indexing two parallel arrays.
+// We keep vibes and total for now.
+DestinationSchema.index({ vibes: 1, 'avgCosts.total': 1 });
 
 // Fast climate lookup by month (used by /climate/score route)
 DestinationSchema.index({ 'climate.monthly.month': 1 });

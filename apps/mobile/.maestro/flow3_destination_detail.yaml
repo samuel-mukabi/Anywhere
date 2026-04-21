@@ -1,0 +1,34 @@
+# Maestro E2E Flow 3: Tap a result pin → preview card → View full details
+#
+# Preconditions: Flow 2 has completed and results are visible in the bottom sheet
+# Run: maestro test .maestro/flow3_destination_detail.yaml
+
+appId: com.anywhere.travel
+---
+- launchApp
+
+- waitForAnimationToEnd
+
+# ── Ensure results are loaded (run search if needed) ─────────────────────────
+- assertVisible: "Sort by"
+
+# Tap the first result card in the FlatList
+- tapOn:
+    index: 0
+    id: destination-result-card
+
+# ── Preview card should slide up ─────────────────────────────────────────────
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "View full details →"
+
+# ── Navigate to the destination detail screen ────────────────────────────────
+- tapOn: "View full details →"
+
+- waitForAnimationToEnd:
+    timeout: 4000
+
+# The detail screen renders the city name in the hero and the price strip
+- assertVisible: "Cost breakdown"
+- assertVisible: "Why it fits"
+- assertVisible: "Book this trip →"

@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Feather } from '@expo/vector-icons';
@@ -34,7 +34,7 @@ export default function ForgotPasswordScreen() {
   const [sent, setSent] = useState(false);
 
   const { control, handleSubmit, formState: { errors } } =
-    useForm<ForgotPasswordFormData>({ resolver: zodResolver(forgotPasswordSchema as any) });
+    useForm<ForgotPasswordFormData>({ resolver: zodResolver(forgotPasswordSchema) });
 
   const mutation = useMutation({
     mutationFn: (data: ForgotPasswordFormData) => authApi.forgotPassword(data.email),

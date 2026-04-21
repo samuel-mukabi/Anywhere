@@ -13,6 +13,8 @@ const KEYS = {
   REFRESH_TOKEN: 'anywhere_refresh_token',
   USER_ID:       'anywhere_user_id',
   USER_TIER:     'anywhere_user_tier',
+  USER_EMAIL:    'anywhere_user_email',
+  USER_NAME:     'anywhere_user_name',
 } as const;
 
 type StorageKey = keyof typeof KEYS;
@@ -56,6 +58,14 @@ export const secureStorage = {
   getUserTier:     () => get('USER_TIER'),
   setUserTier:     (tier: string) => set('USER_TIER', tier),
 
+  /** Returns the persisted user email or null. */
+  getUserEmail:    () => get('USER_EMAIL'),
+  setUserEmail:    (email: string) => set('USER_EMAIL', email),
+
+  /** Returns the persisted user name or null. */
+  getUserName:     () => get('USER_NAME'),
+  setUserName:     (name: string) => set('USER_NAME', name),
+
   /** Wipes all auth-related keys — call on full logout. */
   async clearAll(): Promise<void> {
     await Promise.all([
@@ -63,6 +73,8 @@ export const secureStorage = {
       remove('REFRESH_TOKEN'),
       remove('USER_ID'),
       remove('USER_TIER'),
+      remove('USER_EMAIL'),
+      remove('USER_NAME'),
     ]);
   },
 };

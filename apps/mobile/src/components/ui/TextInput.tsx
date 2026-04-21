@@ -36,6 +36,8 @@ export function TextInput({
     Animated.timing(borderAnim, {
       toValue: 1,
       duration: 180,
+      // Must be false: animating borderColor (a layout/style prop),
+      // which is not supported by the native animation driver.
       useNativeDriver: false,
     }).start();
   };
@@ -45,7 +47,7 @@ export function TextInput({
     Animated.timing(borderAnim, {
       toValue: 0,
       duration: 180,
-      useNativeDriver: false,
+      useNativeDriver: false, // same reason — color interpolation
     }).start();
   };
 

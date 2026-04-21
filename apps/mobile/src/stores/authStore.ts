@@ -12,8 +12,9 @@ export type SubscriptionTier = 'free' | 'pro' | 'elite';
 
 export interface AuthUser {
   id:        string;
-  name:      string;
+  name?:     string;
   email:     string;
+  tier:      SubscriptionTier;
   avatarUrl?: string;
 }
 
@@ -27,7 +28,7 @@ interface AuthState {
   /** True after the initial SecureStore check completes. */
   hydrated: boolean;
 
-  setAuth:   (user: AuthUser, token: string, tier?: SubscriptionTier) => void;
+  setAuth:   (user: AuthUser, token: string) => void;
   clearAuth: () => void;
   setHydrated: () => void;
 }
@@ -38,8 +39,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   tier:     'free',
   hydrated: false,
 
-  setAuth: (user, token, tier = 'free') =>
-    set({ user, token, tier }),
+  setAuth: (user, token) =>
+    set({ user, token, tier: user.tier }),
 
   clearAuth: () =>
     set({ user: null, token: null, tier: 'free' }),

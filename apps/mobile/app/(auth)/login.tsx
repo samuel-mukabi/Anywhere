@@ -23,9 +23,10 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -33,7 +34,7 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { loginSchema, LoginFormData } from '@/lib/authSchemas';
 import { authApi }                     from '@/lib/apiClient';
 import { secureStorage }               from '@/lib/secureStorage';
-import { useAuthStore }                from '@/stores/authStore';
+import { useAuthStore, SubscriptionTier } from '@/stores/authStore';
 import { useGoogleAuth }               from '@/hooks/useGoogleAuth';
 import { useAppleAuth }                from '@/hooks/useAppleAuth';
 import { TextInput }                   from '@/components/ui';
@@ -52,7 +53,7 @@ export default function LoginScreen() {
   }, []);
 
   const { control, handleSubmit, setError, formState: { errors } } =
-    useForm<LoginFormData>({ resolver: zodResolver(loginSchema as any) });
+    useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
   const { signIn: googleSignIn, request: googleRequest } = useGoogleAuth();
   const { signIn: appleSignIn } = useAppleAuth();
@@ -68,13 +69,12 @@ export default function LoginScreen() {
         secureStorage.setUserTier(data.user.tier),
       ]);
       setAuth(
-        { id: data.user.id, name: data.user.name, email: data.user.email },
+        { id: data.user.id, name: data.user.name, email: data.user.email, tier: data.user.tier as SubscriptionTier },
         data.token,
-        data.user.tier as any,
       );
       router.replace('/(tabs)/explore');
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<{ errors?: Record<string, string> }>) => {
       const apiErrors = err?.response?.data?.errors as
         | Record<string, string>
         | undefined;

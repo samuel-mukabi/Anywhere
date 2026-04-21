@@ -14,7 +14,7 @@ export default ({ config }) => ({
   icon: './assets/icon.png',
 
   splash: {
-    image: './assets/splash.png',
+    image: './assets/icon.png',
     resizeMode: 'contain',
     backgroundColor: '#EEEBD9',
   },
@@ -22,6 +22,7 @@ export default ({ config }) => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.anywhere.travel',
+    associatedDomains: ['applinks:anywhere.app'],
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
@@ -33,6 +34,17 @@ export default ({ config }) => ({
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#EEEBD9',
     },
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          { scheme: 'https', host: 'anywhere.app', pathPrefix: '/' },
+          { scheme: 'anywhere', host: '*', pathPrefix: '/' }
+        ],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
     permissions: [
       'ACCESS_FINE_LOCATION',
       'ACCESS_COARSE_LOCATION',
@@ -50,6 +62,12 @@ export default ({ config }) => ({
     'expo-router',
     'expo-secure-store',
     'expo-apple-authentication',
+    [
+      'expo-location',
+      {
+        locationAlwaysAndWhenInUsePermission: 'Allow Anywhere to use your location to find nearby destinations and synchronize Mapbox placement.',
+      },
+    ],
     [
       '@rnmapbox/maps',
       {

@@ -34,9 +34,13 @@ export function useAppleAuth() {
     const { data } = await authApi.appleMobile(credential.identityToken, fullName);
     await persistAuth(data);
     setAuth(
-      { id: data.user.id, name: data.user.name, email: data.user.email },
+      { 
+        id: data.user.id, 
+        name: data.user.name, 
+        email: data.user.email,
+        tier: data.user.tier as any
+      },
       data.token,
-      data.user.tier as any,
     );
   }, [setAuth]);
 
@@ -49,5 +53,7 @@ async function persistAuth(data: AuthResponse) {
     secureStorage.setRefreshToken(data.refreshToken),
     secureStorage.setUserId(data.user.id),
     secureStorage.setUserTier(data.user.tier),
+    secureStorage.setUserEmail(data.user.email),
+    secureStorage.setUserName(data.user.name ?? ''),
   ]);
 }

@@ -1,0 +1,40 @@
+# Maestro E2E Flow 4: Save a destination → navigate to Trips → assert it appears
+#
+# Preconditions: Flow 3 has completed and the destination preview card is visible
+# Run: maestro test .maestro/flow4_save_trip.yaml
+
+appId: com.anywhere.travel
+---
+- launchApp
+
+- waitForAnimationToEnd
+
+# Ensure preview card is visible (tap a result card first if needed)
+- tapOn:
+    index: 0
+    id: destination-result-card
+
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "View full details →"
+
+# ── Tap Save button on the preview card ──────────────────────────────────────
+- tapOn: "Save"
+
+# Assert the toast confirmation appears
+- assertVisible: "Destination Saved"
+
+- waitForAnimationToEnd
+
+# ── Navigate to the Trips tab ─────────────────────────────────────────────────
+- tapOn:
+    id: tab-trips
+
+- waitForAnimationToEnd
+
+# ── Assert saved destination is visible in the Saved tab ─────────────────────
+- assertVisible: "Saved"
+# The DestinationResultCard renders city name — assert Lisbon (or first result) visible
+- assertVisible:
+    id: destination-result-card
+    index: 0

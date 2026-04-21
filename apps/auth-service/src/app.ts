@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance } from 'fastify';
 import pino from 'pino';
 import fastifyCookie from '@fastify/cookie';
 import { oauthRoutes } from './routes/oauth';
+import { authRoutes } from './routes/auth';
 import { sessionRoutes } from './routes/session';
 import { webhookRoutes } from './routes/webhooks';
 import { billingRoutes } from './routes/billing';
@@ -34,6 +35,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(fastifyCookie);
 
   await app.register(oauthRoutes);
+  await app.register(authRoutes);
   await app.register(sessionRoutes);
   await app.register(webhookRoutes);
   await app.register(billingRoutes);

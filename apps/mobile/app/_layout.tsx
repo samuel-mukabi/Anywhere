@@ -14,7 +14,7 @@ import 'react-native-gesture-handler';
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, useRootNavigationState, Href } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -29,7 +29,21 @@ import { secureStorage }   from '@/lib/secureStorage';
 import {
   useAuthStore,
   selectHydrated,
+  SubscriptionTier,
 }                          from '@/stores/authStore';
+import * as Notifications from 'expo-notifications';
+import * as Linking from 'expo-linking';
+
+// ─── Push Notification Handlers ───────────────────────────────────────────────
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 // ─── TanStack Query client (singleton) ────────────────────────────────────────
 const queryClient = new QueryClient({
@@ -48,6 +62,59 @@ function RootNavigator() {
   const hydrated   = useAuthStore(selectHydrated);
   const setAuth    = useAuthStore((s) => s.setAuth);
   const setHydrated = useAuthStore((s) => s.setHydrated);
+  const rootNavigationState = useRootNavigationState();
+
+  // ─── Universal Warm-Start URL Interceptor ────────────────────────────────────
+  const url = Linking.useURL();
+  useEffect(() => {
+    if (url) {
+      console.log('[Universal Links] Intercepted Warm-Start URL:', url);
+      try {
+        const { hostname, path } = Linking.parse(url);
+        // Map natively into router bindings: anywhere://destination/xyz mapped
+        if (hostname === 'destination' && path) {
+           router.push(`/destination/${path}` as Href);
+        } else if (hostname === 'group' && path) {
+           router.push(`/group/${path}` as Href);
+        } else if (path) {
+           router.push(`/${path}` as Href);
+        }
+      } catch (err) {
+        console.warn('Failed resolving warm link routing:', err);
+      }
+    }
+  }, [url]);
+
+  // ─── Push Notification Hooks ─────────────────────────────────────────────────
+  useEffect(() => {
+    // Define interactive categories
+    Notifications.setNotificationCategoryAsync('price_alert', [
+      { identifier: 'VIEW_DEST', buttonTitle: 'View destination', options: { opensAppToForeground: true } }
+    ]);
+    Notifications.setNotificationCategoryAsync('booking_confirmed', [
+      { identifier: 'VIEW_BOOKING', buttonTitle: 'View booking', options: { opensAppToForeground: true } }
+    ]);
+
+    // Handle background / deep link routing
+    const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      const url = response.notification.request.content.data?.url as string;
+      if (url) {
+        // e.g. anywhere://destination/xyz
+        try {
+           const path = new URL(url).pathname as Href;
+           router.push(path);
+        } catch {
+           router.push(url as Href); // fallback if it's already a relative path payload
+        }
+      }
+    });
+
+    return () => {
+      if (responseListener) {
+        responseListener.remove();
+      }
+    };
+  }, []);
 
   // ─── Diagnostic Logging ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -67,7 +134,9 @@ function RootNavigator() {
 
   // Hydrate auth state from SecureStore + check onboarding status
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    const isNavigationReady = !!rootNavigationState?.key;
+
+    if (isNavigationReady && (fontsLoaded || fontError)) {
       // Hide native splash immediately so the branded React splash takes over
       SplashScreen.hideAsync().catch(() => {});
 
@@ -77,15 +146,16 @@ function RootNavigator() {
           const token = await secureStorage.getJwt();
           const tier  = await secureStorage.getUserTier();
           const id    = await secureStorage.getUserId();
+          const email = await secureStorage.getUserEmail();
+          const name  = await secureStorage.getUserName();
           const onboarded = await AsyncStorage.getItem('onboardingComplete');
 
-          console.log('[RootLayout] Storage check result:', { hasToken: !!token, hasId: !!id, onboarded });
+          console.log('[RootLayout] Storage check result:', { hasToken: !!token, hasId: !!id, email, name, tier, onboarded });
 
           if (token && id) {
             setAuth(
-              { id, name: '', email: '' },
+              { id, email: email ?? '', name: name ?? undefined, tier: (tier as SubscriptionTier) ?? 'free' },
               token,
-              (tier as any) ?? 'free',
             );
             console.log('[RootLayout] Redirecting to explore...');
             router.replace('/(tabs)/explore');
@@ -165,15 +235,19 @@ function RootNavigator() {
   );
 }
 
+import { StripeProvider } from '@stripe/stripe-react-native';
+
 // ─── Root default export ──────────────────────────────────────────────────────
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <RootNavigator />
-        </QueryClientProvider>
-      </SafeAreaProvider>
+      <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx'}>
+        <SafeAreaProvider>
+          <QueryClientProvider client={queryClient}>
+            <RootNavigator />
+          </QueryClientProvider>
+        </SafeAreaProvider>
+      </StripeProvider>
     </GestureHandlerRootView>
   );
 }

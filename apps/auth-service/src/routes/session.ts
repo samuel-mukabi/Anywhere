@@ -57,7 +57,11 @@ export async function sessionRoutes(app: FastifyInstance) {
       maxAge: 2592000
     });
 
-    return reply.send({ accessToken, expiresAt: accessExp });
+    return reply.send({ 
+      accessToken, 
+      refreshToken: newRefresh, // Added for mobile compatibility
+      expiresAt: accessExp 
+    });
   });
 
   /**

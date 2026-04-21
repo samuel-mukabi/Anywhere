@@ -1,0 +1,32 @@
+# Maestro E2E Flow 2: Set budget → select Beach vibe → search → assert map pins
+#
+# Preconditions: User is authenticated and on the Explore tab
+# Run: maestro test .maestro/flow2_search.yaml
+
+appId: com.anywhere.travel
+---
+- launchApp
+
+- waitForAnimationToEnd
+- assertVisible: "Where to next?"
+
+# ── Set budget via the slider ────────────────────────────────────────────────
+# The BudgetSlider displays the current value as a large text label.
+# We interact with it via an accessibility label on the Slider component.
+- tapOn:
+    id: budget-slider
+- inputText: "800"
+
+# ── Select Beach vibe ────────────────────────────────────────────────────────
+- tapOn: "Beach"
+
+# ── Trigger search ───────────────────────────────────────────────────────────
+- tapOn: "Find my destination"
+
+# ── Wait for the results and assert map pin layer appeared ──────────────────
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# The sort row is only rendered once results land in the list view
+- assertVisible: "Sort by"
+- assertVisible: "Best match"

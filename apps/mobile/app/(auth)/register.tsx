@@ -21,9 +21,10 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -37,7 +38,7 @@ import {
 }                     from '@/lib/authSchemas';
 import { authApi }    from '@/lib/apiClient';
 import { secureStorage } from '@/lib/secureStorage';
-import { useAuthStore }  from '@/stores/authStore';
+import { useAuthStore, SubscriptionTier } from '@/stores/authStore';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { useAppleAuth }  from '@/hooks/useAppleAuth';
 import { TextInput }     from '@/components/ui';
@@ -85,7 +86,7 @@ export default function RegisterScreen() {
   const [pwdValue, setPwdValue] = useState('');
 
   const { control, handleSubmit, setError, watch, formState: { errors } } =
-    useForm<RegisterFormData>({ resolver: zodResolver(registerSchema as any) });
+    useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) });
 
   const [appleAvailable, setAppleAvailable] = React.useState(false);
 
@@ -111,18 +112,16 @@ export default function RegisterScreen() {
         secureStorage.setUserTier(data.user.tier),
       ]);
       setAuth(
-        { id: data.user.id, name: data.user.name, email: data.user.email },
+        { id: data.user.id, email: data.user.email, name: data.user.name, tier: data.user.tier as SubscriptionTier },
         data.token,
-        data.user.tier as any,
       );
       // After register → onboarding preferences flow
       router.replace('/(auth)/onboarding');
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<{ errors?: Record<string, string> }>) => {
       const apiErrors = err?.response?.data?.errors as
         | Record<string, string>
         | undefined;
-      if (apiErrors?.name)     setError('name',     { message: apiErrors.name });
       if (apiErrors?.email)    setError('email',    { message: apiErrors.email });
       if (apiErrors?.password) setError('password', { message: apiErrors.password });
     },
@@ -183,6 +182,7 @@ export default function RegisterScreen() {
                 autoComplete="name"
                 placeholder="Samuel Mukabi"
                 error={errors.name?.message}
+                testID="input-name"
               />
             )}
           />
@@ -201,6 +201,7 @@ export default function RegisterScreen() {
                 autoComplete="email"
                 placeholder="you@example.com"
                 error={errors.email?.message}
+                testID="input-email"
               />
             )}
           />
@@ -218,6 +219,7 @@ export default function RegisterScreen() {
                   secureTextEntry={!showPwd}
                   placeholder="Min. 8 characters"
                   error={errors.password?.message}
+                  testID="input-password"
                   rightIcon={
                     <TouchableOpacity onPress={() => setShowPwd((s) => !s)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
                       <Feather name={showPwd ? 'eye-off' : 'eye'} size={18} color={Colors.textSecondary} />

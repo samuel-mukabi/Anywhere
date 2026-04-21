@@ -1,0 +1,43 @@
+# Maestro E2E Flow 1: Onboarding → Registration → Explore tab visible
+#
+# Preconditions: App is freshly installed (no stored onboarding flag)
+# Run: maestro test .maestro/flow1_onboarding.yaml
+
+appId: com.anywhere.travel
+---
+- launchApp:
+    clearState: true
+
+# ── Onboarding screens ──────────────────────────────────────────────────────
+- waitForAnimationToEnd
+
+# Swipe through all onboarding cards
+- swipe:
+    direction: LEFT
+    element: id: onboarding-swiper
+- swipe:
+    direction: LEFT
+    element: id: onboarding-swiper
+- swipe:
+    direction: LEFT
+    element: id: onboarding-swiper
+
+- tapOn: "Get started"
+
+# ── Registration form ────────────────────────────────────────────────────────
+- waitForAnimationToEnd
+- assertVisible: "Create your account"
+- tapOn: id: input-name
+- inputText: "Test User"
+- tapOn: id: input-email
+- inputText: "testuser+e2e@anywhere.app"
+- tapOn: id: input-password
+- inputText: "SecurePass123!"
+- hideKeyboard
+
+- tapOn: "Create account"
+
+# ── Assert we land on the Explore tab ───────────────────────────────────────
+- waitForAnimationToEnd:
+    timeout: 8000
+- assertVisible: "Where to next?"

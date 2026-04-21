@@ -14,6 +14,7 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { secureStorage } from './secureStorage';
 import { useAuthStore }  from '../stores/authStore';
+import { DestinationResult } from '../stores/searchStore';
 
 // ─── Create instance ──────────────────────────────────────────────────────────
 const baseURL =
@@ -134,7 +135,7 @@ apiClient.interceptors.response.use(
 
 // ─── Typed API helpers ────────────────────────────────────────────────────────
 export interface AuthResponse {
-  user:         { id: string; name: string; email: string; tier: string };
+  user:         { id: string; email: string; tier: string; name?: string };
   token:        string;
   refreshToken: string;
 }
@@ -143,7 +144,7 @@ export const authApi = {
   login:          (data: { email: string; password: string }) =>
     apiClient.post<AuthResponse>('/auth/login', data),
 
-  register:       (data: { name: string; email: string; password: string }) =>
+  register:       (data: { email: string; password: string }) =>
     apiClient.post<AuthResponse>('/auth/register', data),
 
   forgotPassword: (email: string) =>
@@ -154,4 +155,32 @@ export const authApi = {
 
   appleMobile:    (identityToken: string, fullName?: string | null) =>
     apiClient.post<AuthResponse>('/auth/apple/mobile', { identityToken, fullName }),
+};
+
+// ─── Search API ──────────────────────────────────────────────────────────────
+export interface SearchPostPayload {
+  budget: number;
+  tags: string[];
+  duration: number;
+  dates: { start: string; end: string } | null;
+}
+
+export interface SearchPostResponse {
+  searchId: string;
+  cached: boolean;
+  status?: string;
+  results?: DestinationResult[];
+}
+
+export interface SearchStatusResponse {
+  status: 'pending' | 'ready' | 'failed';
+  results?: DestinationResult[];
+}
+
+export const searchApi = {
+  createSearch: (payload: SearchPostPayload) =>
+    apiClient.post<SearchPostResponse>('/search', payload),
+
+  getSearchStatus: (searchId: string) =>
+    apiClient.get<SearchStatusResponse>(`/search/${searchId}/status`),
 };

@@ -42,7 +42,8 @@ async function seed() {
 
     logger.info('Bulk Upserting documents natively via Mongoose Model layer...');
     
-    await Destination.insertMany(destinations);
+    const insertResult = await Destination.insertMany(destinations);
+    logger.info({ insertedCount: insertResult.length }, `Inserted ${insertResult.length} destination documents.`);
 
     logger.info(`Done! Safely seeded exactly ${destinations.length} catalog items.`);
 
