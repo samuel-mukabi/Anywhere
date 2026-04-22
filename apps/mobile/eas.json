@@ -7,6 +7,7 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "npmInstallFlags": ["--legacy-peer-deps"],
       "ios": {
         "simulator": true
       },
@@ -18,6 +19,7 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
+      "npmInstallFlags": ["--legacy-peer-deps"],
       "env": {
         "APP_ENV": "preview"
       }
@@ -25,6 +27,7 @@
     "production": {
       "autoIncrement": true,
       "channel": "production",
+      "npmInstallFlags": ["--legacy-peer-deps"],
       "env": {
         "APP_ENV": "production"
       }
