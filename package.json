@@ -28,11 +28,11 @@
   "overrides": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-native-reanimated": "3.16.2",
     "@rnmapbox/maps": "10.2.10",
     "zod": "^3.25.76"
   },
   "dependencies": {
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "react-native-reanimated": "~4.1.1"
   }
 }
