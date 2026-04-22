@@ -20,10 +20,7 @@ module.exports = function (api) {
           extensions: ['.ios.js', '.android.js', '.js', '.jsx', '.ts', '.tsx'],
         },
       ],
-      // react-native-reanimated/plugin depends on react-native-worklets/plugin at
-      // Babel compile-time, which is unavailable in a Node/Jest environment.
-      // The reanimated mock (jest.mock('react-native-reanimated')) handles tests.
-      ...(isTest ? [] : ['react-native-reanimated/plugin']),
+      'react-native-reanimated/plugin',
     ],
   };
 };

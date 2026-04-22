@@ -16,6 +16,7 @@ export interface AuthUser {
   email:     string;
   tier:      SubscriptionTier;
   avatarUrl?: string;
+  metadata?:  Record<string, any>;
 }
 
 interface AuthState {

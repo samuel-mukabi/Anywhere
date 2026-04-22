@@ -37,9 +37,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors }  from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
+import { ONBOARDING_KEY } from '@/constants/keys';
 
 const { width, height } = Dimensions.get('window');
-export const ONBOARDING_KEY = 'onboardingComplete';
 
 // ─── Slide definitions ────────────────────────────────────────────────────────
 const SLIDES = ['budget', 'globe', 'pro'] as const;
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   },
   skipBtn: {
     position: 'absolute',
-    right:    spacing.xl,
+    right:    20,
     zIndex:   10,
   },
   skipLabel: {

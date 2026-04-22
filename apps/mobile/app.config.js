@@ -21,15 +21,15 @@ export default ({ config }) => ({
 
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.anywhere.travel',
-    associatedDomains: ['applinks:anywhere.app'],
+    bundleIdentifier: 'com.anywhere.travel.local', // changed to avoid personal team conflict
+    // associatedDomains: ['applinks:anywhere.app'],
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
   },
 
   android: {
-    package: 'com.anywhere.travel',
+    package: 'com.anywhere.travel.local', // Keep identical with iOS
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#EEEBD9',
@@ -61,7 +61,7 @@ export default ({ config }) => ({
     'expo-font',
     'expo-router',
     'expo-secure-store',
-    'expo-apple-authentication',
+    // 'expo-apple-authentication', // Commented out to avoid Apple Developer account requirement on personal teams
     [
       'expo-location',
       {

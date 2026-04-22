@@ -1,9 +1,8 @@
 import React, { useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions, Animated } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import Svg, { Rect, Circle, G, Text as SvgText, Path } from 'react-native-svg';
@@ -27,7 +26,7 @@ export default function DestinationDetailScreen() {
   
   const destination = useMemo(() => results.find((r) => r.id === id) || null, [id, results]);
 
-  const scrollY = useRef(new Animated.Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   // Render Loader if somehow lost context
   if (!destination) {
@@ -83,14 +82,14 @@ export default function DestinationDetailScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 120 }}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
-        onScroll={Animated.Animated.event(
+        onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true }
         )}
       >
         {/* HERO IMAGE CONTAINER */}
         <View style={[styles.heroContainer, { height: HERO_HEIGHT }]}>
-          <Animated.Animated.View style={[StyleSheet.absoluteFill, { transform: [{ translateY: imageTranslateY }] }]}>
+          <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ translateY: imageTranslateY }] }]}>
             <Image 
               source={{ uri: destination.imageUrl || 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05' }}
               style={StyleSheet.absoluteFillObject}
@@ -99,7 +98,7 @@ export default function DestinationDetailScreen() {
               transition={300}
               cachePolicy="memory-disk"
             />
-          </Animated.Animated.View>
+          </Animated.View>
           
           <LinearGradient
             colors={['transparent', 'rgba(13,30,39,0.85)']}

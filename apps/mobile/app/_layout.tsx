@@ -10,8 +10,6 @@
  *  6. Mount Toast provider above all other UI
  */
 
-import 'react-native-gesture-handler';
-
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Stack, router, useRootNavigationState, Href } from 'expo-router';
@@ -95,24 +93,27 @@ function RootNavigator() {
       { identifier: 'VIEW_BOOKING', buttonTitle: 'View booking', options: { opensAppToForeground: true } }
     ]);
 
-    // Handle background / deep link routing
+    // Handle background / deep link routing (while app was closed or in background)
     const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       const url = response.notification.request.content.data?.url as string;
       if (url) {
-        // e.g. anywhere://destination/xyz
         try {
            const path = new URL(url).pathname as Href;
            router.push(path);
         } catch {
-           router.push(url as Href); // fallback if it's already a relative path payload
+           router.push(url as Href);
         }
       }
     });
 
+    // Handle foreground notifications (while app is active)
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log('[Push] Notification received in foreground:', notification.request.content.title);
+    });
+
     return () => {
-      if (responseListener) {
-        responseListener.remove();
-      }
+      responseListener.remove();
+      notificationListener.remove();
     };
   }, []);
 
@@ -176,14 +177,14 @@ function RootNavigator() {
 
       hydrate();
     } else {
-      console.log('[RootLayout] Waiting for fonts...');
+      console.log('[RootLayout] Waiting for readiness...', { fontsLoaded, hasNav: !!rootNavigationState?.key });
       // Even if fonts fail, hide splash after 4s
       const timer = setTimeout(() => {
         SplashScreen.hideAsync().catch(() => {});
       }, 4000);
       return () => clearTimeout(timer);
     }
-  }, [fontsLoaded, fontError, setAuth, setHydrated]);
+  }, [fontsLoaded, fontError, setAuth, setHydrated, rootNavigationState]);
 
   const isLoading = !fontsLoaded && !fontError;
   const showOverlay = isLoading || !hydrated;

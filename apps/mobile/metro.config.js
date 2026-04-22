@@ -28,6 +28,15 @@ config.resolver.extraNodeModules = {
   'react-dom': resolvePackage('react-dom'),
   'react-native': resolvePackage('react-native'),
   'scheduler': resolvePackage('scheduler'),
+
+  // ─── Native animation / gesture (must all resolve to the same single copy) ──
+  // Missing pins here cause "Exception in HostFunction" at runtime because the
+  // Reanimated worklet runtime binds to a different native module than the JS
+  // module Metro bundled.
+  'react-native-reanimated': resolvePackage('react-native-reanimated'),
+  'react-native-gesture-handler': resolvePackage('react-native-gesture-handler'),
+  '@gorhom/bottom-sheet': resolvePackage('@gorhom/bottom-sheet'),
+
   '@tanstack/react-query': resolvePackage('@tanstack/react-query'),
   '@react-native-async-storage/async-storage': resolvePackage('@react-native-async-storage/async-storage'),
   'expo-router': resolvePackage('expo-router'),
