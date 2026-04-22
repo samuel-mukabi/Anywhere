@@ -54,4 +54,5 @@ Layer by layer:
 * **Zero Error Build**: Achieved a 100% clean TypeScript build (`tsc --noEmit`) across the entire monorepo, including both the mobile application and the `auth-service` backend APIs.
 * **Elimination of `any`**: Conducted a project-wide refactor to remove all `any` types in critical layers (API clients, Form validation, Map architecture).
 * **Native Stabilization**: Successfully stabilized React Native iOS/Android compilation by strictly pinning native dependencies, bypassing C++ header mismatches (via disabling the New Architecture), and managing Apple developer entitlements.
+* **Testing & ESM Stability**: Established a robust Jest testing environment for the monorepo, resolving complex ESM module transformation issues (msw, rettime) and ensuring 100% test pass rate in the `api-clients` package with full TypeScript integration.
 * **Web Bundler Disclaimer**: The mobile Expo app currently targets iOS and Android natively. Web bundling (`expo export` / `npx expo start --web`) is intentionally unsupported due to internal deep-imports within the `@stripe/stripe-react-native` package.

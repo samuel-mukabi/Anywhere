@@ -1,0 +1,531 @@
+
+> @anywhere/api-clients@0.1.0 test
+> jest --passWithNoTests
+
+(node:47313) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/ClimateScorer.spec.ts
+(node:47311) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/__tests__/ClimateScorer.test.ts
+(node:47312) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/TripCostCalculator.spec.ts
+(node:47307) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47309) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/geodb/GeoDBClient.spec.ts
+(node:47310) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/restcountries/RestCountriesClient.spec.ts
+(node:47308) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/duffel/DuffelClient.spec.ts
+  ● Console
+
+    console.error
+      Duffel Create Offer Request Failed: 422
+
+      146 |
+      147 |       if (statusCode !== 200 && statusCode !== 201) {
+    > 148 |          console.error(`Duffel Create Offer Request Failed: ${statusCode}`);
+          |                  ^
+      149 |          return null;
+      150 |       }
+      151 |
+
+      at DuffelClient.createOfferRequest (src/duffel/DuffelClient.ts:148:18)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:101:14)
+
+    console.error
+      Error creating Duffel Offer Request: Error: connection refused
+          at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:105:37)
+          at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:104:5)
+          at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      162 |         ...context,
+      163 |       });
+    > 164 |       console.error('Error creating Duffel Offer Request:', err);
+          |               ^
+      165 |       return null;
+      166 |     }
+      167 |   }
+
+      at DuffelClient.createOfferRequest (src/duffel/DuffelClient.ts:164:15)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:106:14)
+
+    console.error
+      Duffel List Offers Failed: 500
+
+      192 |
+      193 |       if (statusCode !== 200) {
+    > 194 |         console.error(`Duffel List Offers Failed: ${statusCode}`);
+          |                 ^
+      195 |         return [];
+      196 |       }
+      197 |
+
+      at DuffelClient.listOffers (src/duffel/DuffelClient.ts:194:17)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:156:14)
+
+    console.error
+      Error listing Duffel Offers: Error: timeout
+          at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:160:37)
+          at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:104:5)
+          at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      220 |         ...context,
+      221 |       });
+    > 222 |       console.error('Error listing Duffel Offers:', err);
+          |               ^
+      223 |       return [];
+      224 |     }
+      225 |   }
+
+      at DuffelClient.listOffers (src/duffel/DuffelClient.ts:222:15)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:161:14)
+
+    console.error
+      Duffel Get Offer Failed: 503
+
+      246 |
+      247 |       if (statusCode !== 200) {
+    > 248 |         console.error(`Duffel Get Offer Failed: ${statusCode}`);
+          |                 ^
+      249 |         return null;
+      250 |       }
+      251 |
+
+      at DuffelClient.getOffer (src/duffel/DuffelClient.ts:248:17)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:205:14)
+
+    console.error
+      Error getting Duffel Offer: Error: timeout
+          at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:209:37)
+          at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:104:5)
+          at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      266 |         ...context,
+      267 |       });
+    > 268 |       console.error('Error getting Duffel Offer:', err);
+          |               ^
+      269 |       return null;
+      270 |     }
+      271 |   }
+
+      at DuffelClient.getOffer (src/duffel/DuffelClient.ts:268:15)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:210:14)
+
+    console.error
+      Duffel Create Order Failed: 503
+
+      312 |
+      313 |       if (statusCode !== 200 && statusCode !== 201) {
+    > 314 |         console.error(`Duffel Create Order Failed: ${statusCode}`);
+          |                 ^
+      315 |         return null;
+      316 |       }
+      317 |
+
+      at DuffelClient.createOrder (src/duffel/DuffelClient.ts:314:17)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:243:14)
+
+    console.error
+      Error creating Duffel Order: Error: connection reset
+          at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/duffel/DuffelClient.spec.ts:247:37)
+          at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)
+          at processTicksAndRejections (node:internal/process/task_queues:104:5)
+          at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)
+          at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)
+          at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)
+
+      321 |       if (err instanceof Error && err.message === 'offer_no_longer_available') throw err;
+      322 |       
+    > 323 |       console.error('Error creating Duffel Order:', err);
+          |               ^
+      324 |       return null;
+      325 |     }
+      326 |   }
+
+      at DuffelClient.createOrder (src/duffel/DuffelClient.ts:323:15)
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:248:14)
+
+  ● DuffelClient › token safety › uses empty string if live token is passed in dev and no env token exists
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ""
+    Received: "test_token"
+
+      56 |     it('uses empty string if live token is passed in dev and no env token exists', () => {
+      57 |       const token = Reflect.get(client as object, 'token') as string;
+    > 58 |       expect(token).toBe('');
+         |                     ^
+      59 |     });
+      60 |
+      61 |     it('isSandbox is false when token is empty', () => {
+
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:58:21)
+
+  ● DuffelClient › token safety › isSandbox is false when token is empty
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      60 |
+      61 |     it('isSandbox is false when token is empty', () => {
+    > 62 |       expect(Reflect.get(client as object, 'isSandbox')).toBe(false);
+         |                                                          ^
+      63 |     });
+      64 |
+      65 |     it('uses a provided duffel_test_ token directly in dev', () => {
+
+      at Object.<anonymous> (src/duffel/DuffelClient.spec.ts:62:58)
+
+{"level":30,"time":1776827081904,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827081905,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081905,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":50,"time":1776827081905,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827081905,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":60,"time":1776827081908,"pid":47309,"hostname":"Samuels-MacBook-Air.local","msg":"RapidAPI Limit Structurally Breached. Terminate seed locally actively blocking IP."}
+{"level":30,"time":1776827081907,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081908,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"429","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081909,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081909,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081910,"pid":47309,"hostname":"Samuels-MacBook-Air.local","api":"geodb","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":50,"time":1776827081909,"pid":47309,"hostname":"Samuels-MacBook-Air.local","statusCode":503,"msg":"Unexpected Response entirely explicitly blocking resolution sequence."}
+{"level":40,"time":1776827081909,"pid":47309,"hostname":"Samuels-MacBook-Air.local","name":"nowhere","countryCode":"XX","msg":"GeoDB explicitly returned empty matches logically avoiding coordinates"}
+{"level":50,"time":1776827081910,"pid":47309,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"network error","stack":"Error: network error\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/geodb/GeoDBClient.spec.ts:93:35)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)"},"name":"bali","countryCode":"ID","msg":"GeoDBClient mapping sequence collapsed tracking dependencies."}
+{"level":30,"time":1776827081921,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081927,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":40,"time":1776827081930,"pid":47310,"hostname":"Samuels-MacBook-Air.local","code":"XX","msg":"RestCountries invalid country code"}
+{"level":30,"time":1776827081927,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081930,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"404","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081931,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"400","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081931,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081932,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081932,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827081934,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081935,"pid":47310,"hostname":"Samuels-MacBook-Air.local","api":"restcountries","method":"GET","latencyMs":0,"status":"404","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":40,"time":1776827081931,"pid":47310,"hostname":"Samuels-MacBook-Air.local","code":"BAD","msg":"RestCountries invalid country code"}
+{"level":50,"time":1776827081931,"pid":47310,"hostname":"Samuels-MacBook-Air.local","code":"ID","statusCode":503,"msg":"RestCountries returned non-200 status"}
+{"level":50,"time":1776827081932,"pid":47310,"hostname":"Samuels-MacBook-Air.local","err":[{"code":"invalid_type","expected":"string","received":"undefined","path":["name","official"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["cca2"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["cca3"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["flag"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["region"],"message":"Required"},{"code":"invalid_type","expected":"array","received":"undefined","path":["latlng"],"message":"Required"},{"code":"invalid_type","expected":"number","received":"undefined","path":["population"],"message":"Required"}],"code":"BR","msg":"RestCountries response failed schema validation"}
+{"level":40,"time":1776827081935,"pid":47310,"hostname":"Samuels-MacBook-Air.local","msg":"Destination missing alpha-2 country code for enrichment"}
+{"level":40,"time":1776827081935,"pid":47310,"hostname":"Samuels-MacBook-Air.local","code":"XX","msg":"RestCountries invalid country code"}
+PASS src/openmeteo/OpenMeteoClient.spec.ts
+{"level":30,"time":1776827081931,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"201","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081932,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"422","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081951,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827081952,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"201","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081953,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081955,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081956,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"500","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081956,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827081957,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081958,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081958,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081958,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081959,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081959,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081959,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827081960,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"201","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081960,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081960,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"422","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827081964,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081965,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"POST","latencyMs":0,"status":"201","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081966,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081966,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081966,"pid":47308,"hostname":"Samuels-MacBook-Air.local","api":"duffel","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081987,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":40,"time":1776827081999,"pid":47313,"hostname":"Samuels-MacBook-Air.local","originalLat":0,"originalLng":0,"fallback":"Cape Town","reason":"No data available for these coordinates","msg":"OpenMeteo: no data for destination [0,0] — substituting nearest capital: Cape Town"}
+{"level":30,"time":1776827081997,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081999,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"400","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827081999,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827082000,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827082000,"pid":47313,"hostname":"Samuels-MacBook-Air.local","api":"openmeteo","method":"GET","latencyMs":0,"status":"503","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827082000,"pid":47313,"hostname":"Samuels-MacBook-Air.local","originalLat":-8.4,"originalLng":115.2,"fallback":"Singapore","msg":"OpenMeteo: no data for destination [-8.4,115.2] — substituting nearest capital: Singapore"}
+{"level":50,"time":1776827082000,"pid":47313,"hostname":"Samuels-MacBook-Air.local","msg":"Total OpenMeteo bounds fetch collapse inherently"}
+{"level":50,"time":1776827082002,"pid":47313,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"timeout","stack":"Error: timeout\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/openmeteo/OpenMeteoClient.spec.ts:115:35)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)"},"msg":"Exception executing OpenMeteo sequence seamlessly"}
+{"level":40,"time":1776827082936,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ne"}
+{"level":30,"time":1776827082950,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827082950,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827082951,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827082951,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827082984,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827082984,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":50,"time":1776827082985,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827082985,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827083017,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827083017,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":50,"time":1776827083017,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827083017,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827084049,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ne"}
+{"level":30,"time":1776827084050,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"fxrates","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827084052,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827084052,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827084052,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827084052,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827085084,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ne"}
+{"level":30,"time":1776827085086,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827085086,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827085087,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827085087,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827086118,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ne"}
+{"level":30,"time":1776827086119,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"fxrates","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":50,"time":1776827086119,"pid":47307,"hostname":"Samuels-MacBook-Air.local","err":{"type":"Error","message":"FX network down","stack":"Error: FX network down\n    at Object.<anonymous> (/Users/samuel/anywhere/packages/api-clients/src/wherenext/WhereNextClient.spec.ts:112:39)\n    at Promise.then.completed (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:316:40)\n    at _runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/samuel/anywhere/node_modules/@jest/core/node_modules/jest-runner/build/testWorker.js:106:12)"},"msg":"Failed tracking FX sequences successfully"}
+{"level":30,"time":1776827086121,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827086122,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827086121,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827086122,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827087154,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ne"}
+{"level":30,"time":1776827087160,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827087160,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827087161,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827087161,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827088196,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Missing from WhereNext - Re-routed to Mongo for ky"}
+{"level":30,"time":1776827088203,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827088203,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827088203,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827088203,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827089235,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on no"}
+{"level":30,"time":1776827089237,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827089237,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827089238,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827089237,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827090268,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on at"}
+{"level":30,"time":1776827090269,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827090269,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827090269,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827090269,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":50,"time":1776827091300,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Mongo Fallback collapsed inherently."}
+{"level":30,"time":1776827091302,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":40,"time":1776827091301,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on so"}
+{"level":30,"time":1776827091302,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827091302,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827091302,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827091333,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827091333,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"403","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":40,"time":1776827091333,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Prefetch failed with status: 403"}
+{"level":40,"time":1776827092364,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on an"}
+{"level":30,"time":1776827092366,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827092366,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827092366,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827092366,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827092396,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827092396,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":50,"time":1776827092396,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":40,"time":1776827093426,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on re"}
+{"level":30,"time":1776827093427,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827093427,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827093427,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827093427,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827093458,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827093459,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":1,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":50,"time":1776827093459,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827093459,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":40,"time":1776827094492,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ch"}
+{"level":30,"time":1776827094492,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":30,"time":1776827094492,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":50,"time":1776827094493,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827094493,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+{"level":30,"time":1776827094524,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Prefetching WhereNext 380 CoL matrix into memory array..."}
+{"level":30,"time":1776827094525,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":1,"status":"200","cacheHit":false,"fallbackUsed":false,"msg":"external_api_call"}
+{"level":50,"time":1776827094525,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"WhereNext Request crash locally internally."}
+{"level":30,"time":1776827094525,"pid":47307,"hostname":"Samuels-MacBook-Air.local","api":"wherenext","method":"GET","latencyMs":0,"status":"error","cacheHit":false,"fallbackUsed":true,"msg":"external_api_call"}
+FAIL src/wherenext/WhereNextClient.spec.ts (14.374 s)
+  ● WhereNextClient › city in dataset returns DailyBudgetEstimate (USD → USD)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "mid"
+    Received: "budget"
+
+      62 |     const estimate = await client.getDailyBudget('new york');
+      63 |
+    > 64 |     expect(estimate.tier).toBe('mid');
+         |                           ^
+      65 |     expect(estimate.dailyTotal).toBeCloseTo(53, 1);
+      66 |     expect(estimate.currency).toBe('USD');
+      67 |     expect(estimate.mealCheap).toBeCloseTo(15, 1);
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:64:27)
+
+  ● WhereNextClient › isKnownCity returns true for a prefetched city slug
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      71 |   // ── isKnownCity ───────────────────────────────────────────────────────────
+      72 |   it('isKnownCity returns true for a prefetched city slug', () => {
+    > 73 |     expect(client.isKnownCity('new york')).toBe(true);
+         |                                            ^
+      74 |   });
+      75 |
+      76 |   it('isKnownCity returns false for an unknown city', () => {
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:73:44)
+
+  ● WhereNextClient › converts daily total to EUR when targetCurrency is EUR (cache miss → live fetch)
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 49.29
+    Received: 25.11
+
+    Expected precision:    0
+    Expected difference: < 0.5
+    Received difference:   24.18
+
+      89 |     expect(estimate.currency).toBe('EUR');
+      90 |     // dailyTotal in USD is ~53, × 0.93 ≈ 49.29
+    > 91 |     expect(estimate.dailyTotal).toBeCloseTo(53 * 0.93, 0);
+         |                                 ^
+      92 |   });
+      93 |
+      94 |   it('uses cached FX rates when available (skips live fetch)', async () => {
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:91:33)
+
+  ● WhereNextClient › uses cached FX rates when available (skips live fetch)
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 48.760000000000005
+    Received: 24.84
+
+    Expected precision:    0
+    Expected difference: < 0.5
+    Received difference:   23.920000000000005
+
+      106 |     expect(mockRequest).not.toHaveBeenCalled();
+      107 |     expect(estimate.currency).toBe('EUR');
+    > 108 |     expect(estimate.dailyTotal).toBeCloseTo(53 * 0.92, 0);
+          |                                 ^
+      109 |   });
+      110 |
+      111 |   it('falls back to rate=1 when FX API is unavailable', async () => {
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:108:33)
+
+  ● WhereNextClient › falls back to rate=1 when FX API is unavailable
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 53
+    Received: 27
+
+    Expected precision:    0
+    Expected difference: < 0.5
+    Received difference:   26
+
+      116 |     // Falls back to multiplier=1 → same as USD value
+      117 |     expect(estimate.currency).toBe('GBP');
+    > 118 |     expect(estimate.dailyTotal).toBeCloseTo(53, 0);
+          |                                 ^
+      119 |   });
+      120 |
+      121 |   it('USD → USD conversion returns rate 1 without hitting FX API', async () => {
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:118:33)
+
+  ● WhereNextClient › unknown city found in MongoDB → uses avgCosts from DB document
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "budget"
+    Received: "mid"
+
+      141 |
+      142 |     // totalUsd = 8+18+2+3 = 31 → tier 'budget'
+    > 143 |     expect(estimate.tier).toBe('budget');
+          |                           ^
+      144 |     expect(estimate.dailyTotal).toBeCloseTo(31, 1);
+      145 |     expect(mockCollection).toHaveBeenCalledWith('destinations');
+      146 |     expect(mockFindOne).toHaveBeenCalledWith({ slug: 'kyoto' });
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:143:27)
+
+  ● WhereNextClient › totalUsd > 90 → premium tier
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "premium"
+    Received: "budget"
+
+      223 |
+      224 |     const estimate = await expClient.getDailyBudget('expenseville');
+    > 225 |     expect(estimate.tier).toBe('premium');
+          |                           ^
+      226 |   });
+      227 | });
+      228 |
+
+      at Object.<anonymous> (src/wherenext/WhereNextClient.spec.ts:225:27)
+
+Test Suites: 2 failed, 6 passed, 8 total
+Tests:       9 failed, 110 passed, 119 total
+Snapshots:   0 total
+Time:        15.125 s, estimated 17 s
+Ran all test suites.
+{"level":40,"time":1776827095556,"pid":47307,"hostname":"Samuels-MacBook-Air.local","msg":"Absolute Default FX fallback mapped globally for generic response on ex"}
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path /Users/samuel/anywhere/packages/api-clients
+npm error workspace @anywhere/api-clients@0.1.0
+npm error location /Users/samuel/anywhere/packages/api-clients
+npm error command failed
+npm error command sh -c jest --passWithNoTests

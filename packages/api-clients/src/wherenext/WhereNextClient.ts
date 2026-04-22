@@ -154,7 +154,8 @@ export class WhereNextClient {
    * Expose public lookup mapping to securely ascertain logic bounding over WhereNext parameters prior to executing.
    */
   public isKnownCity(slug: string): boolean {
-     return this.colDataMap.has(slug.toLowerCase());
+     const key = slug.toLowerCase().slice(0, 2);
+     return this.colDataMap.has(key);
   }
 
   /**

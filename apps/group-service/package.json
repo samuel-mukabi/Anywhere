@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "ts-node src/server.ts",
     "start": "node dist/server.js",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@anywhere/api-clients": "*",

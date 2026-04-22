@@ -83,7 +83,8 @@ TTL:        destination route caches full response for 1200s (20 min)
 | **Docs** | https://duffel.com/docs |
 
 > [!IMPORTANT]
-> `DuffelClient` requires **two tokens** — `(testToken, liveToken)`. The client automatically uses `DUFFEL_TEST_TOKEN` unless `NODE_ENV=production`, where it switches to `DUFFEL_LIVE_TOKEN`. Never pass a single `DUFFEL_ACCESS_TOKEN` — that env var does not exist.
+> `DuffelClient` requires **two tokens** — `(testToken, liveToken)`. The client automatically uses `DUFFEL_TEST_TOKEN` unless `NODE_ENV=production`, where it switches to `DUFFEL_LIVE_TOKEN`.
+> **Dev-Mode Safety**: In `development` mode, the client will explicitly block any token that does not start with `duffel_test_` to prevent accidental live usage during local testing.
 
 #### Endpoints Used
 

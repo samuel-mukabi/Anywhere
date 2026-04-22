@@ -55,7 +55,13 @@ export class DuffelClient {
   constructor(testToken: string, liveToken: string, isLiveMode?: boolean) {
     this.isLiveMode = isLiveMode ?? process.env.NODE_ENV === 'production';
     this.token = this.isLiveMode ? liveToken : testToken;
-    this.isSandbox = !this.isLiveMode;
+
+    // Safety: In development, block live tokens passed accidentally
+    if (!this.isLiveMode && process.env.NODE_ENV === 'development' && this.token && !this.token.startsWith('duffel_test_')) {
+        this.token = '';
+    }
+
+    this.isSandbox = !this.isLiveMode && !!this.token;
 
     if (!this.token && process.env.NODE_ENV === 'development') {
         console.warn(`DUFFEL_${this.isLiveMode ? 'LIVE' : 'TEST'}_TOKEN not set or invalid.`);

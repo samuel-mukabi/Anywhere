@@ -1,0 +1,374 @@
+
+> @anywhere/api-clients@0.1.0 test
+> jest --passWithNoTests
+
+FAIL src/restcountries/RestCountriesClient.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+FAIL src/__tests__/ClimateScorer.test.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46813) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46811) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/openmeteo/OpenMeteoClient.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46812) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/wherenext/WhereNextClient.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46810) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/TripCostCalculator.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+FAIL src/duffel/DuffelClient.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46814) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/ClimateScorer.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46816) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/geodb/GeoDBClient.spec.ts
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/samuel/anywhere/node_modules/rettime/build/index.mjs:2
+    import { LensList } from "./lens-list.mjs";
+    ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    > 1 | import { setupServer } from 'msw/node';
+        | ^
+      2 | import { handlers } from './handlers';
+      3 |
+      4 | export const server = setupServer(...handlers);
+
+      at Runtime.createScriptFromCode (../../node_modules/@jest/core/node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/msw/lib/core/experimental/define-network.js:26:22)
+      at Object.<anonymous> (node_modules/msw/lib/node/index.js:35:30)
+      at Object.<anonymous> (src/__mocks__/server.ts:1:1)
+      at Object.<anonymous> (jest.setup.ts:1:1)
+
+(node:46815) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+Test Suites: 8 failed, 8 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        1.301 s
+Ran all test suites.
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path /Users/samuel/anywhere/packages/api-clients
+npm error workspace @anywhere/api-clients@0.1.0
+npm error location /Users/samuel/anywhere/packages/api-clients
+npm error command failed
+npm error command sh -c jest --passWithNoTests
