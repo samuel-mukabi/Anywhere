@@ -27,10 +27,10 @@ jobs:
         uses: dopplerhq/cli-action@v3
 
       - name: Doppler setup
-        run: doppler setup --project anywhere --config staging --no-interactive
+        run: doppler setup --project anywhere --config stg --no-interactive
 
       - name: Build with Doppler secrets
-        run: doppler run --project anywhere --config staging -- npm run build
+        run: doppler run --project anywhere --config stg -- npm run build
 
       - name: Test with Doppler secrets
-        run: doppler run --project anywhere --config staging -- npm run test
+        run: doppler run --project anywhere --config stg -- npm run test
