@@ -7,7 +7,7 @@ export default ({ config }) => ({
   version: '1.0.0',
   orientation: 'portrait',
   userInterfaceStyle: 'light',
-  newArchEnabled: false,
+  newArchEnabled: true,
   platforms: ['ios', 'android'],
   owner: 'samuel-mukabi',
   scheme: 'anywhere',
