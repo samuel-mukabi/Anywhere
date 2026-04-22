@@ -44,7 +44,7 @@ describe('DuffelClient', () => {
     mockRequest.mockReset();
     process.env.NODE_ENV = 'development';
     delete process.env.DUFFEL_ACCESS_TOKEN;
-    client = new DuffelClient('live_prod_token_that_must_be_blocked');
+    client = new DuffelClient('test_token', 'live_prod_token_that_must_be_blocked');
   });
 
   afterEach(() => {
@@ -63,13 +63,13 @@ describe('DuffelClient', () => {
     });
 
     it('uses a provided duffel_test_ token directly in dev', () => {
-      const devClient = new DuffelClient('duffel_test_myowntoken');
+      const devClient = new DuffelClient('duffel_test_myowntoken', 'live_token');
       expect(Reflect.get(devClient as object, 'token')).toBe('duffel_test_myowntoken');
     });
 
     it('uses live token in non-dev environments', () => {
       process.env.NODE_ENV = 'production';
-      const prodClient = new DuffelClient('live_tok_abc123');
+      const prodClient = new DuffelClient('test_token', 'live_tok_abc123');
       expect(Reflect.get(prodClient as object, 'token')).toBe('live_tok_abc123');
       expect(Reflect.get(prodClient as object, 'isSandbox')).toBe(false);
     });

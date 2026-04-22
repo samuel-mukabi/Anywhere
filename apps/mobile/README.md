@@ -144,5 +144,11 @@ The project is linked to Expo Application Services (EAS). Production environment
 
 Profiles are defined in `eas.json`:
 - `development`: Local development client simulators.
-- `preview`: Internal distribution.
-- `production`: App Store and Play Store auto-incremented releases.
+  - `preview`: Internal distribution.
+  - `production`: App Store and Play Store auto-incremented releases.
+
+## Build & Stability Notes
+
+- **Native iOS/Android Builds**: The native app environment is highly stabilized. If you are building natively, ensure `newArchEnabled` is false in your settings to avoid C++ header mismatch errors. Apple provisioning is configured to utilize Personal Team development by stripping "Pro" entitlements (Push Notifications, Associated Domains).
+- **Dependency Pinning**: React Native Reanimated is strictly pinned in `metro.config.js` to prevent `Exception in HostFunction` crashes during startup.
+- **Web Bundling Constraint**: Do **not** attempt to run `npx expo start --web` or build the app for the web platform. The `@stripe/stripe-react-native` package contains direct `react-native` internal imports which fundamentally break the Expo Web bundler. This application targets iOS and Android natively.

@@ -26,7 +26,7 @@ describe('GeoDBClient', () => {
   let client: GeoDBClient;
 
   beforeEach(() => {
-    client = new GeoDBClient('test_rapid_key');
+    client = new GeoDBClient();
     mockRequest.mockReset();
     mockRedis.get.mockReset();
     mockRedis.setex.mockReset();

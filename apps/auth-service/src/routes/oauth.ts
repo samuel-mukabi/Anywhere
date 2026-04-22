@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import oauthPlugin, { OAuth2Namespace } from '@fastify/oauth2';
+import fastifyOauth2, { OAuth2Namespace } from '@fastify/oauth2';
 import { syncOAuthUser } from '../lib/supabase';
 import { issueTokens } from '../lib/jwt';
 import { storeRefreshToken } from '../lib/redis';
@@ -16,14 +16,15 @@ export async function oauthRoutes(app: FastifyInstance) {
   // --------------------------------------------------------
   // GOOGLE OAUTH
   // --------------------------------------------------------
-  await app.register(oauthPlugin, {
+  // @ts-expect-error - FastifyOauth2 types use Fastify v4 generics which conflict with Fastify v5
+  await app.register(fastifyOauth2, {
     name: 'googleOAuth2',
     credentials: {
       client: {
         id: process.env.GOOGLE_CLIENT_ID || 'dummy-google-id',
         secret: process.env.GOOGLE_CLIENT_SECRET || 'dummy-google-secret',
       },
-      auth: oauthPlugin.GOOGLE_CONFIGURATION,
+      auth: fastifyOauth2.GOOGLE_CONFIGURATION,
     },
     // The start redirect URL
     startRedirectPath: '/auth/google',
@@ -75,14 +76,15 @@ export async function oauthRoutes(app: FastifyInstance) {
   // --------------------------------------------------------
   // APPLE OAUTH (Similar architecture)
   // --------------------------------------------------------
-  await app.register(oauthPlugin, {
+  // @ts-expect-error - FastifyOauth2 types use Fastify v4 generics which conflict with Fastify v5
+  await app.register(fastifyOauth2, {
     name: 'appleOAuth2',
     credentials: {
       client: {
         id: process.env.APPLE_CLIENT_ID || 'dummy-apple-id',
         secret: process.env.APPLE_CLIENT_SECRET || 'dummy-apple-secret',
       },
-      auth: oauthPlugin.APPLE_CONFIGURATION,
+      auth: fastifyOauth2.APPLE_CONFIGURATION,
     },
     startRedirectPath: '/auth/apple',
     callbackUri: `${process.env.API_URL || 'http://localhost:8003'}/auth/apple/callback`,

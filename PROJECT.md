@@ -51,6 +51,7 @@ Layer by layer:
 ---
 
 ### ## Technical reliability & Type Safety
-* **Zero Error Build**: Achieved a 100% clean TypeScript build (`tsc --noEmit`) across the mobile application.
+* **Zero Error Build**: Achieved a 100% clean TypeScript build (`tsc --noEmit`) across the entire monorepo, including both the mobile application and the `auth-service` backend APIs.
 * **Elimination of `any`**: Conducted a project-wide refactor to remove all `any` types in critical layers (API clients, Form validation, Map architecture).
-* **Dependency Synchronization**: Unified Zod versions across the monorepo to resolve identity mismatches and ensure strict validation integrity.
+* **Native Stabilization**: Successfully stabilized React Native iOS/Android compilation by strictly pinning native dependencies, bypassing C++ header mismatches (via disabling the New Architecture), and managing Apple developer entitlements.
+* **Web Bundler Disclaimer**: The mobile Expo app currently targets iOS and Android natively. Web bundling (`expo export` / `npx expo start --web`) is intentionally unsupported due to internal deep-imports within the `@stripe/stripe-react-native` package.

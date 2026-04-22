@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import pino from 'pino';
-import fastifyCookie from '@fastify/cookie';
+import fastifyCookie = require('@fastify/cookie');
 import { oauthRoutes } from './routes/oauth';
 import { authRoutes } from './routes/auth';
 import { sessionRoutes } from './routes/session';
