@@ -56,7 +56,7 @@ jest.mock('react-native-worklets-core', () => {
       has: jest.fn(),
     },
   };
-});
+}, { virtual: true });
 
 
 

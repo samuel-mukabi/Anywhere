@@ -20,7 +20,7 @@ describe('authStore', () => {
   it('setAuth stores user, token, and tier in memory', () => {
     useAuthStore.getState().setAuth({ ...MOCK_USER, tier: 'pro' }, MOCK_TOKEN);
     const state = useAuthStore.getState();
-    expect(state.user).toEqual(MOCK_USER);
+    expect(state.user).toEqual({ ...MOCK_USER, tier: 'pro' });
     expect(state.token).toBe(MOCK_TOKEN);
     expect(state.tier).toBe('pro');
   });
