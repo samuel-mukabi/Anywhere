@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import fastifyRateLimit from '@fastify/rate-limit';
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyRequest } from 'fastify';
 
 /**
  * Role-Based Rate Limiting Plugin
@@ -20,14 +20,14 @@ export const setupRateLimit = fp(async (fastify: FastifyInstance) => {
   await fastify.register(fastifyRateLimit, {
     redis: fastify.redis,
     // By default check based on IP unless user is authenticated
-    keyGenerator: (request) => {
+    keyGenerator: (request: FastifyRequest) => {
       if (request.user && request.user.sub !== 'anonymous') {
         return request.user.sub;
       }
       return request.ip;
     },
     // Dynamically calculate limit based on the `target` JWT 'tier' extracted
-    max: (request) => {
+    max: (request: FastifyRequest) => {
       // request.tier is injected by the JWT plugin
       if (request.tier === 'pro') return 300; 
       return 60; 

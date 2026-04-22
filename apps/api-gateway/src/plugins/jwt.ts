@@ -14,21 +14,6 @@ declare module '@fastify/jwt' {
   }
 }
 
-declare module 'fastify' {
-  interface FastifyRequest {
-    tier: 'free' | 'pro';
-  }
-  interface FastifyInstance {
-    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
-  }
-}
-
-/**
- * JWT Authentication Plugin
- * =========================
- * Processes Supabase (or any provider) JWT tokens.
- * Extracts user ID and the pricing 'tier' from the token.
- */
 export const setupJwtPlugin = fp(async (fastify: FastifyInstance) => {
   // Uses Doppler-provided JWT_SECRET
   const secret = process.env.JWT_SECRET || 'super-secret-default-string-development';
