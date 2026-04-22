@@ -80,9 +80,7 @@ export default ({ config }) => ({
   updates: {
     url: "https://u.expo.dev/36ff202d-ed90-4207-b32e-e309bd32a040"
   },
-  runtimeVersion: {
-    policy: "appVersion"
-  },
+  runtimeVersion: "1.0.0",
 
   extra: {
     // Runtime env vars — read from process.env, injected by EAS or .env.local
