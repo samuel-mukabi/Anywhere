@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "pg": "^8.20.0",
-    "react-native-reanimated": "~4.1.1"
+    "react-native-reanimated": "^4.3.0"
   }
 }
