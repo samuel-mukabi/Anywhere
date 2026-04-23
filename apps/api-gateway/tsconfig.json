@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "extends": "@repo/config/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
@@ -13,6 +16,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "src/types/fastify.d.ts"],
+  "include": ["src/**/*", "src/types/**/*"],
   "exclude": ["node_modules", "dist"]
 }

@@ -24,6 +24,7 @@ export async function buildApp(): Promise<FastifyInstance> {
         : undefined,
     },
     disableRequestLogging: true,
+    ignoreTrailingSlash: true,
   });
 
   app.addHook('onRequest', async (req) => {

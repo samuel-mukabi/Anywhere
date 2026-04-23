@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "node --env-file=.env -r ts-node/register src/server.ts",
+    "seed": "node --env-file=.env -r ts-node/register src/scripts/seed-supabase-rest.ts",
     "start": "node dist/server.js",
     "lint": "eslint src/**/*.ts",
     "typecheck": "tsc --noEmit"

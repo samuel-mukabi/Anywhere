@@ -16,9 +16,9 @@ describe('DestinationRanker', () => {
     let ranker: DestinationRanker;
 
     const mockDestinations = [
-       { iso: 'DPS', name: 'Bali', safetyScore: 85, climateMatrix: { '7': { 'Tropical': 90 } }, avgCosts: { dailyLiving: 40 } },
-       { iso: 'PAR', name: 'Paris', safetyScore: 70, climateMatrix: { '7': { 'Tropical': 30 } }, avgCosts: { dailyLiving: 150 } },
-       { iso: 'NYC', name: 'New York', safetyScore: 60, climateMatrix: { '7': { 'Tropical': 20 } }, avgCosts: { dailyLiving: 200 } }
+       { _id: '1', iso: 'DPS', name: 'Bali', safetyScore: 85, climateMatrix: { '7': { 'Tropical': 90 } }, avgCosts: { dailyLiving: 40 } },
+       { _id: '2', iso: 'PAR', name: 'Paris', safetyScore: 70, climateMatrix: { '7': { 'Tropical': 30 } }, avgCosts: { dailyLiving: 150 } },
+       { _id: '3', iso: 'NYC', name: 'New York', safetyScore: 60, climateMatrix: { '7': { 'Tropical': 20 } }, avgCosts: { dailyLiving: 200 } }
     ];
 
     const mockOffers: FlightOffer[] = [
@@ -48,8 +48,8 @@ describe('DestinationRanker', () => {
 
         const results = await ranker.rank(params);
         expect(results.length).toBe(1);
-        expect(results.find(r => r.destination.iso === 'PAR')).toBeUndefined();
-        expect(results.find(r => r.destination.iso === 'NYC')).toBeUndefined();
+        expect(results.find(r => r.iataCode === 'PAR')).toBeUndefined();
+        expect(results.find(r => r.iataCode === 'NYC')).toBeUndefined();
     });
 
     it('results sorted gracefully accurately by rankScore seamlessly', async () => {
@@ -69,7 +69,7 @@ describe('DestinationRanker', () => {
         const results = await ranker.rank(params);
         expect(results).toHaveLength(3);
         // Bali should be first because rankScore (Safety 85, Climate 90) > completely crushes the rest
-        expect(results[0].destination.iso).toBe('DPS');
+        expect(results[0].iataCode).toBe('DPS');
         expect(results[0].rankScore).toBeGreaterThan(results[1].rankScore);
     });
 

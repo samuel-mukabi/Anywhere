@@ -9,15 +9,13 @@ import { billingRoutes } from './routes/billing';
 import { adminRoutes } from './routes/admin';
 
 export async function buildApp(): Promise<FastifyInstance> {
-  const logger = pino({
-    level: process.env.LOG_LEVEL || 'info',
-    transport: process.env.NODE_ENV !== 'production' 
-      ? { target: 'pino-pretty', options: { colorize: true } } 
-      : undefined,
-  });
-
   const app = Fastify({
-    logger,
+    logger: {
+      level: process.env.LOG_LEVEL || 'info',
+      transport: process.env.NODE_ENV !== 'production' 
+        ? { target: 'pino-pretty', options: { colorize: true } } 
+        : undefined,
+    },
     disableRequestLogging: true,
   });
 

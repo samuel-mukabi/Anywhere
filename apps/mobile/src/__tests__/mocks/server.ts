@@ -25,8 +25,8 @@ export const handlers = [
     res(ctx.json({ searchId: MOCK_SEARCH_ID, cached: false })),
   ),
 
-  // GET /search/:id/status — returns ready state with results
-  rest.get(`*/search/${MOCK_SEARCH_ID}/status`, (_req, res, ctx) =>
+  // GET /search/poll/:id — returns ready state with results
+  rest.get(`*/search/poll/${MOCK_SEARCH_ID}`, (_req, res, ctx) =>
     res(ctx.json({ status: 'ready', results: [MOCK_DESTINATION] })),
   ),
 

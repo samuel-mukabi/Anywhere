@@ -2,6 +2,10 @@ import 'fastify';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user?: { tier?: string };
+    user?: { 
+      id?: string;
+      email?: string;
+      tier?: 'free' | 'pro' | 'admin';
+    };
   }
 }

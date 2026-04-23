@@ -16,7 +16,7 @@ function buildInMemoryCache(): Redis {
 
 export const cacheRedis: Redis = process.env.NODE_ENV === 'test'
   ? buildInMemoryCache()
-  : new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+  : new Redis(process.env.REDIS_URL || 'redis://localhost:6379', { maxRetriesPerRequest: null });
 
 export async function setCachedSearch(hash: string, payload: unknown): Promise<void> {
   // Store raw JSON heavily compressed using 20 Minute EX TTL constraints

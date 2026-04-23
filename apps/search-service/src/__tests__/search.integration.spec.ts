@@ -49,7 +49,7 @@ describe('Search Integration Pipeline', () => {
             .send(payload)
             .expect(202);
         
-        expect(res1.body.status).toBe('processing');
+        expect(res1.body.status).toBe('pending');
         const searchHash = res1.body.hash;
 
         // Simulate BullMQ Worker natively explicitly effectively 
@@ -75,7 +75,7 @@ describe('Search Integration Pipeline', () => {
             .get(`/search/poll/${res1.body.jobId}`)
             .expect(200);
 
-        expect(res2.body.status).toBe('completed');
+        expect(res2.body.status).toBe('ready');
         expect(res2.body.results[0].city).toBe('Bali');
     });
 
@@ -115,7 +115,7 @@ describe('Search Integration Pipeline', () => {
             .send(payload)
             .expect(200); // Because cache immediately terminates gracefully safely natively logically correctly mathematically reliably
         
-        expect(res2.body.status).toBe('completed');
+        expect(res2.body.status).toBe('ready');
         expect(res2.body.results[0].city).toBe('Tokyo');
         
         // Assert queue only called ONCE gracefully naturally seamlessly natively safely dynamically accurately flawlessly organically smoothly cleanly smartly

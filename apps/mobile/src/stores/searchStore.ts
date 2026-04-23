@@ -61,7 +61,7 @@ const DEFAULT_PARAMS: SearchParams = {
   budget:         2000,
   dateFrom:       null,
   dateTo:         null,
-  vibes:          [],
+  vibes:          ['City'],
   durationNights: 7,
   currency:       'USD',
   departureIATA:  'LHR',

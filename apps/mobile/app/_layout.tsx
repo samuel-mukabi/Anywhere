@@ -54,6 +54,10 @@ const queryClient = new QueryClient({
   },
 });
 
+const STACK_SCREEN_OPTIONS = {
+  headerShown: false,
+};
+
 // ─── Inner navigator (needs access to hooks) ─────────────────────────────────
 function RootNavigator() {
   const { fontsLoaded, fontError } = useFontLoader();
@@ -61,6 +65,7 @@ function RootNavigator() {
   const setAuth    = useAuthStore((s) => s.setAuth);
   const setHydrated = useAuthStore((s) => s.setHydrated);
   const rootNavigationState = useRootNavigationState();
+  const isHydrating = React.useRef(false);
 
   // ─── Universal Warm-Start URL Interceptor ────────────────────────────────────
   const url = Linking.useURL();
@@ -137,9 +142,10 @@ function RootNavigator() {
   useEffect(() => {
     const isNavigationReady = !!rootNavigationState?.key;
 
-    if (isNavigationReady && (fontsLoaded || fontError)) {
+    if (isNavigationReady && (fontsLoaded || fontError) && !hydrated && !isHydrating.current) {
       // Hide native splash immediately so the branded React splash takes over
       SplashScreen.hideAsync().catch(() => {});
+      isHydrating.current = true;
 
       async function hydrate() {
         console.log('[RootLayout] Starting hydration check...');
@@ -172,19 +178,22 @@ function RootNavigator() {
           router.replace('/(auth)/login');
         } finally {
           setHydrated();
+          isHydrating.current = false;
         }
       }
 
       hydrate();
     } else {
-      console.log('[RootLayout] Waiting for readiness...', { fontsLoaded, hasNav: !!rootNavigationState?.key });
-      // Even if fonts fail, hide splash after 4s
-      const timer = setTimeout(() => {
-        SplashScreen.hideAsync().catch(() => {});
-      }, 4000);
-      return () => clearTimeout(timer);
+      if (!hydrated) {
+        console.log('[RootLayout] Waiting for readiness...', { fontsLoaded, hasNav: !!rootNavigationState?.key });
+        // Even if fonts fail, hide splash after 4s
+        const timer = setTimeout(() => {
+          SplashScreen.hideAsync().catch(() => {});
+        }, 4000);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [fontsLoaded, fontError, setAuth, setHydrated, rootNavigationState]);
+  }, [fontsLoaded, fontError, setAuth, setHydrated, rootNavigationState, hydrated]);
 
   const isLoading = !fontsLoaded && !fontError;
   const showOverlay = isLoading || !hydrated;
@@ -201,7 +210,7 @@ function RootNavigator() {
 
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={STACK_SCREEN_OPTIONS}>
         <Stack.Screen name="index"   options={{ animation: 'none' }} />
         <Stack.Screen name="(auth)"  options={{ animation: 'fade' }} />
         <Stack.Screen name="(tabs)"  options={{ animation: 'none' }} />

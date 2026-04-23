@@ -14,6 +14,17 @@ declare module '@fastify/jwt' {
   }
 }
 
+declare module 'fastify' {
+  interface FastifyRequest {
+    tier: 'free' | 'pro';
+    user: JwtPayload;
+    jwtVerify<T = JwtPayload>(): Promise<T>;
+  }
+  interface FastifyInstance {
+    authenticateRequest: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+  }
+}
+
 export const setupJwtPlugin = fp(async (fastify: FastifyInstance) => {
   // Uses Doppler-provided JWT_SECRET
   const secret = process.env.JWT_SECRET || 'super-secret-default-string-development';
@@ -23,7 +34,7 @@ export const setupJwtPlugin = fp(async (fastify: FastifyInstance) => {
   });
 
   // Provide an authenticate decorator that extracts the tokens and validates them
-  fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.decorate('authenticateRequest', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Decode and verify the JWT header
       const decoded = await request.jwtVerify<JwtPayload>();
@@ -42,5 +53,5 @@ export const setupJwtPlugin = fp(async (fastify: FastifyInstance) => {
 
   // Automatically execute our authentication extraction on every request
   // so `rate-limit` has access to `request.tier` during its evaluate phase.
-  fastify.addHook('onRequest', fastify.authenticate);
+  fastify.addHook('onRequest', fastify.authenticateRequest);
 });

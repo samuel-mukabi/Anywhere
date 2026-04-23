@@ -27,6 +27,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import Toast from 'react-native-toast-message';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -62,24 +63,49 @@ export default function LoginScreen() {
   const loginMutation = useMutation({
     mutationFn: (data: LoginFormData) => authApi.login(data),
     onSuccess: async ({ data }) => {
-      await Promise.all([
-        secureStorage.setJwt(data.token),
-        secureStorage.setRefreshToken(data.refreshToken),
-        secureStorage.setUserId(data.user.id),
-        secureStorage.setUserTier(data.user.tier),
-      ]);
-      setAuth(
-        { id: data.user.id, name: data.user.name, email: data.user.email, tier: data.user.tier as SubscriptionTier },
-        data.token,
-      );
-      router.replace('/(tabs)/explore');
+      try {
+        await Promise.all([
+          secureStorage.setJwt(data.token),
+          secureStorage.setRefreshToken(data.refreshToken),
+          secureStorage.setUserId(data.user.id),
+          secureStorage.setUserTier(data.user.tier),
+        ]);
+        setAuth(
+          { id: data.user.id, name: data.user.name, email: data.user.email, tier: data.user.tier as SubscriptionTier },
+          data.token,
+        );
+        router.replace('/(tabs)/explore');
+      } catch (err) {
+        console.error('[Login] Error in onSuccess:', err);
+      }
     },
-    onError: (err: AxiosError<{ errors?: Record<string, string> }>) => {
-      const apiErrors = err?.response?.data?.errors as
-        | Record<string, string>
-        | undefined;
+    onError: (err: AxiosError<{ error?: string; errors?: Record<string, string> }>) => {
+      const apiErrors = err?.response?.data?.errors;
+      const singleError = err?.response?.data?.error;
+
       if (apiErrors?.email)    setError('email',    { message: apiErrors.email });
       if (apiErrors?.password) setError('password', { message: apiErrors.password });
+      
+      // Fallback for single error string (e.g. "Invalid credentials")
+      if (!apiErrors && singleError) {
+        setError('email',    { message: singleError });
+        setError('password', { message: ' ' }); // visually clear password but keep error on email
+      }
+
+      // ─── Network / Server Failure Toast ──────────────────────────────────────
+      if (!err.response) {
+        Toast.show({
+          type: 'error',
+          text1: 'Connection Error',
+          text2: 'Could not reach the server. Please check your internet or if the backend is running.',
+        });
+      } else if (!apiErrors && !singleError) {
+        Toast.show({
+          type: 'error',
+          text1: 'Authentication Failed',
+          text2: `Server returned ${err.response.status}. Please try again later.`,
+        });
+      }
     },
   });
 

@@ -6,19 +6,21 @@
  */
 
 import React, { useRef, useState, useMemo, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ScrollView, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { useShallow } from 'zustand/react/shallow';
 
 import { Colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
+import Toast from 'react-native-toast-message';
 import { useSearchStore, DestinationResult, SortMethod } from '@/stores/searchStore';
 import { BudgetSlider } from '@/components/ui/BudgetSlider';
-import { PillGroup } from '@/components/ui/PillTag';
+import { PillGroup, DateRangePicker } from '@/components/ui';
 import { useSearch } from '@/hooks/useSearch';
 import { AnywhereMap } from '@/components/map/AnywhereMap';
 import { DestinationPreviewCard } from '@/components/destination/DestinationPreviewCard';
@@ -27,7 +29,6 @@ import { SkeletonCard } from '@/components/ui/SkeletonCard';
 import { useMapStore } from '@/stores/mapStore';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence } from 'react-native-reanimated';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { RefreshControl } from 'react-native';
 
 const VIBE_OPTIONS = ['Tropical', 'Snowy', 'Beach', 'City', 'Balkans', 'Desert', 'Mountains', 'Cultural'];
 const DURATION_OPTIONS = ['Weekend', '5–7 nights', '1–2 weeks', '2+ weeks'];
@@ -92,18 +93,24 @@ export default function ExploreScreen() {
   }, []);
 
   // Search Store Hook Bindings
-  const params = useSearchStore((s) => ({
-    budget: s.budget,
-    vibes: s.vibes,
-    durationNights: s.durationNights,
-    dateFrom: s.dateFrom,
-    dateTo: s.dateTo,
-  }));
+  const params = useSearchStore(
+    useShallow((s) => ({
+      budget: s.budget,
+      vibes: s.vibes,
+      durationNights: s.durationNights,
+      dateFrom: s.dateFrom,
+      dateTo: s.dateTo,
+      departureIATA: s.departureIATA,
+      currency: s.currency,
+    }))
+  );
   const setParams = useSearchStore((s) => s.setParams);
   const status = useSearchStore((s) => s.status);
   const results = useSearchStore((s) => s.results);
   const sortBy = useSearchStore((s) => s.sortBy);
   const setSortBy = useSearchStore((s) => s.setSortBy);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [dateMode, setDateMode] = useState<'specific' | 'flexible'>('flexible');
 
   const [sheetIndex, setSheetIndex] = useState(1);
   const snapPoints = useMemo(() => ['30%', '45%', '70%', '95%'], []);
@@ -151,9 +158,12 @@ export default function ExploreScreen() {
       vibes: randomVibes,
       dateFrom: null,
       dateTo: null,
+      departureIATA: params.departureIATA,
+      currency: params.currency,
     };
 
     setParams(payloadParams);
+    setDateMode('flexible');
     handleSearchSubmit(payloadParams);
   }, [setParams]);
 
@@ -163,14 +173,24 @@ export default function ExploreScreen() {
     // Collapse to row 0 immediately to unveil the ghost pins map layer
     bottomSheetRef.current?.snapToIndex(0);
     
+    if (payload.vibes.length === 0) {
+      Toast.show({
+        type: 'info',
+        text1: 'Choose a vibe',
+        text2: 'Select at least one vibe to help us find your perfect match.',
+      });
+      return;
+    }
+
     // Trigger real TanStack hook
     triggerSearch({
-      budget: payload.budget,
-      duration: payload.durationNights,
-      tags: payload.vibes,
-      dates: (payload.dateFrom && payload.dateTo) 
-        ? { start: payload.dateFrom, end: payload.dateTo } 
-        : null,
+      budget:          payload.budget,
+      vibes:           payload.vibes,
+      duration:        payload.durationNights,
+      dateFrom:        payload.dateFrom,
+      dateTo:          payload.dateTo,
+      departureRegion: payload.departureIATA,
+      currency:        payload.currency,
     });
   }, [params, triggerSearch]);
 
@@ -203,66 +223,9 @@ export default function ExploreScreen() {
         backgroundStyle={styles.sheetBackground}
         handleIndicatorStyle={styles.sheetHandle}
       >
-        {(status === 'ready' || status === 'pending') ? (
-          <BottomSheetFlatList
-            data={status === 'pending' ? (Array.from({ length: 5 }) as undefined[]) : results}
-            keyExtractor={(item, index) => status === 'pending' ? `skel-${index}` : (item as DestinationResult).id}
-            contentContainerStyle={styles.sheetContent}
-            showsVerticalScrollIndicator={false}
-            removeClippedSubviews
-            maxToRenderPerBatch={8}
-            windowSize={5}
-            initialNumToRender={5}
-            getItemLayout={(_, index) => ({
-              length: RESULT_CARD_HEIGHT + 8, // card + marginBottom
-              offset: (RESULT_CARD_HEIGHT + 8) * index,
-              index,
-            })}
-            refreshControl={
-              <RefreshControl refreshing={status === 'pending' || isPolling} onRefresh={() => handleSearchSubmit()} tintColor={Colors.terracotta} />
-            }
-            ListHeaderComponent={() => (
-              <View style={{ marginBottom: spacing.md }}>
-                {activeDestination && <DestinationPreviewCard destination={activeDestination} />}
-                
-                <Text style={styles.swipeHintText}>Swipe up for list, swipe down for map</Text>
-                
-                <View style={styles.sortRow}>
-                  <Text style={styles.sortLabel}>Sort by</Text>
-                  <BottomSheetScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: spacing.xs }}>
-                    {['match', 'price', 'safety', 'climate'].map((method) => {
-                       const labels: Record<string, string> = { match: 'Best match', price: 'Price ↑', safety: 'Safety', climate: 'Climate' };
-                       const isActive = sortBy === method;
-                       return (
-                         <TouchableOpacity 
-                           key={method} 
-                           activeOpacity={0.7} 
-                           style={[styles.sortPill, isActive && styles.sortPillActive]}
-                           onPress={() => setSortBy(method as SortMethod)}
-                         >
-                           <Text style={[styles.sortPillText, isActive && styles.sortPillTextActive]}>{labels[method]}</Text>
-                         </TouchableOpacity>
-                       );
-                    })}
-                  </BottomSheetScrollView>
-                </View>
-              </View>
-            )}
-            renderItem={({ item, index }) => 
-              status === 'pending' ? (
-                <SkeletonCard />
-              ) : (
-                <DestinationResultCard destination={item as DestinationResult} rank={index + 1} />
-              )
-            }
-            ListFooterComponent={() => (
-              <TouchableOpacity onPress={() => useSearchStore.getState().reset()} style={styles.resetBtn}>
-                <Text style={styles.resetBtnText}>Start completely new search</Text>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
+        {status === 'idle' ? (
           <BottomSheetScrollView
+            key="search-form"
             contentContainerStyle={styles.sheetContent}
             showsVerticalScrollIndicator={false}
           >
@@ -285,28 +248,51 @@ export default function ExploreScreen() {
                 onChange={(v) => setParams({ budget: v })}
               />
 
-              {/* 2. Date Trigger */}
+              {/* 2. Date Mode Toggle */}
               <View style={styles.sectionBlock}>
-                <Text style={styles.sectionLabel}>DATES</Text>
-                <TouchableOpacity style={styles.datePickerTrigger} activeOpacity={0.7}>
-                  <Feather name="calendar" size={18} color={hasDates ? Colors.nearBlack : Colors.textSecondary} />
-                  <Text style={[styles.datePickerText, hasDates && styles.datePickerTextActive]}>
-                    {hasDates ? `${params.dateFrom} - ${params.dateTo}` : 'Select travel window'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* 3. Duration Line */}
-              <View style={styles.sectionBlock}>
-                <Text style={styles.sectionLabel}>HOW LONG?</Text>
+                <Text style={styles.sectionLabel}>PLANNING TYPE</Text>
                 <PillGroup
-                  options={DURATION_OPTIONS}
-                  selected={parseNightsToDurationText(params.durationNights)}
+                  options={['Specific Dates', "I'm Flexible"]}
+                  selected={dateMode === 'specific' ? 'Specific Dates' : "I'm Flexible"}
                   multiSelect={false}
-                  onChange={(val) => setParams({ durationNights: parseDurationTextToNights(val as string) })}
-                  activeColor={Colors.terracotta}
+                  onChange={(val) => {
+                    const mode = val === 'Specific Dates' ? 'specific' : 'flexible';
+                    setDateMode(mode);
+                    if (mode === 'flexible') {
+                      setParams({ dateFrom: null, dateTo: null });
+                    }
+                  }}
+                  activeColor={Colors.nearBlack}
                 />
               </View>
+
+              {/* 3. Conditional Options based on Mode */}
+              {dateMode === 'specific' ? (
+                <View style={styles.sectionBlock}>
+                  <Text style={styles.sectionLabel}>DATES</Text>
+                  <TouchableOpacity 
+                    style={styles.datePickerTrigger} 
+                    activeOpacity={0.7}
+                    onPress={() => setIsDatePickerVisible(true)}
+                  >
+                    <Feather name="calendar" size={18} color={hasDates ? Colors.nearBlack : Colors.textSecondary} />
+                    <Text style={[styles.datePickerText, hasDates && styles.datePickerTextActive]}>
+                      {hasDates ? `${params.dateFrom} — ${params.dateTo}` : 'Select travel window'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.sectionBlock}>
+                  <Text style={styles.sectionLabel}>HOW LONG?</Text>
+                  <PillGroup
+                    options={DURATION_OPTIONS}
+                    selected={parseNightsToDurationText(params.durationNights)}
+                    multiSelect={false}
+                    onChange={(val) => setParams({ durationNights: parseDurationTextToNights(val as string) })}
+                    activeColor={Colors.terracotta}
+                  />
+                </View>
+              )}
 
               {/* 4. Vibe Tags */}
               <View style={styles.sectionBlock}>
@@ -338,8 +324,99 @@ export default function ExploreScreen() {
             
             <View style={{ height: insets.bottom + spacing.sm }} />
           </BottomSheetScrollView>
+        ) : status === 'failed' ? (
+          <View key="error-state" style={styles.errorContainer}>
+            <Feather name="cloud-off" size={48} color={Colors.terracotta} />
+            <Text style={styles.errorTitle}>Search Failed</Text>
+            <Text style={styles.errorSubtitle}>
+              We couldn't connect to our travel servers. Please check your connection and try again.
+            </Text>
+            
+            <TouchableOpacity 
+              style={styles.retryBtn} 
+              onPress={() => handleSearchSubmit()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.retryBtnLabel}>Retry Search</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => useSearchStore.getState().reset()} 
+              style={styles.backBtn}
+              activeOpacity={0.6}
+            >
+              <Text style={styles.backBtnText}>Go back to preferences</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <BottomSheetFlatList
+            key="results-list"
+            data={status === 'pending' ? (Array.from({ length: 5 }) as undefined[]) : results}
+            keyExtractor={(item, index) => status === 'pending' ? `skel-${index}` : (item as DestinationResult).id}
+            contentContainerStyle={styles.sheetContent}
+            showsVerticalScrollIndicator={false}
+            removeClippedSubviews
+            maxToRenderPerBatch={8}
+            windowSize={5}
+            initialNumToRender={5}
+            getItemLayout={(_, index) => ({
+              length: RESULT_CARD_HEIGHT + 8,
+              offset: (RESULT_CARD_HEIGHT + 8) * index,
+              index,
+            })}
+            refreshControl={
+              <RefreshControl refreshing={status === 'pending' || isPolling} onRefresh={() => handleSearchSubmit()} tintColor={Colors.terracotta} />
+            }
+            ListHeaderComponent={
+              <View style={{ marginBottom: spacing.md }}>
+                {activeDestination && <DestinationPreviewCard destination={activeDestination} />}
+                
+                <Text style={styles.swipeHintText}>Swipe up for list, swipe down for map</Text>
+                
+                <View style={styles.sortRow}>
+                  <Text style={styles.sortLabel}>Sort by</Text>
+                  <View style={{ flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap' }}>
+                    {(['match', 'price', 'safety', 'climate'] as SortMethod[]).map((method) => {
+                       const labels: Record<string, string> = { match: 'Best match', price: 'Price ↑', safety: 'Safety', climate: 'Climate' };
+                       const isActive = sortBy === method;
+                       return (
+                         <TouchableOpacity 
+                           key={`sort-${method}`} 
+                           activeOpacity={0.7} 
+                           style={[styles.sortPill, isActive && styles.sortPillActive]}
+                           onPress={() => setSortBy(method)}
+                         >
+                           <Text style={[styles.sortPillText, isActive && styles.sortPillTextActive]}>{labels[method]}</Text>
+                         </TouchableOpacity>
+                       );
+                    })}
+                  </View>
+                </View>
+              </View>
+            }
+            renderItem={({ item, index }) => 
+              status === 'pending' ? (
+                <SkeletonCard />
+              ) : (
+                <DestinationResultCard destination={item as DestinationResult} rank={index + 1} />
+              )
+            }
+            ListFooterComponent={
+              <TouchableOpacity onPress={() => useSearchStore.getState().reset()} style={styles.resetBtn}>
+                <Text style={styles.resetBtnText}>Start completely new search</Text>
+              </TouchableOpacity>
+            }
+          />
         )}
       </BottomSheet>
+
+      <DateRangePicker
+        isVisible={isDatePickerVisible}
+        onClose={() => setIsDatePickerVisible(false)}
+        initialStart={params.dateFrom}
+        initialEnd={params.dateTo}
+        onSelect={(start, end) => setParams({ dateFrom: start, dateTo: end })}
+      />
     </View>
   );
 }
@@ -460,4 +537,49 @@ const styles = StyleSheet.create({
   sortPillTextActive: { color: Colors.white },
   resetBtn: { marginTop: spacing.xl, padding: spacing.md, alignItems: 'center' },
   resetBtnText: { fontFamily: 'CeraPro-Bold', fontSize: 14, color: Colors.terracotta, textDecorationLine: 'underline' },
+
+  // Error State
+  errorContainer: {
+    padding: spacing.xxl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.md,
+  },
+  errorTitle: {
+    fontFamily: 'Astoria',
+    fontSize: 24,
+    color: Colors.nearBlack,
+    marginTop: spacing.sm,
+  },
+  errorSubtitle: {
+    fontFamily: 'CeraPro-Regular',
+    fontSize: 15,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: spacing.md,
+  },
+  retryBtn: {
+    height: 50,
+    backgroundColor: Colors.nearBlack,
+    paddingHorizontal: spacing.xl,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  retryBtnLabel: {
+    fontFamily: 'CeraPro-Bold',
+    fontSize: 15,
+    color: Colors.white,
+  },
+  backBtn: {
+    marginTop: spacing.md,
+    padding: spacing.sm,
+  },
+  backBtnText: {
+    fontFamily: 'CeraPro-Medium',
+    fontSize: 14,
+    color: Colors.textSecondary,
+    textDecorationLine: 'underline',
+  },
 });

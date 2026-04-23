@@ -2,7 +2,7 @@ import { buildApp } from './app';
 // Ensure the worker script processes async jobs immediately upon booting the search service cluster
 import './queue/searchQueue'; 
 
-const PORT = parseInt(process.env.PORT || '8004', 10);
+const PORT = parseInt(process.env.PORT || '8001', 10);
 const HOST = process.env.HOST || '0.0.0.0';
 
 async function start() {

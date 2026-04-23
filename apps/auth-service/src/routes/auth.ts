@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { supabaseAdmin } from '../lib/supabase';
 import { issueTokens } from '../lib/jwt';
-import { storeRefreshToken } from '../lib/redis';
+import { storeRefreshToken, rotateRefreshToken } from '../lib/redis';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';

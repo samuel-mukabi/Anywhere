@@ -9,7 +9,14 @@ import { Socket } from 'socket.io';
 const logger = pino({ level: 'info' });
 
 export async function buildApp() {
-  const app = Fastify({ logger });
+  const app = Fastify({
+    logger: {
+      level: process.env.LOG_LEVEL || 'info',
+      transport: process.env.NODE_ENV !== 'production'
+        ? { target: 'pino-pretty', options: { colorize: true } }
+        : undefined,
+    }
+  });
 
   const pubClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
   const subClient = pubClient.duplicate();

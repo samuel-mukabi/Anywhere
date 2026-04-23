@@ -10,23 +10,25 @@ export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379'
  */
 export async function storeRefreshToken(userId: string, plainToken: string, expiresInSeconds: number): Promise<void> {
   const hash = crypto.createHash('sha256').update(plainToken).digest('hex');
-  // Store the hash with a TTL matching its expiry logic (e.g. 30 days)
-  await redis.setex(`refresh_token:${userId}:${hash}`, expiresInSeconds, 'active');
+  // Store the userId as the value so we can identify the user during refresh
+  await redis.setex(`refresh_token:${hash}`, expiresInSeconds, userId);
 }
 
 /**
  * Validates and rotated a refresh token.
  * Validating it deletes it immediately (one-time use) ensuring token rotation.
  */
-export async function rotateRefreshToken(userId: string, plainToken: string): Promise<boolean> {
+export async function rotateRefreshToken(plainToken: string): Promise<string | null> {
   const hash = crypto.createHash('sha256').update(plainToken).digest('hex');
-  const key = `refresh_token:${userId}:${hash}`;
+  const key = `refresh_token:${hash}`;
   
+  // Get the userId first
+  const userId = await redis.get(key);
+  if (!userId) return null;
+
   // Attempt to delete it. If it deletes, it existed and was valid. 
-  // If it doesn't delete, it's either expired or invalid.
-  // This natively prevents race conditions because Redis DEL is atomic!
-  const deletedCount = await redis.del(key);
-  return deletedCount === 1;
+  await redis.del(key);
+  return userId;
 }
 
 /**

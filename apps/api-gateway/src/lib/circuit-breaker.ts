@@ -16,7 +16,7 @@ import { IncomingHttpHeaders } from 'http';
 export const SERVICE_REGISTRY: Record<string, string> = {
   '/api/search': process.env.SEARCH_SERVICE_URL || 'http://localhost:8001',
   '/api/pricing': process.env.PRICING_SERVICE_URL || 'http://localhost:8002',
-  '/api/auth': process.env.AUTH_SERVICE_URL || 'http://localhost:8003',
+  '/api/auth':   process.env.AUTH_SERVICE_URL   || 'http://localhost:8003',
 };
 
 // Cache to hold CircuitBreakers per target downstream URL

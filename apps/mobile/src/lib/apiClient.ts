@@ -19,7 +19,7 @@ import { DestinationResult } from '../stores/searchStore';
 // ─── Create instance ──────────────────────────────────────────────────────────
 const baseURL =
   (Constants.expoConfig?.extra?.apiBaseUrl as string | undefined) ??
-  'http://localhost:4000';
+  'http://localhost:8000';
 
 export const apiClient = axios.create({
   baseURL,
@@ -55,7 +55,7 @@ async function doRefresh(): Promise<string> {
   if (!refreshToken) throw new Error('No refresh token');
 
   const res = await axios.post<{ token: string; refreshToken: string }>(
-    `${baseURL}/auth/refresh`,
+    `${baseURL}/api/auth/refresh`,
     { refreshToken },
   );
 
@@ -95,7 +95,11 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const original = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    if (error.response?.status !== 401 || original._retry) {
+    const isAuthPath = original.url?.includes('/auth/login') || 
+                       original.url?.includes('/auth/register') ||
+                       original.url?.includes('/auth/refresh');
+
+    if (error.response?.status !== 401 || original._retry || isAuthPath) {
       return Promise.reject(error);
     }
 
@@ -103,7 +107,7 @@ apiClient.interceptors.response.use(
 
     if (isRefreshing) {
       // Queue request behind current refresh
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         refreshQueue.push((newToken: string) => {
           original.headers.Authorization = `Bearer ${newToken}`;
           resolve(apiClient(original));
@@ -115,18 +119,29 @@ apiClient.interceptors.response.use(
 
     try {
       const newToken = await doRefresh();
+      
+      // Execute queued requests
       refreshQueue.forEach((cb) => cb(newToken));
       refreshQueue = [];
 
       original.headers.Authorization = `Bearer ${newToken}`;
       return apiClient(original);
-    } catch {
-      // Refresh failed — force sign out
+    } catch (refreshError) {
+      // REFRESH FAILED — This is critical. The session is dead.
       refreshQueue = [];
+      
+      console.warn('[API] Token refresh failed permanently. Wiping session.');
+      
+      // 1. Wipe SecureStore physically
       await secureStorage.clearAll();
+      
+      // 2. Clear Zustand memory
       useAuthStore.getState().clearAuth();
+      
+      // 3. Force redirect to login
       router.replace('/(auth)/login');
-      return Promise.reject(error);
+      
+      return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
     }
@@ -142,27 +157,30 @@ export interface AuthResponse {
 
 export const authApi = {
   login:          (data: { email: string; password: string }) =>
-    apiClient.post<AuthResponse>('/auth/login', data),
+    apiClient.post<AuthResponse>('/api/auth/login', data),
 
   register:       (data: { email: string; password: string }) =>
-    apiClient.post<AuthResponse>('/auth/register', data),
+    apiClient.post<AuthResponse>('/api/auth/register', data),
 
   forgotPassword: (email: string) =>
-    apiClient.post('/auth/forgot-password', { email }),
+    apiClient.post('/api/auth/forgot-password', { email }),
 
   googleMobile:   (code: string) =>
-    apiClient.post<AuthResponse>('/auth/google/mobile', { code }),
+    apiClient.post<AuthResponse>('/api/auth/google/mobile', { code }),
 
   appleMobile:    (identityToken: string, fullName?: string | null) =>
-    apiClient.post<AuthResponse>('/auth/apple/mobile', { identityToken, fullName }),
+    apiClient.post<AuthResponse>('/api/auth/apple/mobile', { identityToken, fullName }),
 };
 
 // ─── Search API ──────────────────────────────────────────────────────────────
 export interface SearchPostPayload {
-  budget: number;
-  tags: string[];
-  duration: number;
-  dates: { start: string; end: string } | null;
+  budget:          number;
+  vibes:           string[];
+  duration:        number;
+  dateFrom:        string | null;
+  dateTo:          string | null;
+  departureRegion: string;
+  currency:        string;
 }
 
 export interface SearchPostResponse {
@@ -179,8 +197,8 @@ export interface SearchStatusResponse {
 
 export const searchApi = {
   createSearch: (payload: SearchPostPayload) =>
-    apiClient.post<SearchPostResponse>('/search', payload),
+    apiClient.post<SearchPostResponse>('/api/search', payload),
 
   getSearchStatus: (searchId: string) =>
-    apiClient.get<SearchStatusResponse>(`/search/${searchId}/status`),
+    apiClient.get<SearchStatusResponse>(`/api/search/poll/${searchId}`),
 };

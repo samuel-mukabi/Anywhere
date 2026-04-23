@@ -8,16 +8,13 @@ import { proxyRoutes } from './routes/proxy';
 import { setupRedis } from './plugins/redis';
 
 export async function buildApp(): Promise<FastifyInstance> {
-  // Configure root logger with transport for production/development
-  const logger = pino({
-    level: process.env.LOG_LEVEL || 'info',
-    transport: process.env.NODE_ENV !== 'production' 
-      ? { target: 'pino-pretty', options: { colorize: true } } 
-      : undefined,
-  });
-
   const app = Fastify({
-    logger,
+    logger: {
+      level: process.env.LOG_LEVEL || 'info',
+      transport: process.env.NODE_ENV !== 'production' 
+        ? { target: 'pino-pretty', options: { colorize: true } } 
+        : undefined,
+    },
     disableRequestLogging: true, // We'll handle custom request logging
   });
 

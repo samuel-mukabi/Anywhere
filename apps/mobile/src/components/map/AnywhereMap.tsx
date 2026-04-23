@@ -12,6 +12,8 @@ import { DestinationResult } from '@/stores/searchStore';
 import { getPalette, detectTimeOfDay } from '@/lib/mapPalette';
 import { useMapStore } from '@/stores/mapStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { sanitizeLayerStyle, sanitizeLayerProps } from '@/utils/mapboxStyle';
+
 
 // Initialize Mapbox tokens early
 Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapboxToken || '');
@@ -50,7 +52,7 @@ function GhostPins() {
         const animatedStyle = useAnimatedStyle(() => ({
           opacity: opacities[i].value,
         }));
-        
+
         return (
           <Mapbox.PointAnnotation key={`ghost-${i}`} id={`ghost-${i}`} coordinate={coord}>
             <AnimatedReanimated.View style={[styles.ghostPinMarker, animatedStyle]} />
@@ -66,6 +68,41 @@ interface AnywhereMapProps {
   results: DestinationResult[];
 }
 
+interface PulsingLayerProps {
+  activePalette: any;
+}
+
+function PulsingLayer({ activePalette }: PulsingLayerProps) {
+  const [pulseRadius, setPulseRadius] = useState(8);
+
+  useEffect(() => {
+    let growing = true;
+    const interval = setInterval(() => {
+      setPulseRadius((prev) => {
+        if (prev >= 16) growing = false;
+        if (prev <= 8) growing = true;
+        return growing ? prev + 0.4 : prev - 0.4;
+      });
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Mapbox.CircleLayer
+      {...sanitizeLayerProps({
+        id: "pin-pulse",
+        style: sanitizeLayerStyle({
+          circleColor: activePalette.accent || '#C4713A',
+          circleRadius: pulseRadius,
+          circleOpacity: 0.4,
+          circleStrokeWidth: 0,
+        })
+      })}
+    />
+  );
+}
+
+
 export function AnywhereMap({ status, results }: AnywhereMapProps) {
   const insets = useSafeAreaInsets();
   const mapStyleObj = Constants.expoConfig?.extra?.mapboxStyleUrl || Mapbox.StyleURL.Dark;
@@ -74,14 +111,13 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
   const [activePalette, setActivePalette] = useState(() => getPalette());
   const cameraRef = useRef<Mapbox.Camera>(null);
   const shapeSourceRef = useRef<ShapeSourceRef>(null);
-  
+
   const setSelected = useMapStore((s) => s.setSelected);
 
   // Map state
   const [isGlobe, setIsGlobe] = useState(true);
   const [currentZoom, setCurrentZoom] = useState(1.5);
-  // Pulse animation for results
-  const pulseAnim = useRef(new Animated.Value(8)).current;
+  const [styleLoaded, setStyleLoaded] = useState(false);
 
   // Initial Feature collection stub
   const initialFeatureCollection: GeoJSON.FeatureCollection = useMemo(() => ({
@@ -103,64 +139,57 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
-    // Drive the looping Animated.loop pulse layer
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 18,
-          duration: 1500,
-          // Must be false: drives a Mapbox circle-radius paint property via
-          // setNativeProps — not a transform/opacity, so native driver is unsupported.
-          useNativeDriver: false,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 8,
-          duration: 0,
-          useNativeDriver: false, // same constraint
-        }),
-      ])
-    ).start();
-  }, [pulseAnim]);
-
   // Method to fit bounds over all loaded search features
-  const executeFitBounds = () => {
-    const lats = results.map(r => r.latitude).filter((val): val is number => val != null);
-    const lons = results.map(r => r.longitude).filter((val): val is number => val != null);
+  // Derived Feature collection from results
+  const geojson: GeoJSON.FeatureCollection = useMemo(() => {
+    const features = results
+      .filter(r => {
+        const lon = Number(r.longitude);
+        const lat = Number(r.latitude);
+        return r.longitude != null && r.latitude != null && Number.isFinite(lon) && Number.isFinite(lat);
+      })
+      .map((r, i) => ({
+        type: 'Feature' as const,
+        id: r.id,
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [Number(r.longitude), Number(r.latitude)],
+        },
+        properties: {
+          id: r.id,
+          city: r.city,
+          priceLabel: `$${r.flightPrice || r.totalCost}`,
+          rank: i + 1,
+        },
+      }));
     
-    if (lats.length > 0 && lons.length > 0) {
-      const ne: [number, number] = [Math.max(...lons), Math.max(...lats)];
-      const sw: [number, number] = [Math.min(...lons), Math.min(...lats)];
-      cameraRef.current?.fitBounds(ne, sw, [60, 60, 60, 60], 1000);
+    console.log(`[AnywhereMap] Results: ${results.length}, Filtered Features: ${features.length}`);
+    return {
+      type: 'FeatureCollection',
+      features
+    };
+  }, [results]);
+
+  const executeFitBounds = () => {
+    if (results.length > 0) {
+      const lats = results.map(r => r.latitude).filter((val): val is number => val != null && Number.isFinite(Number(val)));
+      const lons = results.map(r => r.longitude).filter((val): val is number => val != null && Number.isFinite(Number(val)));
+
+      if (lats.length > 0 && lons.length > 0) {
+        const ne: [number, number] = [Math.max(...lons), Math.max(...lats)];
+        const sw: [number, number] = [Math.min(...lons), Math.min(...lats)];
+        console.log(`[AnywhereMap] Fitting camera to bounds: SW(${sw}), NE(${ne})`);
+        cameraRef.current?.fitBounds(ne, sw, [80, 80, 80, 80], 1000);
+      }
     }
   };
 
   useEffect(() => {
-    if (status === 'ready' && results.length > 0) {
-      const geojson: GeoJSON.FeatureCollection = {
-        type: 'FeatureCollection',
-        features: results
-          .filter(r => r.longitude && r.latitude)
-          .map(r => ({
-            type: 'Feature',
-            id: r.id,
-            geometry: {
-              type: 'Point',
-              coordinates: [r.longitude!, r.latitude!],
-            },
-            properties: {
-              id: r.id,
-              priceLabel: `$${r.flightPrice || r.totalCost}`,
-            },
-          })),
-      };
-      
-      // Perform direct setNativeProps as natively requested
-      shapeSourceRef.current?.setNativeProps({ shape: geojson });
-      
+    console.log(`[AnywhereMap] Status: ${status}, Results: ${results.length}, StyleLoaded: ${styleLoaded}`);
+    if (status === 'ready' && results.length > 0 && styleLoaded) {
       executeFitBounds();
     }
-  }, [status, results]); // Depend aggressively on result state
+  }, [status, results.length, styleLoaded]);
 
   const handlePinPress = (event: any) => {
     const feature = event.features[0];
@@ -168,7 +197,7 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
       // Prevent underlying map click processing
       const id = feature.properties.id;
       const coords = (feature.geometry as GeoJSON.Point).coordinates;
-      
+
       setSelected(id);
 
       // Trigger map panning
@@ -217,6 +246,7 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
         logoEnabled={false}
         attributionEnabled={false}
         onPress={handleMapPress}
+        onDidFinishLoadingStyle={() => setStyleLoaded(true)}
         onCameraChanged={(e) => setCurrentZoom(e.properties.zoom)}
       >
         <Mapbox.Camera
@@ -229,82 +259,69 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
         />
 
         {/* ─── Sky & Atmosphere Overlay ────────────────────────────────────── */}
-        {isGlobe && (
+        {isGlobe && styleLoaded && (
           <Mapbox.Atmosphere
-            style={{
-              color: activePalette.fogColor,
-              highColor: activePalette.skyColor,
-              horizonBlend: 0.04,
-              spaceColor: '#000000',
-              starIntensity: activePalette.label === 'Night' ? 0.6 : 0.15,
-            }}
+            key="map-atmosphere"
+            {...sanitizeLayerProps({
+              style: sanitizeLayerStyle({
+                color: activePalette.fogColor,
+                highColor: activePalette.skyColor,
+                horizonBlend: 0.04,
+                spaceColor: '#000000',
+                starIntensity: activePalette.label === 'Night' ? 0.6 : 0.15,
+              })
+            })}
           />
         )}
 
-        {/* ─── Map Palette Style Overrides ─────────────────────────────────── */}
-        <Mapbox.BackgroundLayer id="background" style={{ backgroundColor: activePalette.ocean }} />
-        
-        {/* Fill Colors */}
-        <Mapbox.FillLayer id="water" style={{ fillColor: activePalette.inlandWater }} />
-        <Mapbox.FillLayer id="water-shadow" style={{ fillColor: activePalette.inlandWater }} />
-        <Mapbox.FillLayer id="land" style={{ fillColor: activePalette.land }} />
-        <Mapbox.FillLayer id="landmass" style={{ fillColor: activePalette.land }} />
-        <Mapbox.FillLayer id="national-park" style={{ fillColor: activePalette.landSubtle }} />
-        <Mapbox.FillLayer id="landuse" style={{ fillColor: activePalette.landSubtle }} />
-        <Mapbox.FillLayer id="landcover" style={{ fillColor: activePalette.landSubtle }} />
-        <Mapbox.FillLayer id="landuse-residential" style={{ fillColor: activePalette.land }} />
-        <Mapbox.LineLayer id="pitch-outline" style={{ lineColor: activePalette.landSubtle }} />
 
-        {/* Visibility Mutes (Hiding Noisy Labels) */}
-        <Mapbox.SymbolLayer id="poi-label" style={{ visibility: 'none' }} />
-        <Mapbox.SymbolLayer id="place-label" style={{ visibility: 'none' }} />
-        <Mapbox.SymbolLayer id="airport-label" style={{ visibility: 'none' }} />
-        <Mapbox.SymbolLayer id="transit-stop-label" style={{ visibility: 'none' }} />
+        {/* Feature Overlays */}
+        {status === 'pending' && <GhostPins key="map-ghost-pins" />}
 
-        {/* ─── Feature Overlays ────────────────────────────────────────────── */}
-        {status === 'pending' && <GhostPins />}
-        
         {/* Interactive ShapeSource Engine */}
-        <Mapbox.ShapeSource 
-          ref={shapeSourceRef} 
-          id="destinations" 
-          shape={initialFeatureCollection}
-          onPress={handlePinPress}
-        >
-          <Mapbox.CircleLayer
-            id="pin-pulse"
-            style={{
-              circleColor: '#C4713A',
-              circleRadius: pulseAnim as unknown as number,
-              circleOpacity: 0.3,
-              circleStrokeWidth: 0,
-            }}
-          />
-          <Mapbox.CircleLayer
-            id="pin-core"
-            style={{
-              circleColor: '#C4713A',
-              circleRadius: 6,
-              circleStrokeColor: '#EEEBD9',
-              circleStrokeWidth: 2,
-            }}
-          />
-          <Mapbox.SymbolLayer
-            id="pin-price"
-            minZoomLevel={3}
-            style={{
-              textField: ['get', 'priceLabel'],
-              textColor: '#EEEBD9',
-              textHaloColor: 'rgba(13,30,39,0.9)',
-              textHaloWidth: 1.5,
-              textAnchor: 'left',
-              textOffset: [1.2, 0],
-              textSize: 11,
-            }}
-          />
-        </Mapbox.ShapeSource>
+        {styleLoaded && (
+          <Mapbox.ShapeSource
+            key={`source-${results.length}-${status}`}
+            ref={shapeSourceRef}
+            id="destinations"
+            shape={geojson}
+            onPress={handlePinPress}
+          >
+            <PulsingLayer activePalette={activePalette} />
+
+            <Mapbox.CircleLayer
+              {...sanitizeLayerProps({
+                id: "pin-core",
+                style: sanitizeLayerStyle({
+                  circleColor: '#C4713A',
+                  circleRadius: 7,
+                  circleStrokeColor: '#EEEBD9',
+                  circleStrokeWidth: 2,
+                  circleOpacity: 1,
+                })
+              })}
+            />
+
+            <Mapbox.SymbolLayer
+              {...sanitizeLayerProps({
+                id: "pin-price",
+                minZoomLevel: 3,
+                style: sanitizeLayerStyle({
+                  textField: ['get', 'priceLabel'],
+                  textColor: '#EEEBD9',
+                  textHaloColor: 'rgba(13,30,39,0.9)',
+                  textHaloWidth: 1.5,
+                  textAnchor: 'left',
+                  textOffset: [1.2, 0],
+                  textSize: 11,
+                })
+              })}
+            />
+          </Mapbox.ShapeSource>
+        )}
 
       </Mapbox.MapView>
+
 
       {/* ─── Floating Controls Overlay ────────────────────────────────────── */}
       <View style={[styles.controlsContainer, { top: insets.top + spacing.md }]}>
@@ -320,7 +337,7 @@ export function AnywhereMap({ status, results }: AnywhereMapProps) {
         <TouchableOpacity style={[styles.controlButton, styles.controlButtonBottom]} onPress={() => handleZoom('out')} activeOpacity={0.8}>
           <Feather name="minus" size={20} color={Colors.white} />
         </TouchableOpacity>
-        
+
         <View style={styles.spacer} />
 
         <TouchableOpacity style={styles.controlButton} onPress={() => setIsGlobe(!isGlobe)} activeOpacity={0.8}>

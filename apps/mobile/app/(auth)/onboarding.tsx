@@ -37,6 +37,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors }  from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
+import { useAuthStore }  from '@/stores/authStore';
 import { ONBOARDING_KEY } from '@/constants/keys';
 
 const { width, height } = Dimensions.get('window');
@@ -187,20 +188,30 @@ export default function OnboardingScreen() {
   const insets       = useSafeAreaInsets();
   const flatListRef  = useRef<FlatList<Slide>>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const user = useAuthStore((s) => s.user);
 
   const goToSlide = useCallback((idx: number) => {
     flatListRef.current?.scrollToIndex({ index: idx, animated: true });
     setActiveIdx(idx);
   }, []);
 
-  const handleSkip = useCallback(() => {
-    router.replace('/(auth)/login');
-  }, []);
+  const handleSkip = useCallback(async () => {
+    await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
+    if (user) {
+      router.replace('/(tabs)/explore');
+    } else {
+      router.replace('/(auth)/login');
+    }
+  }, [user]);
 
   const handleGetStarted = useCallback(async () => {
     await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
-    router.replace('/(auth)/register');
-  }, []);
+    if (user) {
+      router.replace('/(tabs)/explore');
+    } else {
+      router.replace('/(auth)/register');
+    }
+  }, [user]);
 
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {

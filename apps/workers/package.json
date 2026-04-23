@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "seed": "ts-node src/seed-destinations.ts",
+    "seed:costs": "node --env-file=.env -r ts-node/register src/seedDestinationCosts.ts",
+    "seed:climate": "node --env-file=.env -r ts-node/register src/seedClimateProfiles.ts",
     "start": "node dist/cron.js",
     "lint": "eslint src/**/*.ts",
     "typecheck": "tsc --noEmit"

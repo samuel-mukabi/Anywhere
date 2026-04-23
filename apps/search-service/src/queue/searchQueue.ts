@@ -32,8 +32,23 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`[Worker] Started Engine Algorithm for Job ${job.id}`);
     
     // Mock flight fetching layer resolving explicitly upstream later naturally 
-    const mockFlightOffers: FlightOffer[] = [];
-    const travelMonth = new Date(job.data.query.dateFrom).getMonth() + 1;
+    const mockFlightOffers: FlightOffer[] = [
+      { destinationIso: 'IS', totalAmount: 450, currency: 'USD' },
+      { destinationIso: 'JP', totalAmount: 1200, currency: 'USD' },
+      { destinationIso: 'PT', totalAmount: 650, currency: 'USD' },
+      { destinationIso: 'FR', totalAmount: 700, currency: 'USD' },
+      { destinationIso: 'US', totalAmount: 300, currency: 'USD' },
+      { destinationIso: 'IE', totalAmount: 550, currency: 'USD' },
+      { destinationIso: 'NZ', totalAmount: 1800, currency: 'USD' },
+      { destinationIso: 'SG', totalAmount: 1100, currency: 'USD' },
+      { destinationIso: 'CH', totalAmount: 850, currency: 'USD' },
+      { destinationIso: 'CA', totalAmount: 400, currency: 'USD' },
+      { destinationIso: 'DE', totalAmount: 600, currency: 'USD' },
+      { destinationIso: 'TH', totalAmount: 950, currency: 'USD' },
+      { destinationIso: 'GR', totalAmount: 750, currency: 'USD' },
+      { destinationIso: 'MX', totalAmount: 350, currency: 'USD' },
+    ];
+    const travelMonth = new Date(job.data.query.dateFrom || Date.now()).getMonth() + 1;
 
     const rankParams = {
         flightOffers: mockFlightOffers,
@@ -52,7 +67,7 @@ if (process.env.NODE_ENV !== 'test') {
     // Broadcast Analytics asynchronously into Kafka
     await emitSearchCompleted({
       totalResults: results.length,
-      topDestination: results.length > 0 ? results[0].destination?.name || 'None' : 'None',
+      topDestination: results.length > 0 ? results[0].city : 'None',
       queryBudget: job.data.query.budget
     });
 

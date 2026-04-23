@@ -15,5 +15,6 @@ export { toastConfig }                  from './Toast';
 export { Card }                         from './Card';
 export { Skeleton, DestinationCardSkeleton } from './Skeleton';
 export { BottomSheet }                  from './BottomSheet';
+export { DateRangePicker }              from './DateRangePicker';
 export type { BottomSheetRef }          from './BottomSheet';
 

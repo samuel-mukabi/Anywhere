@@ -14,7 +14,8 @@ module.exports = {
     '^react-native$': require.resolve('react-native'),
     '^react-native/(.*)$': path.dirname(require.resolve('react-native/package.json')) + '/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^react-native-worklets$': 'react-native-worklets-core',
+    'react-native-worklets': '<rootDir>/__mocks__/react-native-worklets.js',
+    'react-native-worklets-core': '<rootDir>/__mocks__/react-native-worklets-core.js',
   },
   testMatch: ['**/__tests__/**/*.test.[jt]s?(x)'],
   collectCoverageFrom: [

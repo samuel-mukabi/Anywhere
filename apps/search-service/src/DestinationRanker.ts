@@ -27,11 +27,20 @@ export interface SearchParams {
 }
 
 export interface RankedDestination {
-  destination: FlattenMaps<IDestination>;
-  flightOffer: FlightOffer;
-  rankScore: number;
-  totalTripCost: number | null;
+  id: string;
+  city: string;
+  country: string;
+  iataCode: string;
+  imageUrl?: string;
+  flightPrice: number;
+  totalCost: number;
+  climateScore: number;
+  costScore: number;
+  safetyScore: number;
+  latitude: number;
+  longitude: number;
   whyItFits: string[];
+  rankScore: number;
 }
 
 export class DestinationRanker {
@@ -47,7 +56,6 @@ export class DestinationRanker {
     const searchId = params.searchId ?? `search_${Date.now()}`;
     
     // Convert travel month to 0-indexed string offset structurally if climateMatrix uses "1".."12" string keys natively
-    // The previous implementation used `monthStr = data.month.toString()` which maps to "1", "2", etc.
     const monthStr = travelMonth.toString();
 
     let droppedCount = 0;
@@ -71,9 +79,8 @@ export class DestinationRanker {
         const whyItFits: string[] = [];
 
         // 1. Budget Fit dynamically evaluating Pro tracking externally 
-        // Build mock bounds capturing exactly the expected WhereNext metrics smoothly
         const dailyEstimate: DailyBudgetEstimate = {
-            currency: 'USD', // Normalizing assumption or mapping from dest
+            currency: 'USD',
             mealCheap: dest.avgCosts?.mealCheap || 10,
             mealMid: dest.avgCosts?.mealMid || 25,
             localTransport: dest.avgCosts?.localTransport || 5,
@@ -88,7 +95,6 @@ export class DestinationRanker {
           currency: offer.currency,
         };
 
-        // Calculate as pro for deterministic total-cost filtering.
         const budgetCalc = new TripCostCalculator(
             flightPricing,
             dailyEstimate,
@@ -109,7 +115,7 @@ export class DestinationRanker {
             whyItFits.push(`Under budget by $${savings.toFixed(0)}`);
         }
 
-        // 2. Climate Alignment securely traversing mapped Matrix correctly directly filtering boundaries natively
+        // 2. Climate Alignment
         let compositeClimateScore = 0;
         const monthClimate = dest.climateMatrix?.[monthStr];
         if (monthClimate) {
@@ -126,23 +132,32 @@ export class DestinationRanker {
             whyItFits.push(`Good weather match in ${monthName}`);
         }
 
-        // 3. Safety Bounds mapping explicit normalization metrics securely natively natively safely 
+        // 3. Safety Bounds
         const safetyScore = dest.safetyScore || 50;
         if (safetyScore >= 80) whyItFits.push(`Safety score ${safetyScore}/100`);
 
-        // Composite Mathematics specifically mirroring requested weights perfectly securely
-        // rankScore = (budgetFitScore*0.5) + (climateScore [0-1]*0.3) + (safetyScore/100*0.2)
+        // Composite Mathematics
         const normalizedClimate = compositeClimateScore / 100;
         const normalizedSafety = safetyScore / 100;
 
         const rankScore = (budgetFitScore * 0.5) + (normalizedClimate * 0.3) + (normalizedSafety * 0.2);
+        console.log(`[Ranker] Ranked ${dest.name} with score ${rankScore}`);
 
         scoredResults.push({
-            destination: dest,
-            flightOffer: offer,
-            rankScore: rankScore,
-            totalTripCost: userTier === 'pro' ? budgetCalc.totalCost : offer.totalAmount,
-            whyItFits
+            id: dest._id.toString(),
+            city: dest.name || 'Unknown City',
+            country: dest.country || 'Unknown Country',
+            iataCode: dest.iso || '???',
+            imageUrl: dest.imageUrl,
+            flightPrice: offer.totalAmount,
+            totalCost: budgetCalc.totalCost,
+            climateScore: compositeClimateScore,
+            costScore: Math.round(budgetFitScore * 100),
+            safetyScore: safetyScore,
+            latitude: dest.coords?.coordinates[1] || 0,
+            longitude: dest.coords?.coordinates[0] || 0,
+            whyItFits,
+            rankScore: rankScore
         });
     }
 
@@ -150,12 +165,12 @@ export class DestinationRanker {
     scoredResults.sort((a, b) => b.rankScore - a.rankScore);
     const topResults = scoredResults.slice(0, 20);
 
-    // Dynamic analytics reporting emitting event mapping seamlessly reliably natively effectively
+    // Dynamic analytics reporting
     const avgRankScore = topResults.length > 0
       ? topResults.reduce((a, r) => a + r.rankScore, 0) / topResults.length
       : 0;
 
-    const topDestName = topResults.length > 0 ? topResults[0].destination.name ?? 'None' : 'None';
+    const topDestName = topResults.length > 0 ? topResults[0].city : 'None';
     const analyticsPayload = {
       searchId,
       topDestination: topDestName,

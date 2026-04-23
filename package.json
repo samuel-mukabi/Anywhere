@@ -14,7 +14,10 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "prepare": "husky",
-    "postinstall": "node scripts/patch-expo-router.js"
+    "postinstall": "node scripts/patch-expo-router.js",
+    "infra:start": "brew services start redis && brew services start mongodb-community && brew services start zookeeper && brew services start kafka",
+    "infra:stop": "brew services stop redis && brew services stop mongodb-community && brew services stop zookeeper && brew services stop kafka",
+    "infra:status": "brew services list | grep -E 'redis|mongodb|zookeeper|kafka'"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",

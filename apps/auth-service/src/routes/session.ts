@@ -12,27 +12,28 @@ export async function sessionRoutes(app: FastifyInstance) {
    * We expect the `refresh_token` httpOnly cookie.
    */
   app.post('/auth/refresh', async (req: FastifyRequest, reply: FastifyReply) => {
-    // We expect the original JWT payload's sub so we know WHICH user's list to check the refresh against
-    // This allows O(1) Redis lookups without full table scans
-    const { userId } = req.body as { userId?: string };
-    const refreshToken = req.cookies.refresh_token;
+    // Support both Mobile (body) and Web (cookie)
+    const { refreshToken: bodyToken } = req.body as { refreshToken?: string };
+    const cookieToken = req.cookies.refresh_token;
+    const tokenToRotate = bodyToken || cookieToken;
 
-    if (!refreshToken || !userId) {
-      return reply.code(401).send({ error: 'Missing token or identifier' });
+    if (!tokenToRotate) {
+      return reply.code(401).send({ error: 'Missing refresh token' });
     }
 
+    app.log.info({ tokenPrefix: tokenToRotate.substring(0, 10) }, 'Attempting token refresh');
+
     // 1. Verify and violently Rotate the Refresh Token
-    // If rotateRefreshToken resolves false, the token is dead, missing or stolen!
-    const valid = await rotateRefreshToken(userId, refreshToken);
-    if (!valid) {
-      app.log.warn({ userId }, 'Attempted to use invalid or recycled Refresh Token');
-      return reply.code(403).send({ error: 'Invalid Refresh Token' });
+    const userId = await rotateRefreshToken(tokenToRotate);
+    if (!userId) {
+      app.log.warn({ tokenPrefix: tokenToRotate.substring(0, 10) }, 'Refresh failed: Token invalid or expired');
+      return reply.code(401).send({ error: 'Invalid Refresh Token' });
     }
 
     // 2. The token was valid! Let's lookup their current exact Tier in the DB
     const { data: dbUser, error } = await supabaseAdmin
       .from('users')
-      .select('email, tier')
+      .select('id, email, tier')
       .eq('id', userId)
       .single();
 
@@ -42,13 +43,13 @@ export async function sessionRoutes(app: FastifyInstance) {
 
     // 3. Re-issue fresh Access and rotating Refresh tokens
     const { accessToken, refreshToken: newRefresh, accessExp } = issueTokens({
-      sub: userId,
+      sub: dbUser.id,
       email: dbUser.email,
-      tier: dbUser.tier, // Syncs Stripe Subscription upgrades dynamically right here!
+      tier: dbUser.tier,
     });
 
-    // 4. Save new refresh hash explicitly into Redis mapping
-    await storeRefreshToken(userId, newRefresh, 2592000);
+    // 4. Save new refresh hash explicitly into Redis
+    await storeRefreshToken(dbUser.id, newRefresh, 2592000);
 
     reply.setCookie('refresh_token', newRefresh, {
       httpOnly: true,
@@ -60,7 +61,7 @@ export async function sessionRoutes(app: FastifyInstance) {
 
     return reply.send({ 
       accessToken, 
-      refreshToken: newRefresh, // Added for mobile compatibility
+      refreshToken: newRefresh,
       expiresAt: accessExp 
     });
   });
@@ -93,7 +94,7 @@ export async function sessionRoutes(app: FastifyInstance) {
 
       // Rotate/kill the existing refresh token aggressively
       if (refreshToken) {
-        await rotateRefreshToken(payload.sub, refreshToken);
+        await rotateRefreshToken(refreshToken);
       }
 
       // Clear the cookie header natively on the browser

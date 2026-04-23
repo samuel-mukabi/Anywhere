@@ -50,6 +50,8 @@ export default ({ config }) => ({
       'ACCESS_FINE_LOCATION',
       'ACCESS_COARSE_LOCATION',
       'RECEIVE_BOOT_COMPLETED',
+      'ACCESS_NETWORK_STATE',
+      'INTERNET',
     ],
     edgeToEdgeEnabled: true,
   },
@@ -84,8 +86,9 @@ export default ({ config }) => ({
 
   extra: {
     // Runtime env vars — read from process.env, injected by EAS or .env.local
-    apiBaseUrl: process.env.API_BASE_URL ?? 'http://localhost:3001',
+    apiBaseUrl: process.env.API_BASE_URL ?? 'http://localhost:8000',
     mapboxToken: process.env.MAPBOX_PUBLIC_TOKEN ?? '',
+    mapboxStyleUrl: process.env.MAPBOX_STYLE_URL ?? 'mapbox://styles/samuelmukabi/cmo27z8la011n01sb26nthri5',
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY ?? '',
     // Google OAuth Web Client ID — create at console.cloud.google.com
     googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID ?? '',

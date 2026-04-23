@@ -13,9 +13,8 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 // Reanimated must be mocked — the spring runs on native thread unavailable in Jest
-jest.mock('react-native-reanimated', () => ({
-  ...require('react-native-reanimated/mock'),
-}));
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+jest.mock('react-native-worklets-core', () => ({ WorkletsModule: {} }));
 
 import { DestinationPreviewCard } from '@/components/destination/DestinationPreviewCard';
 import { MOCK_DESTINATION } from '../mocks/server';

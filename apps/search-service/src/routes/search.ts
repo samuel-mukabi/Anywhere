@@ -42,6 +42,9 @@ export async function searchRoutes(app: FastifyInstance) {
     // 2.5. Search-Specific Rate Limiting
     const userId = req.headers['x-user-id']?.toString() || 'anonymous';
     const userTier = req.headers['x-user-tier']?.toString() || 'free';
+    
+    app.log.info({ userId, userTier, searchHash }, 'Processing search request with identity');
+
     const rateLimitKey = `rl:search:${userId}`;
     const limit = userTier === 'pro' ? 30 : 5;
     
@@ -66,8 +69,9 @@ export async function searchRoutes(app: FastifyInstance) {
     if (cachedResponse) {
        app.log.info({ hash: searchHash }, 'Returning instantaneous cached algorithm results');
        return reply.status(200).send({
-          status: 'completed',
-          jobId: `cached_${searchHash}`,
+          status: 'ready',
+          searchId: `cached_${searchHash}`,
+          cached: true,
           hash: searchHash,
           results: cachedResponse
        });
@@ -85,8 +89,8 @@ export async function searchRoutes(app: FastifyInstance) {
     // Respond immediately asking the frontend UI to activate its Loading animations
     // and begin polling the subsequent route.
     return reply.status(202).send({
-       status: 'processing',
-       jobId: job.id,
+       status: 'pending',
+       searchId: job.id,
        hash: searchHash
     });
   });
@@ -103,7 +107,7 @@ export async function searchRoutes(app: FastifyInstance) {
       if (jobId.startsWith('cached_')) {
           const hashId = jobId.replace('cached_', '');
           const cachedResponse = await getCachedSearch(hashId);
-          return reply.send({ status: 'completed', results: cachedResponse });
+          return reply.send({ status: 'ready', results: cachedResponse });
       }
 
       const job = await searchQueue.getJob(jobId);
@@ -117,18 +121,18 @@ export async function searchRoutes(app: FastifyInstance) {
       const isFailed = await job.isFailed();
 
       if (isFailed) {
-         return reply.status(500).send({ error: 'Search Algorithm Engine failed processing due to downstream timeouts.' });
+         return reply.status(200).send({ status: 'failed', error: 'Search Algorithm Engine failed processing due to downstream timeouts.' });
       }
 
       if (isCompleted) {
          // Because our queue natively saves final states back into cache, we can easily locate it 
          // without storing heavy JSON binaries deeply within the queue architecture natively.
          const cachedResponse = await getCachedSearch(job.data.hash);
-         return reply.send({ status: 'completed', results: cachedResponse || job.returnvalue });
+         return reply.send({ status: 'ready', results: cachedResponse || job.returnvalue });
       }
 
       // 409 Conflict logic pattern indicates "Still building, wait" natively
-      return reply.code(206).send({ status: 'processing', progress: job.progress });
+      return reply.code(200).send({ status: 'pending', progress: job.progress });
   });
 
 }
