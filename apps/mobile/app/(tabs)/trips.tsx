@@ -7,10 +7,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Swipeable } from 'react-native-gesture-handler';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useTripsStore } from '@/stores/tripsStore';
-import { DestinationResultCard } from '@/components/destination/DestinationResultCard';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useTripsStore } from '@/features/trips/trips-store';
+import { DestinationResultCard } from '@/features/destination/destination-result-card';
 
 // Simulated Bookings Payload
 const MOCK_BOOKINGS = [

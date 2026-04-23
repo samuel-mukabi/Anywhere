@@ -23,11 +23,11 @@ import { useMutation } from '@tanstack/react-query';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { forgotPasswordSchema, ForgotPasswordFormData } from '@/lib/authSchemas';
-import { authApi }   from '@/lib/apiClient';
-import { TextInput } from '@/components/ui';
-import { Colors }    from '@/theme/colors';
-import { spacing }   from '@/theme/spacing';
+import { forgotPasswordSchema, ForgotPasswordFormData } from '@/features/auth/auth-schemas';
+import { authApi }   from '@/services/api-client';
+import { TextInput } from '@/ui';
+import { Colors }    from '@/core/theme/colors';
+import { spacing }   from '@/core/theme/spacing';
 
 export default function ForgotPasswordScreen() {
   const insets = useSafeAreaInsets();

@@ -6,9 +6,9 @@ import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useAuthStore, selectIsPro } from '@/stores/authStore';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useAuthStore, selectIsPro } from '@/features/auth/auth-store';
 
 const MOCK_ROOMS = [
   { id: 'rm_x84', name: 'Alps Escapade', members: 4, budget: 3200 },

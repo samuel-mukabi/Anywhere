@@ -6,9 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { socketManager } from '@/lib/socket';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { socketManager } from '@/services/socket';
 
 interface Member {
   id: string;

@@ -1,8 +1,8 @@
 import { Redirect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { useAuthStore, selectHydrated } from '@/stores/authStore';
-import { ONBOARDING_KEY } from '@/constants/keys';
+import { useAuthStore, selectHydrated } from '@/features/auth/auth-store';
+import { ONBOARDING_KEY } from '@/core/keys';
 
 /**
  * Root index — app/index.tsx

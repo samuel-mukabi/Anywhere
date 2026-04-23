@@ -7,10 +7,10 @@ import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useAuthStore, selectUser, selectTier, selectIsPro } from '@/stores/authStore';
-import { useSearchStore } from '@/stores/searchStore';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useAuthStore, selectUser, selectTier, selectIsPro } from '@/features/auth/auth-store';
+import { useSearchStore } from '@/features/search/search-store';
 
 const MOCK_CURRENCIES = ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'JPY'];
 const MOCK_AIRPORTS = ['LHR', 'JFK', 'CDG', 'SYD', 'DXB', 'SIN', 'HKG', 'FRA'];

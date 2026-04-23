@@ -32,15 +32,15 @@ import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as AppleAuthentication from 'expo-apple-authentication';
 
-import { loginSchema, LoginFormData } from '@/lib/authSchemas';
-import { authApi }                     from '@/lib/apiClient';
-import { secureStorage }               from '@/lib/secureStorage';
-import { useAuthStore, SubscriptionTier } from '@/stores/authStore';
-import { useGoogleAuth }               from '@/hooks/useGoogleAuth';
-import { useAppleAuth }                from '@/hooks/useAppleAuth';
-import { TextInput }                   from '@/components/ui';
-import { Colors }                      from '@/theme/colors';
-import { spacing }                     from '@/theme/spacing';
+import { loginSchema, LoginFormData } from '@/features/auth/auth-schemas';
+import { authApi }                     from '@/services/api-client';
+import { secureStorage }               from '@/core/secure-storage';
+import { useAuthStore, SubscriptionTier } from '@/features/auth/auth-store';
+import { useGoogleAuth }               from '@/features/auth/use-google-auth';
+import { useAppleAuth }                from '@/features/auth/use-apple-auth';
+import { TextInput }                   from '@/ui';
+import { Colors }                      from '@/core/theme/colors';
+import { spacing }                     from '@/core/theme/spacing';
 
 export default function LoginScreen() {
   const insets    = useSafeAreaInsets();

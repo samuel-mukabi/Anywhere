@@ -20,15 +20,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
-import { useFontLoader }   from '@/hooks/useFontLoader';
-import { toastConfig }     from '@/components/ui';
-import { LoadingOverlay }  from '@/components/LoadingOverlay';
-import { secureStorage }   from '@/lib/secureStorage';
+import { useFontLoader }   from '@/core/use-font-loader';
+import { toastConfig }     from '@/ui';
+import { LoadingOverlay }  from '@/ui/loading-overlay';
+import { secureStorage }   from '@/core/secure-storage';
 import {
   useAuthStore,
   selectHydrated,
   SubscriptionTier,
-}                          from '@/stores/authStore';
+}                          from '@/features/auth/auth-store';
 import * as Notifications from 'expo-notifications';
 import * as Linking from 'expo-linking';
 

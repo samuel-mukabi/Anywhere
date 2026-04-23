@@ -35,10 +35,10 @@ import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors }  from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useAuthStore }  from '@/stores/authStore';
-import { ONBOARDING_KEY } from '@/constants/keys';
+import { Colors }  from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useAuthStore }  from '@/features/auth/auth-store';
+import { ONBOARDING_KEY } from '@/core/keys';
 
 const { width, height } = Dimensions.get('window');
 

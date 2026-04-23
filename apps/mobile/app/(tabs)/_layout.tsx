@@ -9,8 +9,8 @@ import React from 'react';
 import {Tabs} from 'expo-router';
 import {Platform, StyleSheet, View, Text} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {Colors} from '@/theme/colors';
-import {spacing} from '@/theme/spacing';
+import {Colors} from '@/core/theme/colors';
+import {spacing} from '@/core/theme/spacing';
 
 type FeatherName = React.ComponentProps<typeof Feather>['name'];
 

@@ -14,19 +14,19 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { useShallow } from 'zustand/react/shallow';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
 
 import Toast from 'react-native-toast-message';
-import { useSearchStore, DestinationResult, SortMethod } from '@/stores/searchStore';
-import { BudgetSlider } from '@/components/ui/BudgetSlider';
-import { PillGroup, DateRangePicker } from '@/components/ui';
-import { useSearch } from '@/hooks/useSearch';
-import { AnywhereMap } from '@/components/map/AnywhereMap';
-import { DestinationPreviewCard } from '@/components/destination/DestinationPreviewCard';
-import { DestinationResultCard, RESULT_CARD_HEIGHT } from '@/components/destination/DestinationResultCard';
-import { SkeletonCard } from '@/components/ui/SkeletonCard';
-import { useMapStore } from '@/stores/mapStore';
+import { useSearchStore, DestinationResult, SortMethod } from '@/features/search/search-store';
+import { BudgetSlider } from '@/ui/budget-slider';
+import { PillGroup, DateRangePicker } from '@/ui';
+import { useSearch } from '@/features/search/use-search';
+import { AnywhereMap } from '@/features/map/anywhere-map';
+import { DestinationPreviewCard } from '@/features/destination/destination-preview-card';
+import { DestinationResultCard, RESULT_CARD_HEIGHT } from '@/features/destination/destination-result-card';
+import { SkeletonCard } from '@/ui/skeleton-card';
+import { useMapStore } from '@/features/map/map-store';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence } from 'react-native-reanimated';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 

@@ -9,8 +9,8 @@ import { z } from 'zod';
 import { useForm, Controller, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
 
 const passengerSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),

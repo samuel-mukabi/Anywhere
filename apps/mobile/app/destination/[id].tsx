@@ -8,10 +8,10 @@ import { BlurView } from 'expo-blur';
 import Svg, { Rect, Circle, G, Text as SvgText, Path } from 'react-native-svg';
 import { Image } from 'expo-image';
 import Toast from 'react-native-toast-message';
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useSearchStore } from '@/stores/searchStore';
-import { useTripsStore } from '@/stores/tripsStore';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useSearchStore } from '@/features/search/search-store';
+import { useTripsStore } from '@/features/trips/trips-store';
 
 const { width } = Dimensions.get('window');
 const HERO_HEIGHT = 380;

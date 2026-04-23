@@ -5,8 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 

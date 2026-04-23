@@ -7,10 +7,10 @@ import { useRouter } from 'expo-router';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Swipeable } from 'react-native-gesture-handler';
 
-import { Colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
-import { useAuthStore, selectIsPro } from '@/stores/authStore';
-import { BudgetSlider } from '@/components/ui/BudgetSlider';
+import { Colors } from '@/core/theme/colors';
+import { spacing } from '@/core/theme/spacing';
+import { useAuthStore, selectIsPro } from '@/features/auth/auth-store';
+import { BudgetSlider } from '@/ui/budget-slider';
 
 type AlertStatus = 'active' | 'triggered' | 'paused';
 interface PriceAlert {
