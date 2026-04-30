@@ -179,6 +179,7 @@ export interface SearchPostPayload {
   duration:        number;
   dateFrom:        string | null;
   dateTo:          string | null;
+  travelMonth?:    number | null;
   departureRegion: string;
   currency:        string;
 }

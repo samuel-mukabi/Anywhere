@@ -30,7 +30,7 @@ import { useMapStore } from '@/features/map/map-store';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence } from 'react-native-reanimated';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
-const VIBE_OPTIONS = ['Tropical', 'Snowy', 'Beach', 'City', 'Balkans', 'Desert', 'Mountains', 'Cultural'];
+const VIBE_OPTIONS = ['Tropical', 'Beach', 'Snowy', 'City', 'Desert', 'Mountains'];
 const DURATION_OPTIONS = ['Weekend', '5–7 nights', '1–2 weeks', '2+ weeks'];
 
 function parseDurationTextToNights(text: string): number {
@@ -182,13 +182,18 @@ export default function ExploreScreen() {
       return;
     }
 
-    // Trigger real TanStack hook
+    // Derive travelMonth from dateFrom when set
+    const travelMonth = payload.dateFrom
+      ? new Date(payload.dateFrom).getMonth() + 1
+      : null;
+
     triggerSearch({
       budget:          payload.budget,
       vibes:           payload.vibes,
       duration:        payload.durationNights,
       dateFrom:        payload.dateFrom,
       dateTo:          payload.dateTo,
+      travelMonth,
       departureRegion: payload.departureIATA,
       currency:        payload.currency,
     });
@@ -490,12 +495,9 @@ const styles = StyleSheet.create({
   datePickerTrigger: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
-    paddingHorizontal: spacing.md,
     paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border,
     gap: spacing.sm,
   },
   datePickerText: {
@@ -518,23 +520,20 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   primaryBtn: {
-    height: 54,
+    height: 52,
     backgroundColor: Colors.nearBlack,
-    borderRadius: 12,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primaryBtnLoading: {
-    backgroundColor: Colors.textSecondary,
-  },
   primaryBtnLabel: { fontFamily: 'CeraPro-Bold', fontSize: 16, color: Colors.white },
   swipeHintText: { fontFamily: 'CeraPro-Medium', fontSize: 12, color: Colors.textSecondary, textAlign: 'center', marginVertical: spacing.md },
-  sortRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm, paddingHorizontal: spacing.sm },
-  sortLabel: { fontFamily: 'CeraPro-Medium', fontSize: 13, color: Colors.textSecondary, marginRight: spacing.md },
-  sortPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
-  sortPillActive: { backgroundColor: Colors.nearBlack, borderColor: Colors.nearBlack },
-  sortPillText: { fontFamily: 'CeraPro-Medium', fontSize: 13, color: Colors.textSecondary },
-  sortPillTextActive: { color: Colors.white },
+  sortRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm, gap: spacing.xl },
+  sortLabel: { fontFamily: 'CeraPro-Regular', fontSize: 12, color: Colors.textSecondary, letterSpacing: 0.6, textTransform: 'uppercase' },
+  sortPill: { paddingVertical: 6, borderBottomWidth: 2, borderBottomColor: Colors.transparent },
+  sortPillActive: { borderBottomColor: Colors.terracotta },
+  sortPillText: { fontFamily: 'CeraPro-Regular', fontSize: 14, color: Colors.textSecondary },
+  sortPillTextActive: { fontFamily: 'CeraPro-Bold', color: Colors.nearBlack },
   resetBtn: { marginTop: spacing.xl, padding: spacing.md, alignItems: 'center' },
   resetBtnText: { fontFamily: 'CeraPro-Bold', fontSize: 14, color: Colors.terracotta, textDecorationLine: 'underline' },
 

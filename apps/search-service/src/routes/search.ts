@@ -81,7 +81,8 @@ export async function searchRoutes(app: FastifyInstance) {
     // Uses searchHash as Job ID ensuring 10 simultaneous identical clicks don't DDOS downstream API targets
     const job = await searchQueue.add('evaluate-destination', {
         hash: searchHash,
-        query: { ...payload, departureRegion: departureIATA }
+        query: { ...payload, departureRegion: departureIATA },
+        userTier: (userTier === 'pro' ? 'pro' : 'free') as 'free' | 'pro',
     }, { jobId: searchHash });
 
     app.log.info({ jobId: job.id }, 'Dispatched algorithm analysis strictly to background worker');

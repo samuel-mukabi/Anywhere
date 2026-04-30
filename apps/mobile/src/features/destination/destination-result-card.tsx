@@ -7,9 +7,8 @@ import { Colors } from '@/core/theme/colors';
 import { spacing } from '@/core/theme/spacing';
 import { useMapStore } from '@/features/map/map-store';
 
-// Estimated row height for FlatList.getItemLayout (no actions variant)
-export const RESULT_CARD_HEIGHT = 112; // 80px thumb + 16px padding*2
-export const RESULT_CARD_HEIGHT_TRIPS = 160; // with actions row
+export const RESULT_CARD_HEIGHT = 96;
+export const RESULT_CARD_HEIGHT_TRIPS = 140;
 
 interface Props {
   destination: DestinationResult;
@@ -34,49 +33,49 @@ function DestinationResultCardInner({ destination, rank, actionsVariant = 'explo
 
   return (
     <TouchableOpacity
-      style={styles.cardContainer}
-      activeOpacity={0.7}
+      style={styles.row}
+      activeOpacity={0.6}
       onPress={handlePress}
       disabled={actionsVariant === 'trips'}
     >
-      <View style={styles.innerContent}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: destination.imageUrl || FALLBACK_IMAGE }}
-            style={styles.thumbnail}
-            contentFit="cover"
-            // blurhash derived placeholder — backend pre-computes and stores in destination doc
-            placeholder={destination.blurhash || 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH'}
-            transition={200}
-            cachePolicy="memory-disk"
-          />
-          {actionsVariant === 'explore' && rank && (
-            <View style={styles.rankBadge}>
-              <Text style={styles.rankText}>{rank}</Text>
-            </View>
+      <Image
+        source={{ uri: destination.imageUrl || FALLBACK_IMAGE }}
+        style={styles.thumbnail}
+        contentFit="cover"
+        placeholder={destination.blurhash || 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH'}
+        transition={200}
+        cachePolicy="memory-disk"
+      />
+
+      <View style={styles.content}>
+        <View style={styles.topRow}>
+          {rank != null && (
+            <Text style={styles.rank}>{rank < 10 ? `0${rank}` : rank}</Text>
           )}
+          <Text style={styles.city} numberOfLines={1}>{destination.city}</Text>
         </View>
 
-        <View style={styles.detailsContainer}>
-          <Text style={styles.cityText} numberOfLines={1}>{destination.city}</Text>
-          <Text style={styles.countryText} numberOfLines={1}>📍 {destination.country}</Text>
+        <Text style={styles.country} numberOfLines={1}>{destination.country}</Text>
 
-          <View style={styles.bottomRow}>
-            <Text style={styles.priceText}>${destination.totalCost}</Text>
-            <View style={[styles.climatePill, { backgroundColor: isPerfectMatch ? Colors.terracotta : Colors.textSecondary }]}>
-              <Text style={styles.climateText}>{isPerfectMatch ? 'Perfect match' : 'Good climate'}</Text>
-            </View>
+        <View style={styles.bottomRow}>
+          <Text style={styles.price}>${destination.totalCost.toLocaleString()}</Text>
+          <View style={styles.matchRow}>
+            <View style={[styles.dot, { backgroundColor: isPerfectMatch ? Colors.sage : Colors.grey300 }]} />
+            <Text style={styles.matchLabel}>
+              {isPerfectMatch ? 'Perfect match' : 'Good match'}
+            </Text>
           </View>
         </View>
       </View>
 
       {actionsVariant === 'trips' && (
-        <View style={styles.actionsRow}>
-          <TouchableOpacity style={styles.actionBtnOutline} onPress={handleView}>
-            <Text style={styles.actionBtnOutlineText}>View</Text>
+        <View style={styles.tripActions}>
+          <TouchableOpacity onPress={handleView} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Text style={styles.actionLink}>View</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtnFilled} onPress={() => {}}>
-            <Text style={styles.actionBtnFilledText}>Book now</Text>
+          <Text style={styles.actionDivider}>·</Text>
+          <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Text style={[styles.actionLink, { color: Colors.terracotta }]}>Book</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -92,63 +91,90 @@ export const DestinationResultCard = React.memo(DestinationResultCardInner, (pre
 );
 
 const styles = StyleSheet.create({
-  cardContainer: {
-    backgroundColor: Colors.parchment,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    marginBottom: spacing.md,
-    overflow: 'hidden',
-    padding: spacing.sm,
-  },
-  innerContent: { flexDirection: 'row' },
-  imageContainer: { position: 'relative' },
-  thumbnail: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    backgroundColor: Colors.surface,
-  },
-  rankBadge: {
-    position: 'absolute',
-    top: -6,
-    left: -6,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: Colors.terracotta,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.parchment,
-  },
-  rankText: { fontFamily: 'CeraPro-Bold', fontSize: 11, color: Colors.white },
-  detailsContainer: { flex: 1, marginLeft: spacing.md, justifyContent: 'center' },
-  cityText: { fontFamily: 'Astoria', fontSize: 20, color: Colors.nearBlack },
-  countryText: {
-    fontFamily: 'CeraPro-Medium',
-    fontSize: 12,
-    color: Colors.textSecondary,
-    textTransform: 'uppercase',
-    marginTop: 2,
-  },
-  bottomRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.sm },
-  priceText: { fontFamily: 'Astoria', fontSize: 22, color: Colors.nearBlack },
-  climatePill: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-  climateText: { fontFamily: 'CeraPro-Bold', fontSize: 9, color: Colors.white, textTransform: 'uppercase' },
-  actionsRow: {
+  row: {
     flexDirection: 'row',
-    marginTop: spacing.sm,
-    paddingTop: spacing.sm,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border,
+  },
+  thumbnail: {
+    width: 64,
+    height: 64,
+    borderRadius: 6,
+    backgroundColor: Colors.surface,
+    flexShrink: 0,
+  },
+  content: {
+    flex: 1,
+    marginLeft: spacing.md,
+    gap: 2,
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
     gap: spacing.sm,
   },
-  actionBtnOutline: {
-    flex: 1, paddingVertical: 10, borderRadius: 8, borderWidth: 1,
-    borderColor: Colors.border, alignItems: 'center',
+  rank: {
+    fontFamily: 'CeraPro-Regular',
+    fontSize: 11,
+    color: Colors.textSecondary,
+    letterSpacing: 0.4,
   },
-  actionBtnOutlineText: { fontFamily: 'CeraPro-Medium', fontSize: 13, color: Colors.nearBlack },
-  actionBtnFilled: { flex: 1, paddingVertical: 10, borderRadius: 8, backgroundColor: Colors.terracotta, alignItems: 'center' },
-  actionBtnFilledText: { fontFamily: 'CeraPro-Medium', fontSize: 13, color: Colors.white },
+  city: {
+    fontFamily: 'Astoria',
+    fontSize: 20,
+    color: Colors.nearBlack,
+    flexShrink: 1,
+  },
+  country: {
+    fontFamily: 'CeraPro-Regular',
+    fontSize: 11,
+    color: Colors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.7,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 4,
+  },
+  price: {
+    fontFamily: 'Astoria',
+    fontSize: 18,
+    color: Colors.nearBlack,
+  },
+  matchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  matchLabel: {
+    fontFamily: 'CeraPro-Regular',
+    fontSize: 11,
+    color: Colors.textSecondary,
+  },
+  tripActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginLeft: spacing.md,
+  },
+  actionLink: {
+    fontFamily: 'CeraPro-Medium',
+    fontSize: 14,
+    color: Colors.nearBlack,
+  },
+  actionDivider: {
+    fontFamily: 'CeraPro-Regular',
+    fontSize: 14,
+    color: Colors.textSecondary,
+  },
 });

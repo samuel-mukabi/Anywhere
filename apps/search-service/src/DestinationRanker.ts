@@ -95,6 +95,8 @@ export class DestinationRanker {
           currency: offer.currency,
         };
 
+        // Always compute with 'pro' internally — ranker needs totalCost for budget filtering.
+        // Free-tier gating (hiding breakdown) happens at the response/presentation layer.
         const budgetCalc = new TripCostCalculator(
             flightPricing,
             dailyEstimate,
