@@ -41,6 +41,7 @@ export interface RankedDestination {
   longitude: number;
   whyItFits: string[];
   rankScore: number;
+  bestMonths: number[];
 }
 
 export class DestinationRanker {
@@ -159,7 +160,8 @@ export class DestinationRanker {
             latitude: dest.coords?.coordinates[1] || 0,
             longitude: dest.coords?.coordinates[0] || 0,
             whyItFits,
-            rankScore: rankScore
+            rankScore: rankScore,
+            bestMonths: dest.climate?.bestMonths ?? dest.bestMonths ?? [],
         });
     }
 

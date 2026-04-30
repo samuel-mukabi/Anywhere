@@ -61,6 +61,15 @@ export default function DestinationDetailScreen() {
   const safetyBarColor = safetyScore >= 70 ? Colors.sage : safetyScore >= 40 ? Colors.warning : Colors.terracotta;
   const safetyLabel = safetyScore >= 70 ? 'Safe' : safetyScore >= 40 ? 'Exercise caution' : 'High caution';
 
+  const MONTH_ABBREVS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const bestTimeLabel = (() => {
+    const months = destination.bestMonths;
+    if (!months || months.length === 0) return '—';
+    const names = months.map(m => MONTH_ABBREVS[m]);
+    if (names.length === 1) return names[0];
+    return `${names[0]} – ${names[names.length - 1]}`;
+  })();
+
   // Parallax
   const imageTranslateY = scrollY.interpolate({
     inputRange: [-HERO_HEIGHT, 0, HERO_HEIGHT],
@@ -196,17 +205,15 @@ export default function DestinationDetailScreen() {
           </View>
 
           {/* ── INFO GRID: Best Time + Nearest Hub ── */}
-          <View style={styles.infoGrid}>
-            <View style={styles.infoCard}>
-              <Feather name="sun" size={16} color={Colors.warning} />
-              <Text style={styles.infoCardLabel}>BEST TIME</Text>
-              <Text style={styles.infoCardValue}>May – Sept</Text>
+          <View style={styles.infoRow}>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoItemLabel}>BEST TIME</Text>
+              <Text style={styles.infoItemValue}>{bestTimeLabel}</Text>
             </View>
-            <View style={styles.infoCardGap} />
-            <View style={styles.infoCard}>
-              <Feather name="navigation" size={16} color={Colors.ocean} />
-              <Text style={styles.infoCardLabel}>NEAREST HUB</Text>
-              <Text style={styles.infoCardValue}>{destination.iataCode || '—'}</Text>
+            <View style={styles.infoSeparator} />
+            <View style={styles.infoItem}>
+              <Text style={styles.infoItemLabel}>NEAREST HUB</Text>
+              <Text style={styles.infoItemValue}>{destination.iataCode || '—'}</Text>
             </View>
           </View>
 
@@ -222,44 +229,43 @@ export default function DestinationDetailScreen() {
           {dailyTotal > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Average Daily Budget</Text>
-              <View style={styles.dailyBudgetCard}>
-                <View style={styles.dailyBudgetHeader}>
-                  <Text style={styles.dailyBudgetAmount}>${dailyTotal}<Text style={styles.dailyBudgetUnit}> / day</Text></Text>
-                  <View style={[styles.tierBadge, { backgroundColor: tierColor }]}>
-                    <Text style={styles.tierBadgeText}>{tierLabel}</Text>
+              {/* Flat number + tier label */}
+              <View style={styles.dailyBudgetHeader}>
+                <Text style={styles.dailyBudgetAmount}>${dailyTotal}<Text style={styles.dailyBudgetUnit}> / day</Text></Text>
+                <View style={[styles.tierBadge, { backgroundColor: tierColor }]}>
+                  <Text style={styles.tierBadgeText}>{tierLabel}</Text>
+                </View>
+              </View>
+              {/* Flat line items */}
+              <View style={styles.dailyLineItem}>
+                <View style={styles.dailyLineLeft}>
+                  <Feather name="home" size={14} color={Colors.textSecondary} />
+                  <View>
+                    <Text style={styles.dailyLineTitle}>Accommodation</Text>
+                    <Text style={styles.dailyLineSubtitle}>Hotel / Apartment</Text>
                   </View>
                 </View>
-                <View style={styles.dailyBudgetDivider} />
-                <View style={styles.dailyLineItem}>
-                  <View style={styles.dailyLineLeft}>
-                    <Feather name="home" size={14} color={Colors.textSecondary} />
-                    <View>
-                      <Text style={styles.dailyLineTitle}>Accommodation</Text>
-                      <Text style={styles.dailyLineSubtitle}>Hotel / Apartment</Text>
-                    </View>
+                <Text style={styles.dailyLineAmount}>${dailyAccom}</Text>
+              </View>
+              <View style={styles.dailyLineItem}>
+                <View style={styles.dailyLineLeft}>
+                  <Feather name="coffee" size={14} color={Colors.textSecondary} />
+                  <View>
+                    <Text style={styles.dailyLineTitle}>Dining</Text>
+                    <Text style={styles.dailyLineSubtitle}>Restaurants &amp; cafés</Text>
                   </View>
-                  <Text style={styles.dailyLineAmount}>${dailyAccom}</Text>
                 </View>
-                <View style={styles.dailyLineItem}>
-                  <View style={styles.dailyLineLeft}>
-                    <Feather name="coffee" size={14} color={Colors.textSecondary} />
-                    <View>
-                      <Text style={styles.dailyLineTitle}>Dining</Text>
-                      <Text style={styles.dailyLineSubtitle}>Restaurants & cafés</Text>
-                    </View>
+                <Text style={styles.dailyLineAmount}>${dailyDining}</Text>
+              </View>
+              <View style={[styles.dailyLineItem, { borderBottomWidth: 0 }]}>
+                <View style={styles.dailyLineLeft}>
+                  <Feather name="map" size={14} color={Colors.textSecondary} />
+                  <View>
+                    <Text style={styles.dailyLineTitle}>Transport</Text>
+                    <Text style={styles.dailyLineSubtitle}>Local transit</Text>
                   </View>
-                  <Text style={styles.dailyLineAmount}>${dailyDining}</Text>
                 </View>
-                <View style={styles.dailyLineItem}>
-                  <View style={styles.dailyLineLeft}>
-                    <Feather name="map" size={14} color={Colors.textSecondary} />
-                    <View>
-                      <Text style={styles.dailyLineTitle}>Transport</Text>
-                      <Text style={styles.dailyLineSubtitle}>Local transit</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.dailyLineAmount}>${dailyTransport}</Text>
-                </View>
+                <Text style={styles.dailyLineAmount}>${dailyTransport}</Text>
               </View>
             </View>
           )}
@@ -379,16 +385,12 @@ const styles = StyleSheet.create({
   costCardItemValue: { fontFamily: 'CeraPro-Bold', fontSize: 15, color: Colors.white, marginTop: 1 },
   costCardSeparator: { width: 1, height: 28, backgroundColor: 'rgba(255,255,255,0.15)', marginHorizontal: spacing.md },
 
-  // ── Info grid ─────────────────────────────────────────────────────────────
-  infoGrid: { flexDirection: 'row', marginBottom: spacing.lg },
-  infoCard: {
-    flex: 1, backgroundColor: Colors.surfaceElevated,
-    borderRadius: 12, borderWidth: 1, borderColor: Colors.border,
-    padding: spacing.md, gap: 4,
-  },
-  infoCardGap: { width: spacing.sm },
-  infoCardLabel: { fontFamily: 'CeraPro-Medium', fontSize: 9, color: Colors.textSecondary, letterSpacing: 1.5, marginTop: 4 },
-  infoCardValue: { fontFamily: 'CeraPro-Bold', fontSize: 15, color: Colors.nearBlack },
+  // ── Info row (flat, no card) ────────────────────────────────────────────
+  infoRow: { flexDirection: 'row', alignItems: 'stretch', marginBottom: spacing.lg },
+  infoItem: { flex: 1 },
+  infoItemLabel: { fontFamily: 'CeraPro-Regular', fontSize: 10, color: Colors.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 },
+  infoItemValue: { fontFamily: 'CeraPro-Bold', fontSize: 16, color: Colors.nearBlack },
+  infoSeparator: { width: StyleSheet.hairlineWidth, backgroundColor: Colors.border, marginHorizontal: spacing.lg },
 
   // ── Sections ─────────────────────────────────────────────────────────────
   section: { marginBottom: spacing.xl },
@@ -401,21 +403,15 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 
-  // ── Daily budget ─────────────────────────────────────────────────────────
-  dailyBudgetCard: {
-    backgroundColor: Colors.surfaceElevated, borderRadius: 16,
-    borderWidth: 1, borderColor: Colors.border,
-    padding: spacing.md,
-  },
-  dailyBudgetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
+  // ── Daily budget (flat rows) ──────────────────────────────────────────────
+  dailyBudgetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md },
   dailyBudgetAmount: { fontFamily: 'Astoria', fontSize: 30, color: Colors.nearBlack },
   dailyBudgetUnit: { fontFamily: 'CeraPro-Regular', fontSize: 14, color: Colors.textSecondary },
   tierBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
   tierBadgeText: { fontFamily: 'CeraPro-Bold', fontSize: 9, color: Colors.white, letterSpacing: 1 },
-  dailyBudgetDivider: { height: 1, backgroundColor: Colors.border, marginBottom: spacing.md },
   dailyLineItem: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: Colors.border,
+    paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: Colors.border,
   },
   dailyLineLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dailyLineTitle: { fontFamily: 'CeraPro-Medium', fontSize: 14, color: Colors.nearBlack },

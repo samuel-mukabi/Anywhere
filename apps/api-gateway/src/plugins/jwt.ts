@@ -26,8 +26,8 @@ declare module 'fastify' {
 }
 
 export const setupJwtPlugin = fp(async (fastify: FastifyInstance) => {
-  // Uses Doppler-provided JWT_SECRET
-  const secret = process.env.JWT_SECRET || 'super-secret-default-string-development';
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('FATAL: JWT_SECRET env var is not set. Refusing to start.');
 
   await fastify.register(fastifyJwt, {
     secret,

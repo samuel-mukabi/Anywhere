@@ -1,50 +1,58 @@
 import Redis from 'ioredis';
 import crypto from 'crypto';
 
-// Creates a resilient connection to Redis for session state
 export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
+const REFRESH_TOKEN_TTL = 2592000; // 30 days in seconds
+
 /**
- * Stores a refresh token family tied to a specific user.
- * We store a hashed version of the token to prevent database leaks from compromising active sessions.
+ * Stores a refresh token hash and registers it in the user's token set for bulk revocation.
  */
 export async function storeRefreshToken(userId: string, plainToken: string, expiresInSeconds: number): Promise<void> {
   const hash = crypto.createHash('sha256').update(plainToken).digest('hex');
-  // Store the userId as the value so we can identify the user during refresh
-  await redis.setex(`refresh_token:${hash}`, expiresInSeconds, userId);
+  const pipeline = redis.pipeline();
+  pipeline.setex(`refresh_token:${hash}`, expiresInSeconds, userId);
+  // Track hash in per-user set so we can revoke all tokens for a user
+  pipeline.sadd(`user_tokens:${userId}`, hash);
+  pipeline.expire(`user_tokens:${userId}`, REFRESH_TOKEN_TTL);
+  await pipeline.exec();
 }
 
 /**
- * Validates and rotated a refresh token.
- * Validating it deletes it immediately (one-time use) ensuring token rotation.
+ * Validates and rotates a refresh token (one-time use).
  */
 export async function rotateRefreshToken(plainToken: string): Promise<string | null> {
   const hash = crypto.createHash('sha256').update(plainToken).digest('hex');
   const key = `refresh_token:${hash}`;
-  
-  // Get the userId first
+
   const userId = await redis.get(key);
   if (!userId) return null;
 
-  // Attempt to delete it. If it deletes, it existed and was valid. 
-  await redis.del(key);
+  const pipeline = redis.pipeline();
+  pipeline.del(key);
+  pipeline.srem(`user_tokens:${userId}`, hash);
+  await pipeline.exec();
+
   return userId;
 }
 
 /**
- * Validates if the refresh token was stolen. (Bonus feature stub)
+ * Revokes all refresh tokens for a user (e.g. on password change or suspicious activity).
  */
-export async function revokeAllUserRefreshTokens(userId: string) {
-    const keys = await redis.keys(`refresh_token:${userId}:*`);
-    if (keys.length > 0) {
-      await redis.del(...keys);
-    }
+export async function revokeAllUserRefreshTokens(userId: string): Promise<void> {
+  const hashes = await redis.smembers(`user_tokens:${userId}`);
+  if (hashes.length === 0) return;
+
+  const pipeline = redis.pipeline();
+  for (const hash of hashes) {
+    pipeline.del(`refresh_token:${hash}`);
+  }
+  pipeline.del(`user_tokens:${userId}`);
+  await pipeline.exec();
 }
 
 /**
- * Access Token Logout Blacklisting.
- * Because Access Tokens are Stateless JWTs, we cannot easily revoke them.
- * For logout, we store their ID (or exact signature signature) in a redis blacklist until they expire natively.
+ * Blacklists an access token JTI until it naturally expires.
  */
 export async function blacklistAccessToken(jti: string, remainingSeconds: number): Promise<void> {
   if (remainingSeconds > 0) {

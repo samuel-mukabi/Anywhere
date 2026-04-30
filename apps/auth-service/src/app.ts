@@ -1,12 +1,14 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { FastifyInstance, FastifyRequest } from 'fastify';
 import pino from 'pino';
 import fastifyCookie = require('@fastify/cookie');
+import fastifyRateLimit, { RateLimitPluginOptions } from '@fastify/rate-limit';
 import { oauthRoutes } from './routes/oauth';
 import { authRoutes } from './routes/auth';
 import { sessionRoutes } from './routes/session';
 import { webhookRoutes } from './routes/webhooks';
 import { billingRoutes } from './routes/billing';
 import { adminRoutes } from './routes/admin';
+import { redis } from './lib/redis';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -31,6 +33,18 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   await app.register(fastifyCookie);
+
+  await app.register(fastifyRateLimit, {
+    redis,
+    nameSpace: 'rl:auth:',
+    max: 20,
+    timeWindow: '1 minute',
+    keyGenerator: (req: FastifyRequest) => req.ip,
+    errorResponseBuilder: (_req: FastifyRequest, context: { after: string }) => ({
+      error: 'Too many requests',
+      retryAfter: context.after,
+    }),
+  } as RateLimitPluginOptions);
 
   await app.register(oauthRoutes);
   await app.register(authRoutes);

@@ -42,12 +42,12 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(affiliateRoutes, { prefix: '/affiliate' });
   await app.register(destinationRoutes, { prefix: '/destinations' });
 
-  // Optional: Connect to MongoDB here, or delay until first use.
-  // We'll connect it here to ensure it's ready.
-  const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/anywhere_catalog_dev';
-  mongoose.connect(MONGO_URI)
-    .then(() => app.log.info('MongoDB natively connected locally'))
-    .catch(err => app.log.error({ err }, 'Failed mongoose start'));
+  if (process.env.NODE_ENV !== 'test') {
+    const MONGO_URI = process.env.MONGODB_URI;
+    if (!MONGO_URI) throw new Error('FATAL: MONGODB_URI env var is not set. Refusing to start.');
+    await mongoose.connect(MONGO_URI);
+    app.log.info('MongoDB connected');
+  }
 
   // Internal healthcheck
   app.get('/health', async () => ({ status: 'search_engine_online' }));
