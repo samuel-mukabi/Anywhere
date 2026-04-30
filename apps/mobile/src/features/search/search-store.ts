@@ -37,6 +37,7 @@ export interface DestinationResult {
   longitude?:   number;
   // Detail Layout Extrapolations
   whyItFits?:   string[];
+  bestMonths?:  number[];
   climateData?: { month: string; temp: number; sunshine: number; precip: number }[];
   isPro?:       boolean;
   blurhash?:    string;

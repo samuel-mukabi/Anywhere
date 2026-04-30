@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-default-string-development';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('FATAL: JWT_SECRET env var is not set. Refusing to start.');
 
 export interface CustomJwtPayload {
   sub: string;           // userId
@@ -26,7 +27,7 @@ export function issueTokens(payload: Omit<CustomJwtPayload, 'jti' | 'role'>): Si
   // 15 minutes Access Token
   const accessToken = jwt.sign(
     { ...payload, role: 'authenticated', jti },
-    JWT_SECRET,
+    JWT_SECRET as string,
     { expiresIn: '15m' }
   );
 
@@ -48,5 +49,5 @@ export function issueTokens(payload: Omit<CustomJwtPayload, 'jti' | 'role'>): Si
  * Verifies the JWT and throws if it's invalid or expired.
  */
 export function verifyAccessToken(token: string): CustomJwtPayload & jwt.JwtPayload {
-  return jwt.verify(token, JWT_SECRET) as CustomJwtPayload & jwt.JwtPayload;
+  return jwt.verify(token, JWT_SECRET as string) as unknown as CustomJwtPayload & jwt.JwtPayload;
 }

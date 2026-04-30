@@ -32,9 +32,10 @@ const FALLBACK_OFFERS: FlightOffer[] = [
 export const searchQueue = new Queue<SearchJobPayload, unknown, 'evaluate-destination'>('tequila-search', {
   connection: cacheRedis,
   defaultJobOptions: {
-    attempts: 2,
-    removeOnComplete: 100,
-    removeOnFail: 100,
+    attempts: 5,
+    backoff: { type: 'exponential', delay: 1000 },
+    removeOnComplete: { count: 500, age: 86400 },  // keep 500 or 24h, whichever comes first
+    removeOnFail: { count: 1000, age: 604800 },    // keep 1000 or 7 days for debugging
   }
 });
 

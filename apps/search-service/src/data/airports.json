@@ -72,5 +72,15 @@
   "Bridgetown": "BGI",
   "Victoria": "SEZ",
   "Roseau": "DOM",
-  "Kabul": "KBL"
+  "Kabul": "KBL",
+  "Washington": "WAS",
+  "Washington DC": "WAS",
+  "Chicago": "CHI",
+  "Miami": "MIA",
+  "Los Angeles": "LAX",
+  "San Francisco": "SFO",
+  "Dallas": "DFW",
+  "Houston": "HOU",
+  "Seattle": "SEA",
+  "Boston": "BOS"
 }
